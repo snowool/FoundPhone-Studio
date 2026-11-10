@@ -3,7 +3,7 @@
   "id": "snowool-foundphone",
   "title": "捡手机",
   "description": "自定义手机预览",
-  "revision": 3,
+  "revision": 4,
   "phone": {
     "owner": "Bucky Barnes",
     "date": "2026-10-25",
@@ -36,17 +36,12 @@
     "maps",
     "weather",
     "settings",
-    "whatsapp",
     "kakao",
-    "instagram",
     "tiktok",
     "twitter",
-    "telegram",
-    "discord",
     "youtube",
     "snapchat",
     "facebook",
-    "messenger",
     "reddit",
     "spotify",
     "netflix",
@@ -376,16 +371,6 @@
     "settings": [
       {
         "id": "test-item-settings",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
-      }
-    ],
-    "instagram": [
-      {
-        "id": "test-item-instagram",
         "title": "测试内容",
         "body": "这是一条测试内容。",
         "sender": "测试用户",
