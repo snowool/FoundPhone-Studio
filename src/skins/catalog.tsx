@@ -54,6 +54,8 @@ export const catalogSkins = {
   tiktok: skin(media, "TikTokSkin"),
   netflix: skin(media, "NetflixSkin"),
   alipay: skin(commerce, "AlipaySkin"),
-  taobao: skin(commerce, "TaobaoSkin"),
+  taobao: skin(commerce, "MarketplaceSkin"),
+  ebay: skin(commerce, "MarketplaceSkin"),
+  xianyu: skin(commerce, "MarketplaceSkin"),
   delivery: skin(commerce, "DeliverySkin"),
 };

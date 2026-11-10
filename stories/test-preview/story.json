@@ -12,6 +12,7 @@
     "network": "5G",
     "wallpaper": "apple-wwdc26"
   },
+  "restrictAppCatalog": true,
   "installedApps": [
     "appstore",
     {

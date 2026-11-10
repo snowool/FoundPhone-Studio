@@ -70,6 +70,10 @@
       ],
       "additionalProperties": false
     },
+    "restrictAppCatalog": {
+      "default": false,
+      "type": "boolean"
+    },
     "installedApps": {
       "default": [
         "appstore",
@@ -657,6 +661,7 @@
     "description",
     "revision",
     "phone",
+    "restrictAppCatalog",
     "installedApps",
     "contacts",
     "chats",

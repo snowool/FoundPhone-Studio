@@ -90,7 +90,8 @@ export function AlipaySkin(p: Props) {
     </div>
   );
 }
-export function TaobaoSkin(p: Props) {
+export function MarketplaceSkin(p: Props) {
+  const currency = p.appId === "ebay" ? "$" : "¥";
   const { tab, setTab, q, setQ, items } = useContent(p, "商品");
   const [status, setStatus] = useState("全部");
   const list = items
@@ -114,7 +115,7 @@ export function TaobaoSkin(p: Props) {
                 <Media item={i} />
                 <strong>{i.title}</strong>
                 <p>
-                  ¥ <b>{meta(i, "price", "—")}</b>
+                  {currency} <b>{meta(i, "price", "—")}</b>
                 </p>
                 <small>{i.sender}</small>
               </button>
@@ -151,7 +152,7 @@ export function TaobaoSkin(p: Props) {
                     <p>
                       {tab === "物流" ? meta(i, "tracking", i.body) : i.body}
                     </p>
-                    <b>¥ {meta(i, "price", "—")}</b>
+                    <b>{currency} {meta(i, "price", "—")}</b>
                   </span>
                 </section>
                 <footer>{meta(i, "number", i.time)}</footer>

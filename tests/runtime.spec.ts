@@ -171,6 +171,8 @@ test("production PWA cached story works after offline reload", async ({
     await context.setOffline(true);
     await page.reload();
     await page.getByRole("button", { name: "轻触解锁" }).click();
+    for (const digit of "0704")
+      await page.getByRole("button", { name: "密码键" + digit }).click();
     await open(page, "设置");
     await expect(page.getByRole("switch", { name: "飞行模式" })).toBeVisible();
     await page

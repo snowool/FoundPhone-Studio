@@ -177,6 +177,15 @@ const definitions: [
     ["好友", "聊天"],
   ],
   ["appstore", "App Store", "system", "#087cff", ShoppingBag, ["搜索"]],
+  ["ebay", "eBay", "records", "#3862ae", ShoppingBag, ["商品", "订单", "物流"]],
+  [
+    "xianyu",
+    "闲鱼",
+    "records",
+    "#f2cf43",
+    ShoppingBag,
+    ["商品", "订单", "物流"],
+  ],
   ["threads", "Threads", "social", "#4d5150", AtSign, ["动态", "回复"]],
 ];
 export const registry: AppPlugin[] = definitions.map(

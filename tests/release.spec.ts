@@ -1,13 +1,10 @@
 import { test, expect } from "@playwright/test";
-test("published default matches full test preview, four dock apps and updated status bar", async ({
+test("full test preview retains four dock apps and updated status bar", async ({
   page,
   request,
 }) => {
-  const work = await (await request.get("/work.json")).json();
-  const preview = await (await request.get("/test-work.json")).json();
+  const work = await (await request.get("/test-work.json")).json();
   expect(work.id).toBe("ui-test-phone-v2");
-  expect(work.apps).toEqual(preview.apps);
-  expect(work.data).toEqual(preview.data);
   expect(
     work.apps.filter((a: { installed: boolean }) => a.installed),
   ).toHaveLength(49);
@@ -20,7 +17,7 @@ test("published default matches full test preview, four dock apps and updated st
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.setViewportSize({ width: 393, height: 852 });
-  await page.goto("/");
+  await page.goto("/?preview=test");
   await page.getByRole("button", { name: "轻触解锁" }).waitFor();
   await page
     .locator(".phone-screen")
@@ -42,11 +39,9 @@ test("published default matches full test preview, four dock apps and updated st
     .getByRole("button", { name: "打开App Store", exact: true })
     .click();
   await page.getByPlaceholder("搜索全部App").fill("X");
-  const x = page
-    .locator(".runtime-library-row")
-    .filter({
-      has: page.locator(".library-app-title strong", { hasText: /^X$/ }),
-    });
+  const x = page.locator(".runtime-library-row").filter({
+    has: page.locator(".library-app-title strong", { hasText: /^X$/ }),
+  });
   await expect(x.locator("[data-original-icon=twitter] img")).toHaveAttribute(
     "src",
     /twitter\.svg$/,
@@ -82,4 +77,70 @@ test("published default matches full test preview, four dock apps and updated st
     ),
   ).toBe(true);
   expect(errors).toEqual([]);
+});
+
+test("custom phone requires 0704 and exposes only its configured apps", async ({
+  page,
+  request,
+}) => {
+  const work = await (await request.get("/work.json")).json();
+  expect(work.id).toBe("snowool-foundphone");
+  expect(work.apps.map((app: { id: string }) => app.id).sort()).toEqual([
+    "appstore",
+    "calendar",
+    "camera",
+    "clock",
+    "contacts",
+    "discord",
+    "ebay",
+    "facebook",
+    "instagram",
+    "mail",
+    "maps",
+    "messages",
+    "messenger",
+    "netflix",
+    "notes",
+    "phone",
+    "photos",
+    "pinterest",
+    "reddit",
+    "safari",
+    "settings",
+    "snapchat",
+    "spotify",
+    "telegram",
+    "threads",
+    "tiktok",
+    "twitter",
+    "weather",
+    "whatsapp",
+    "xianyu",
+    "youtube",
+  ]);
+  expect(work.apps.every((app: { installed: boolean }) => app.installed)).toBe(
+    true,
+  );
+
+  await page.setViewportSize({ width: 393, height: 852 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "轻触解锁" }).click();
+  for (const digit of "0000")
+    await page.getByRole("button", { name: "密码键" + digit }).click();
+  await expect(page.getByText("密码不正确")).toBeVisible();
+  for (const digit of "0704")
+    await page.getByRole("button", { name: "密码键" + digit }).click();
+
+  await page
+    .getByRole("button", { name: "打开App Store", exact: true })
+    .click();
+  await expect(page.locator(".runtime-library-row")).toHaveCount(
+    work.apps.length,
+  );
+  await page.getByPlaceholder("搜索全部App").fill("闲鱼");
+  await page
+    .locator(".runtime-library-row")
+    .getByRole("button", { name: "打开", exact: true })
+    .click();
+  await expect(page.getByPlaceholder("搜索商品或订单")).toBeVisible();
 });

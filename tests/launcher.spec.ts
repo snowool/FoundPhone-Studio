@@ -43,8 +43,8 @@ test("all apps available, install, remove vs uninstall, refresh and reinstall", 
 }) => {
   await unlock(page);
   await library(page);
-  await expect(page.locator(".runtime-library-row")).toHaveCount(49);
-  await expect(page.locator(".library-count")).toContainText("7 / 全部49");
+  await expect(page.locator(".runtime-library-row")).toHaveCount(51);
+  await expect(page.locator(".library-count")).toContainText("7 / 全部51");
   await add(page, "微信");
   await close(page);
   await open(page, "微信");

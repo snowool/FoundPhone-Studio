@@ -39,6 +39,7 @@ export const storySchema = z
           .default("2026-10-23"),
       })
       .strict(),
+    restrictAppCatalog: z.boolean().default(false),
     installedApps: z
       .array(z.union([z.string(), workSchema.shape.apps.element]))
       .default([
@@ -280,7 +281,8 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
       notifications: true,
       ...s.phone,
     },
-    apps: [...registry]
+    apps: registry
+      .filter((app) => !s.restrictAppCatalog || configuredIds.includes(app.id))
       .sort((a, b) => {
         const ids = s.installedApps.map((x) =>
           typeof x === "string" ? x : x.id,

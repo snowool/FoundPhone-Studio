@@ -8,6 +8,6 @@ src/engine.ts 是纯状态转移引擎。Work 在游玩中保持不可变，Runt
 
 src/registry.ts 注册 App；Phone、AppSkins、skins 与 src/apps 等现有组件负责页面呈现。桌面安装状态与布局由现有 App 管理和 launcher 模块处理。App 注册数量不代表每个 App 的全部原生页面均已完成。
 
-正式构建生成 dist/，使用相对资源路径，支持静态托管。图标资源随源码保存在 assets/app-icons，正式构建自动打包，Fork 后无需另行下载。正式构建同时生成 work.json 与 test-work.json，默认模板使用完整 App 测试配置；纯空白作品独立保留。纯空白入口为 ?template=blank。
+正式构建生成 dist/，使用相对资源路径，支持静态托管。图标资源随源码保存在 assets/app-icons，正式构建自动打包，Fork 后无需另行下载。正式构建同时生成 work.json 与 test-work.json，默认模板使用自定义手机配置；完整测试预览与纯空白作品独立保留。纯空白入口为 ?template=blank。
 
 作者媒体采用经过校验的内嵌数据，不执行任意 HTML 或脚本。大型媒体和大作品会增加 JSON、内存与快照开销，尚未针对超大作品优化。许可与版权通知保留在源文件和分发文件中。
