@@ -3,7 +3,7 @@
   "id": "snowool-foundphone",
   "title": "捡手机",
   "description": "自定义手机预览",
-  "revision": 5,
+  "revision": 6,
   "phone": {
     "owner": "Bucky Barnes",
     "date": "2026-10-25",
@@ -638,6 +638,38 @@
         "meta": {
           "contact": "true",
           "pinned": "true"
+        }
+      },
+      {
+        "id": "kakao-xiaomei-contact",
+        "title": "小梅",
+        "sender": "小梅",
+        "meta": {
+          "contact": "true"
+        }
+      },
+      {
+        "id": "kakao-yelena-contact",
+        "title": "Yelena",
+        "sender": "Yelena",
+        "meta": {
+          "contact": "true"
+        }
+      },
+      {
+        "id": "kakao-sam-contact",
+        "title": "Sam",
+        "sender": "Sam",
+        "meta": {
+          "contact": "true"
+        }
+      },
+      {
+        "id": "kakao-shuri-contact",
+        "title": "Shuri",
+        "sender": "Shuri",
+        "meta": {
+          "contact": "true"
         }
       }
     ],
