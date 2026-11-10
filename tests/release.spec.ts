@@ -155,6 +155,9 @@ test("the custom album supports swiping between photos", async ({ page }) => {
   await page.getByRole("button", { name: "打开相册" }).click();
   await page.getByRole("button", { name: "查看照片 01" }).click();
   const stage = page.locator(".native-photo-stage");
+  await expect
+    .poll(async () => (await stage.boundingBox())?.width ?? 0)
+    .toBeGreaterThan(300);
   const bounds = await stage.boundingBox();
   if (!bounds) throw new Error("Photo viewer is not visible");
 
