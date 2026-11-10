@@ -319,9 +319,11 @@
   text-align: left;
   border-bottom: 1px solid #eee;
 }
-.contact-self .catalog-avatar {
-  width: 49px;
-  height: 49px;
+.native-contacts .catalog-avatar {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  font-size: 14px;
 }
 .contact-self small {
   display: block;

@@ -101,6 +101,10 @@
     {
       "id": "contact-natasha",
       "name": "natasha"
+    },
+    {
+      "id": "contact-stevie",
+      "name": "Stevie"
     }
   ],
   "chats": [
@@ -280,6 +284,15 @@
         "id": "phone-contact-natasha",
         "title": "natasha",
         "sender": "natasha",
+        "read": true,
+        "meta": {
+          "contact": "true"
+        }
+      },
+      {
+        "id": "phone-contact-stevie",
+        "title": "Stevie",
+        "sender": "Stevie",
         "read": true,
         "meta": {
           "contact": "true"
@@ -812,6 +825,15 @@
         "id": "messages-contact-natasha",
         "title": "natasha",
         "sender": "natasha",
+        "read": true,
+        "meta": {
+          "contact": "true"
+        }
+      },
+      {
+        "id": "messages-contact-stevie",
+        "title": "Stevie",
+        "sender": "Stevie",
         "read": true,
         "meta": {
           "contact": "true"
