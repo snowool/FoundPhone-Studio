@@ -19,6 +19,7 @@ import {
   MapPin,
   Music,
   Phone,
+  Play,
   Search,
   SkipForward,
   Star,
@@ -226,8 +227,22 @@ export function PhotosSkin(p: Props) {
                   key={i.id}
                   onClick={() => p.onItem(i)}
                 >
-                  <Media item={i} />
-                  {i.favorite && <Heart size={12} fill="white" />}
+                  {i.kind === "video" ? (
+                    <>
+                      <video
+                        src={safeMedia(i.media)}
+                        preload="metadata"
+                        muted
+                        playsInline
+                      />
+                      <Play size={14} fill="white" />
+                    </>
+                  ) : (
+                    <>
+                      <Media item={i} />
+                      {i.favorite && <Heart size={12} fill="white" />}
+                    </>
+                  )}
                 </button>
               ))}
             </div>

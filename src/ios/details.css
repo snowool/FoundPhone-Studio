@@ -94,7 +94,8 @@
   place-items: center;
   color: white;
 }
-.ios18 .native-photo-stage > img {
+.ios18 .native-photo-stage > img,
+.ios18 .native-photo-stage > video {
   width: 100%;
   max-height: 100%;
   object-fit: contain;
