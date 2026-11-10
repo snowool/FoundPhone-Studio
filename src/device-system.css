@@ -1208,6 +1208,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.ios18 .device-banner[data-app="xianyu"] > span:last-child > span {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
 @keyframes banner-enter {
   from {
     transform: translateY(-130%);

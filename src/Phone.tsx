@@ -242,7 +242,7 @@ function PhoneRuntime({
       if (changed) update(next);
     }, 1000);
     return () => clearInterval(interval);
-  }, [creator, ready, work.id, work.updatedAt]);
+  }, [creator, ready, locked, work.id, work.updatedAt]);
   const event = (event: string, target: string) => {
     if (!creator) update(dispatch(work, runtimeRef.current, event, target));
   };
@@ -292,6 +292,7 @@ function PhoneRuntime({
   }, [app, work.apps]);
   const displayTime = creator ? work.phone.time : s.time || work.phone.time;
   const plugin = getApp(app);
+  const bannerNotice = banner ? notificationContent(banner, work.apps) : null;
   useEffect(() => {
     const count = s.notifications.length;
     if (!locked && work.phone.notifications && count > noticesSeen.current) {
@@ -678,21 +679,19 @@ function PhoneRuntime({
               </div>
             </div>
           )}
-          {banner && !locked && (
+          {bannerNotice && !locked && (
             <button
               className="device-banner"
+              data-app={bannerNotice.appId}
               onClick={() => {
                 setBanner("");
                 setPanel("notification");
               }}
             >
-              <AppIcon
-                id={notificationContent(banner, work.apps).appId}
-                small
-              />
+              <AppIcon id={bannerNotice.appId} small />
               <span>
-                <strong>{notificationContent(banner, work.apps).title}</strong>
-                <span>{notificationContent(banner, work.apps).body}</span>
+                <strong>{bannerNotice.title}</strong>
+                <span>{bannerNotice.body}</span>
               </span>
             </button>
           )}

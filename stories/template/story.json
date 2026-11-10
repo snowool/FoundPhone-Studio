@@ -432,7 +432,89 @@
     ]
   },
   "variables": {},
-  "events": [],
-  "tests": [],
+  "events": [
+    {
+      "id": "xianyu-price-drop",
+      "label": "解锁后闲鱼降价提醒",
+      "type": "delay",
+      "event": "password",
+      "target": "0704",
+      "delayMs": 4000,
+      "once": false,
+      "actions": [
+        {
+          "type": "notification",
+          "key": "",
+          "value": "xianyu:降价提醒\n你浏览过宝贝“HotToys 美国队长7.0倒模1/1比例”降价了"
+        }
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "name": "输错密码没有提醒",
+      "steps": [
+        {
+          "event": "password",
+          "target": "0000"
+        },
+        {
+          "advanceMs": 5000
+        }
+      ],
+      "expectNotifications": []
+    },
+    {
+      "name": "解锁后不足四秒没有提醒",
+      "steps": [
+        {
+          "event": "password",
+          "target": "0704"
+        },
+        {
+          "advanceMs": 3999
+        }
+      ],
+      "expectNotifications": []
+    },
+    {
+      "name": "解锁满四秒后发出闲鱼提醒",
+      "steps": [
+        {
+          "event": "password",
+          "target": "0704"
+        },
+        {
+          "advanceMs": 4000
+        }
+      ],
+      "expectNotifications": [
+        "xianyu:降价提醒\n你浏览过宝贝“HotToys 美国队长7.0倒模1/1比例”降价了"
+      ]
+    },
+    {
+      "name": "再次解锁后重新提醒",
+      "steps": [
+        {
+          "event": "password",
+          "target": "0704"
+        },
+        {
+          "advanceMs": 4000
+        },
+        {
+          "event": "password",
+          "target": "0704"
+        },
+        {
+          "advanceMs": 4000
+        }
+      ],
+      "expectNotifications": [
+        "xianyu:降价提醒\n你浏览过宝贝“HotToys 美国队长7.0倒模1/1比例”降价了",
+        "xianyu:降价提醒\n你浏览过宝贝“HotToys 美国队长7.0倒模1/1比例”降价了"
+      ]
+    }
+  ],
   "restrictAppCatalog": true
 }

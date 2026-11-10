@@ -642,12 +642,17 @@
             "items": {
               "type": "string"
             }
+          },
+          "expectNotifications": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "required": [
           "name",
           "steps",
-          "ending",
           "expectUnlocked"
         ],
         "additionalProperties": false
