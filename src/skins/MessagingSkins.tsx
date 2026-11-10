@@ -84,7 +84,9 @@ function ChatRows({
   return (
     <>
       {names.map((name) => {
-        const last = items.filter((i) => i.title === name).at(-1)!;
+        const last = items
+          .filter((i) => i.title === name && i.meta.contact !== "true")
+          .at(-1);
         return (
           <button
             className="catalog-chat"
@@ -94,12 +96,12 @@ function ChatRows({
               p.onRead(name);
             }}
           >
-            <Avatar name={name} src={last.avatar} round={round} />
+            <Avatar name={name} src={last?.avatar} round={round} />
             <span>
               <strong>{name}</strong>
-              <p>{last.body}</p>
+              {last && <p>{last.body}</p>}
             </span>
-            <time>{last.time.slice(-5)}</time>
+            {last && <time>{last.time.slice(-5)}</time>}
           </button>
         );
       })}
@@ -127,7 +129,9 @@ export function MessagesSkin(p: Props) {
         <>
           <Bubbles
             p={p}
-            items={items.filter((i) => i.title === p.thread)}
+            items={items.filter(
+              (i) => i.title === p.thread && i.meta.contact !== "true",
+            )}
             className="sms-bubbles"
           />
           <Composer p={p} />
