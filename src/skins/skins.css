@@ -3304,6 +3304,17 @@
 .tiktok-ui .catalog-nav strong {
   color: #f1f1f1;
 }
+.tiktok-ui .vertical-video {
+  min-height: 100%;
+  scroll-snap-stop: always;
+}
+.tiktok-ui .vertical-video > video {
+  object-fit: contain;
+  background: #000;
+}
+.tiktok-ui .vertical-caption {
+  bottom: 56px;
+}
 .tiktok-ui .vertical-actions > button:nth-child(2) {
   color: #f4f4f4;
 }

@@ -4,6 +4,7 @@ import {
   Bookmark,
   Check,
   Compass,
+  Forward,
   Heart,
   Home,
   MessageCircle,
@@ -16,7 +17,7 @@ import {
   Users,
   Video,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { safeMedia, type Item } from "../schema";
 import {
   Avatar,
@@ -357,12 +358,50 @@ export function BilibiliSkin(p: Props) {
     </div>
   );
 }
+function TikTokVideo({ src }: { src: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.intersectionRatio >= 0.65) {
+          void video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.65 },
+    );
+    observer.observe(video);
+    return () => {
+      observer.disconnect();
+      video.pause();
+    };
+  }, []);
+
+  return (
+    <video
+      ref={videoRef}
+      src={src}
+      controls
+      playsInline
+      loop
+      muted
+      preload="metadata"
+    />
+  );
+}
+
 function VerticalVideo({ p, item }: { p: Props; item: Item }) {
   const [liked, setLiked] = useSkinState<boolean>(p, `liked-${item.id}`, false),
     [saved, setSaved] = useSkinState<boolean>(p, `saved-${item.id}`, false);
+  const reposts = meta(item, "reposts");
+  const clip =
+    p.appId === "tiktok" && item.kind === "video" && safeMedia(item.media);
   return (
     <article className="vertical-video">
-      <Media item={item} />
+      {clip ? <TikTokVideo src={clip} /> : <Media item={item} />}
       <div className="vertical-actions">
         <button
           aria-label={`作者${item.sender}`}
@@ -375,7 +414,9 @@ function VerticalVideo({ p, item }: { p: Props; item: Item }) {
           onClick={() => setLiked(!liked)}
         >
           <Heart size={29} fill={liked ? "#f44368" : "white"} />
-          <small>{item.likes + (liked ? 1 : 0)}</small>
+          <small>
+            {(item.likes + (liked ? 1 : 0)).toLocaleString("en-US")}
+          </small>
         </button>
         <button aria-label={`评论${item.title}`} onClick={() => p.onItem(item)}>
           <MessageCircle size={29} />
@@ -387,6 +428,12 @@ function VerticalVideo({ p, item }: { p: Props; item: Item }) {
         >
           <Bookmark size={27} fill={saved ? "#f8cc55" : "none"} />
         </button>
+        {reposts && (
+          <button aria-label={`转发 ${reposts}`} onClick={() => p.onItem(item)}>
+            <Forward size={28} />
+            <small>{Number(reposts).toLocaleString("en-US")}</small>
+          </button>
+        )}
       </div>
       <button className="vertical-caption" onClick={() => p.onItem(item)}>
         <strong>@{item.sender}</strong>
@@ -433,9 +480,20 @@ export function DouyinSkin(p: Props) {
 }
 export function TikTokSkin(p: Props) {
   const { tab, setTab, items } = useContent(p, "For You");
+  const [order] = useState(() => {
+    const ids = p.items.map((item) => item.id);
+    for (let index = ids.length - 1; index > 0; index--) {
+      const swap = Math.floor(Math.random() * (index + 1));
+      [ids[index], ids[swap]] = [ids[swap], ids[index]];
+    }
+    return new Map(ids.map((id, index) => [id, index]));
+  });
   const list =
     tab === "For You"
-      ? items
+      ? items.sort(
+          (a, b) =>
+            (order.get(a.id) ?? order.size) - (order.get(b.id) ?? order.size),
+        )
       : tab === "Following"
         ? items.filter((i) => i.folder === "关注" || i.folder === "Following")
         : items.filter((i) => i.folder === "个人主页");
@@ -456,7 +514,7 @@ export function TikTokSkin(p: Props) {
           For You
         </button>
       </div>
-      <div className="vertical-feed">
+      <div className="vertical-feed" key={tab}>
         {list.map((i) => (
           <VerticalVideo key={i.id} p={p} item={i} />
         ))}
@@ -542,4 +600,3 @@ export function NetflixSkin(p: Props) {
     </div>
   );
 }
-

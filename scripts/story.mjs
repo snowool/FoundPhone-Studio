@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir, access } from "node:fs/promises";
 import { createServer } from "vite";
 const [
   mode = "validate",
@@ -86,6 +86,13 @@ try {
     "/src/story-engine/compiler.ts",
   );
   const { story, work } = compileStory(raw);
+  for (const item of Object.values(work.data).flat()) {
+    if (item.media.startsWith("./story-media/")) {
+      await access(`public/${item.media}`).catch(() => {
+        throw Error(`缺少素材 ${item.media}`);
+      });
+    }
+  }
   if (mode === "test" || mode === "build") {
     const { testStory } = await server.ssrLoadModule(
       "/src/story-engine/testStory.ts",

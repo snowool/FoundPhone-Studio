@@ -149,7 +149,7 @@ export function compileStory(raw: unknown): { story: Story; work: Work } {
     });
     for (const k of ["media", "avatar"] as const)
       if (item[k] && !safeMedia(item[k]))
-        fail(p + "." + k, "仅允许受支持的内嵌媒体，不允许脚本或远程资源");
+        fail(p + "." + k, "仅允许受支持的内嵌媒体或随作品分发的 MP4，不允许脚本或远程资源");
     if (item.richText) {
       let doc;
       try {

@@ -118,6 +118,9 @@ const fields: Record<string, Field[]> = {
     { key: "duration", label: "时长" },
   ],
   douyin: [{ key: "views", label: "虚构播放数" }],
-  tiktok: [{ key: "views", label: "虚构播放数" }],
+  tiktok: [
+    { key: "views", label: "虚构播放数" },
+    { key: "reposts", label: "虚构转发数" },
+  ],
 };
 export const getFields = (app: string) => fields[app] ?? [];

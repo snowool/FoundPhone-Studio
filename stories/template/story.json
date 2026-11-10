@@ -3,7 +3,7 @@
   "id": "snowool-foundphone",
   "title": "捡手机",
   "description": "自定义手机预览",
-  "revision": 1,
+  "revision": 2,
   "phone": {
     "owner": "Bucky Barnes",
     "date": "2026-10-25",
@@ -389,12 +389,134 @@
     ],
     "tiktok": [
       {
-        "id": "test-item-tiktok",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
+        "id": "tiktok-5173823046352927",
+        "title": "Video 1",
+        "body": "",
+        "sender": "snowool",
+        "kind": "video",
+        "folder": "个人主页",
+        "media": "./story-media/tiktok-5173823046352927.mp4",
+        "likes": 128430,
+        "meta": {
+          "reposts": "18750"
+        }
+      },
+      {
+        "id": "tiktok-5173823058673669",
+        "title": "Video 2",
+        "body": "",
+        "sender": "snowool",
+        "kind": "video",
+        "folder": "个人主页",
+        "media": "./story-media/tiktok-5173823058673669.mp4",
+        "likes": 76480,
+        "meta": {
+          "reposts": "12560"
+        }
+      },
+      {
+        "id": "tiktok-5173823071518748",
+        "title": "Video 3",
+        "body": "",
+        "sender": "snowool",
+        "kind": "video",
+        "folder": "个人主页",
+        "media": "./story-media/tiktok-5173823071518748.mp4",
+        "likes": 165720,
+        "meta": {
+          "reposts": "24790"
+        }
+      },
+      {
+        "id": "tiktok-5173823083839506",
+        "title": "Video 4",
+        "body": "",
+        "sender": "snowool",
+        "kind": "video",
+        "folder": "个人主页",
+        "media": "./story-media/tiktok-5173823083839506.mp4",
+        "likes": 93410,
+        "meta": {
+          "reposts": "16420"
+        }
+      },
+      {
+        "id": "tiktok-5173823096684566",
+        "title": "Video 5",
+        "body": "",
+        "sender": "snowool",
+        "kind": "video",
+        "folder": "个人主页",
+        "media": "./story-media/tiktok-5173823096684566.mp4",
+        "likes": 112650,
+        "meta": {
+          "reposts": "20830"
+        }
+      },
+      {
+        "id": "tiktok-5173823105073196",
+        "title": "Video 6",
+        "body": "",
+        "sender": "snowool",
+        "kind": "video",
+        "folder": "个人主页",
+        "media": "./story-media/tiktok-5173823105073196.mp4",
+        "likes": 58390,
+        "meta": {
+          "reposts": "10540"
+        }
+      },
+      {
+        "id": "tiktok-5173823117393959",
+        "title": "Video 7",
+        "body": "",
+        "sender": "snowool",
+        "kind": "video",
+        "folder": "个人主页",
+        "media": "./story-media/tiktok-5173823117393959.mp4",
+        "likes": 198240,
+        "meta": {
+          "reposts": "29240"
+        }
+      },
+      {
+        "id": "tiktok-5173823155404838",
+        "title": "Video 8",
+        "body": "",
+        "sender": "snowool",
+        "kind": "video",
+        "folder": "个人主页",
+        "media": "./story-media/tiktok-5173823155404838.mp4",
+        "likes": 146570,
+        "meta": {
+          "reposts": "22370"
+        }
+      },
+      {
+        "id": "tiktok-5173823172182059",
+        "title": "Video 9",
+        "body": "",
+        "sender": "snowool",
+        "kind": "video",
+        "folder": "个人主页",
+        "media": "./story-media/tiktok-5173823172182059.mp4",
+        "likes": 67210,
+        "meta": {
+          "reposts": "13820"
+        }
+      },
+      {
+        "id": "tiktok-5173823469977679",
+        "title": "Video 10",
+        "body": "",
+        "sender": "snowool",
+        "kind": "video",
+        "folder": "个人主页",
+        "media": "./story-media/tiktok-5173823469977679.mp4",
+        "likes": 179860,
+        "meta": {
+          "reposts": "26850"
+        }
       }
     ],
     "twitter": [
