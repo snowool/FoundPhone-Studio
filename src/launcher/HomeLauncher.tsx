@@ -661,7 +661,7 @@ export function HomeLauncher(p: Props) {
               <>
                 <div className="storefront-title">
                   <h1>搜索</h1>
-                  <span>App Store</span>
+                  <span>{p.storeOpen ? p.work.phone.owner : "App Store"}</span>
                 </div>
                 <label className="launcher-search">
                   <Search size={18} />

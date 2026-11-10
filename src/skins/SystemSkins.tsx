@@ -160,13 +160,7 @@ export function ContactsSkin(p: Props) {
       <div className="catalog-scroll">
         <h1>通讯录</h1>
         <SearchBox value={q} set={setQ} />
-        <button
-          className="contact-self"
-          onClick={() => {
-            if (items[0]) p.onItem(items[0]);
-            else if (p.creator) p.onAdd();
-          }}
-        >
+        <button className="contact-self" onClick={p.onOwner}>
           <Avatar name={p.owner ?? "我"} />
           <span>
             <strong>{p.owner ?? "我的名片"}</strong>

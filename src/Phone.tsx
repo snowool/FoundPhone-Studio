@@ -56,6 +56,7 @@ import {
 import { getApp, type AppPlugin } from "./registry";
 import {
   initialRuntime,
+  makeItem,
   safeMedia,
   type Work,
   type Item,
@@ -990,6 +991,16 @@ function AppContent({
             <Skin
               appId={app.id}
               owner={work.phone.owner}
+              onOwner={() =>
+                setDetail(
+                  makeItem({
+                    id: "owner",
+                    title: work.phone.owner,
+                    sender: work.phone.owner,
+                    body: "",
+                  }),
+                )
+              }
               virtualTime={state.time}
               ui={state.ui?.[app.id]}
               onUi={creator ? undefined : onUi}
