@@ -37,6 +37,7 @@
     "weather",
     "settings",
     "whatsapp",
+    "kakao",
     "instagram",
     "tiktok",
     "twitter",
@@ -512,6 +513,48 @@
       ],
       "expectNotifications": [
         "xianyu:降价提醒\n你浏览过宝贝“HotToys 美国队长7.0倒模1/1比例”降价了",
+        "xianyu:降价提醒\n你浏览过宝贝“HotToys 美国队长7.0倒模1/1比例”降价了"
+      ]
+    },
+    {
+      "name": "上一次的解锁倒计时会重新计时",
+      "steps": [
+        {
+          "event": "password",
+          "target": "0704"
+        },
+        {
+          "advanceMs": 2000
+        },
+        {
+          "event": "password",
+          "target": "0704"
+        },
+        {
+          "advanceMs": 3999
+        }
+      ],
+      "expectNotifications": []
+    },
+    {
+      "name": "重新解锁满四秒后才提醒",
+      "steps": [
+        {
+          "event": "password",
+          "target": "0704"
+        },
+        {
+          "advanceMs": 2000
+        },
+        {
+          "event": "password",
+          "target": "0704"
+        },
+        {
+          "advanceMs": 4000
+        }
+      ],
+      "expectNotifications": [
         "xianyu:降价提醒\n你浏览过宝贝“HotToys 美国队长7.0倒模1/1比例”降价了"
       ]
     }

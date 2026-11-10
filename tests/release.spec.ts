@@ -95,6 +95,7 @@ test("custom phone requires 0704 and exposes only its configured apps", async ({
     "ebay",
     "facebook",
     "instagram",
+    "kakao",
     "mail",
     "maps",
     "messages",
@@ -143,4 +144,15 @@ test("custom phone requires 0704 and exposes only its configured apps", async ({
     .getByRole("button", { name: "打开", exact: true })
     .click();
   await expect(page.getByPlaceholder("搜索商品或订单")).toBeVisible();
+  const banner = page.locator('.device-banner[data-app="xianyu"]');
+  await expect(banner).toBeVisible({ timeout: 6500 });
+  await expect(banner.getByText("降价提醒", { exact: true })).toBeVisible();
+  await expect(
+    banner.getByText("你浏览过宝贝“HotToys 美国队长7.0倒模1/1比例”降价了", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    banner.locator('[data-original-icon="xianyu"] img'),
+  ).toBeVisible();
 });

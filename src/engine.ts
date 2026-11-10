@@ -106,11 +106,11 @@ function runQueue(
     if (!pass) continue;
     if (n.type === "delay" && !resuming.has(id)) {
       s.scheduled ??= [];
-      if (!s.scheduled.some((t) => t.nodeId === id))
-        s.scheduled.push({
-          nodeId: id,
-          due: (s.elapsedMs ?? 0) + (n.delayMs ?? 1000),
-        });
+      const pending = s.scheduled.find((t) => t.nodeId === id);
+      const due = (s.elapsedMs ?? 0) + (n.delayMs ?? 1000);
+      if (!pending) s.scheduled.push({ nodeId: id, due });
+      else if (!n.once && event === "password" && n.event === event)
+        pending.due = due;
       s.trace.push(`delay:${n.delayMs ?? 1000}ms → ${n.label}`);
       continue;
     }

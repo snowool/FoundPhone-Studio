@@ -296,8 +296,11 @@ function PhoneRuntime({
   useEffect(() => {
     const count = s.notifications.length;
     if (!locked && work.phone.notifications && count > noticesSeen.current) {
-      setBanner(s.notifications.at(-1) || "");
-      const timer = setTimeout(() => setBanner(""), 4500);
+      const notice = s.notifications.at(-1) || "";
+      setBanner(notice);
+      const duration =
+        notificationContent(notice, work.apps).appId === "xianyu" ? 10000 : 4500;
+      const timer = setTimeout(() => setBanner(""), duration);
       noticesSeen.current = count;
       return () => clearTimeout(timer);
     }

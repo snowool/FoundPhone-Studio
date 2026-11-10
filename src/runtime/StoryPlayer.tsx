@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { registerSW } from "virtual:pwa-register";
 import { Phone } from "../Phone";
 import { validateWork, type Work } from "../schema";
 import "../styles.css";
@@ -9,17 +10,30 @@ function StoryPlayer() {
     [error, setError] = useState("");
   useEffect(() => {
     const abort = new AbortController();
-    fetch(
-      new URLSearchParams(location.search).get("preview") === "test"
+    const params = new URLSearchParams(location.search);
+    const file =
+      params.get("preview") === "test"
         ? "./test-work.json"
-        : new URLSearchParams(location.search).get("template") === "blank"
+        : params.get("template") === "blank"
           ? "./blank-work.json"
-          : "./work.json",
-      { signal: abort.signal },
-    )
-      .then((r) => {
-        if (!r.ok) throw Error("缺少作品文件，请运行 npm run story:build");
-        return r.json();
+          : "./work.json";
+    const options = { signal: abort.signal };
+    // A distinct URL bypasses Workbox's precache when this tab is controlled.
+    const freshFile = navigator.serviceWorker?.controller
+      ? file + "?latest=1"
+      : file;
+    fetch(freshFile, { ...options, cache: "no-cache" })
+      .then((response) => {
+        if (!response.ok) throw Error("无法获取最新作品");
+        return response.json();
+      })
+      .catch((error) => {
+        if (abort.signal.aborted || freshFile === file) throw error;
+        return fetch(file, options).then((response) => {
+          if (!response.ok)
+            throw Error("缺少作品文件，请运行 npm run story:build");
+          return response.json();
+        });
       })
       .then((x) => {
         const w = validateWork(x);
@@ -42,4 +56,5 @@ function StoryPlayer() {
     </main>
   );
 }
+registerSW({ immediate: true });
 createRoot(document.getElementById("root")!).render(<StoryPlayer />);
