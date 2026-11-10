@@ -430,6 +430,17 @@
         "title": "测试内容",
         "body": "这是一条测试内容。"
       }
+    ],
+    "kakao": [
+      {
+        "id": "kakao-stevie-contact",
+        "title": "小stevie",
+        "sender": "小stevie",
+        "meta": {
+          "contact": "true",
+          "pinned": "true"
+        }
+      }
     ]
   },
   "variables": {},

@@ -20,6 +20,7 @@ import {
   Share,
   User,
   Bell,
+  Pin,
   X,
   Smile,
   Menu,
@@ -31,11 +32,18 @@ import { useSkinState } from "../../skinState";
 import { makeItem, type Item } from "../../schema";
 import "./ui.css";
 import "./adapter.css";
-function grouped(items: Item[]) {
-  return [...new Set(items.map((i) => i.title))].map((title) => ({
-    title,
-    items: items.filter((i) => i.title === title),
-  }));
+function kakaoThreads(items: Item[]) {
+  return [...new Set(items.map((i) => i.title))]
+    .map((title) => {
+      const entries = items.filter((item) => item.title === title);
+      return {
+        title,
+        contact: entries.find((item) => item.meta.contact === "true"),
+        last: entries.filter((item) => item.meta.contact !== "true").at(-1),
+        pinned: entries.some((item) => item.meta.pinned === "true"),
+      };
+    })
+    .sort((a, b) => Number(b.pinned) - Number(a.pinned));
 }
 export function messageRun(items: Item[], index: number) {
   const m = items[index],
@@ -67,9 +75,11 @@ export function MymyKakao(p: SkinProps) {
     [draft, setDraft] = useState(""),
     [query, setQuery] = useState(""),
     [menu, setMenu] = useState(false);
-  const list = grouped(p.items),
+  const list = kakaoThreads(p.items),
     messages = [
-      ...p.items.filter((i) => i.title === p.thread),
+      ...p.items.filter(
+        (i) => i.title === p.thread && i.meta.contact !== "true",
+      ),
       ...sent.flatMap((raw, index) => {
         try {
           const entry: unknown = JSON.parse(raw);
@@ -261,28 +271,37 @@ export function MymyKakao(p: SkinProps) {
             </div>
             {list
               .filter((g) => g.title.includes(query.trim()))
-              .map((g) => {
-                const last = g.items.at(-1)!;
-                return (
-                  <button
-                    className="kzkr kzkcr"
-                    key={g.title}
-                    onClick={() => p.onThread(g.title)}
-                  >
-                    <Avatar name={last.sender || g.title} src={last.avatar} />
-                    <span className="kzkn">
-                      <b>{g.title}</b>
+              .map(({ title, contact, last, pinned }) => (
+                <button
+                  className="kzkr kzkcr"
+                  key={title}
+                  onClick={() => p.onThread(title)}
+                >
+                  <Avatar
+                    name={contact?.sender || last?.sender || title}
+                    src={contact?.avatar || last?.avatar}
+                  />
+                  <span className="kzkn">
+                    <b>
+                      {title}
+                      {pinned && (
+                        <Pin role="img" aria-label="已置顶" size={13} />
+                      )}
+                    </b>
+                    {last && (
                       <small>{tab === "好友" ? last.sender : last.body}</small>
-                    </span>
+                    )}
+                  </span>
+                  {last && (
                     <span className="kzkmt">
                       {last.time.slice(-5)}
                       {last.meta.unread && (
                         <i className="kzkbd">{last.meta.unread}</i>
                       )}
                     </span>
-                  </button>
-                );
-              })}
+                  )}
+                </button>
+              ))}
             {!list.length && <Blank />}
           </div>
           <nav className="kzknv">
