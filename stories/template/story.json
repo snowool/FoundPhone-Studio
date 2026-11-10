@@ -3,7 +3,7 @@
   "id": "snowool-foundphone",
   "title": "捡手机",
   "description": "自定义手机预览",
-  "revision": 7,
+  "revision": 8,
   "phone": {
     "owner": "Bucky Barnes",
     "date": "2026-10-25",
@@ -842,7 +842,9 @@
           "key": "",
           "value": "kakao/小梅:小梅\n明天早上九点，请准时带着你家队长到会场开会哦😉"
         }
-      ]
+      ],
+      "type": "delay",
+      "delayMs": 3000
     },
     {
       "id": "kakao-xiaomei-opened",
@@ -862,7 +864,9 @@
           "key": "kakao-xiaomei-meeting-reply",
           "value": true
         }
-      ]
+      ],
+      "type": "delay",
+      "delayMs": 1000
     }
   ],
   "tests": [

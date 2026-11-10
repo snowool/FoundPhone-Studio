@@ -192,7 +192,19 @@ function PhoneRuntime({
   }, [creator, ready]);
   const s = external ?? own;
   const runtimeRef = useRef(s);
-  runtimeRef.current = s;
+  const renderedRuntime = useRef(s);
+  if (renderedRuntime.current !== s) {
+    renderedRuntime.current = s;
+    runtimeRef.current = s;
+  }
+  const lastTick = useRef(performance.now());
+  const advanceClock = () => {
+    const now = performance.now();
+    const next = advance(work, runtimeRef.current, now - lastTick.current);
+    lastTick.current = now;
+    runtimeRef.current = next;
+    return next;
+  };
   const update = (next: Runtime) => {
     runtimeRef.current = next;
     setOwn(next);
@@ -229,11 +241,33 @@ function PhoneRuntime({
         .catch(() => setLoadError("存档失败，请检查浏览器存储权限。"));
   }, [own, creator, work.id, external, ready]);
   useEffect(() => {
+    lastTick.current = performance.now();
+  }, [creator, ready, work.id, work.updatedAt]);
+  const nextDeadline = Math.min(
+    ...(s.scheduled ?? []).map(({ due }) => due),
+    Infinity,
+  );
+  useEffect(() => {
     if (creator || !ready) return;
-    const interval = setInterval(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    const scheduleTick = () => {
+      const current = runtimeRef.current;
+      const deadline = Math.min(
+        ...(current.scheduled ?? []).map(({ due }) => due),
+        Infinity,
+      );
+      const remaining =
+        deadline -
+        (current.elapsedMs ?? 0) -
+        (performance.now() - lastTick.current);
+      timer = setTimeout(
+        tick,
+        Math.min(1000, Math.max(0, Math.ceil(remaining))),
+      );
+    };
+    const tick = () => {
       const previous = runtimeRef.current;
-      const next = advance(work, previous, 1000);
-      runtimeRef.current = next;
+      const next = advanceClock();
       const changed =
         next.time !== previous.time ||
         next.trace.join() !== previous.trace.join() ||
@@ -242,11 +276,13 @@ function PhoneRuntime({
         Math.floor((next.elapsedMs ?? 0) / 5000) !==
           Math.floor((previous.elapsedMs ?? 0) / 5000);
       if (changed) update(next);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [creator, ready, locked, work.id, work.updatedAt]);
+      scheduleTick();
+    };
+    scheduleTick();
+    return () => clearTimeout(timer);
+  }, [creator, ready, locked, work.id, work.updatedAt, nextDeadline]);
   const event = (event: string, target: string) => {
-    if (!creator) update(dispatch(work, runtimeRef.current, event, target));
+    if (!creator) update(dispatch(work, advanceClock(), event, target));
   };
   const captureApp = () => {
     if (!app) return;
@@ -472,7 +508,7 @@ function PhoneRuntime({
                   onBack={() => setApp("")}
                   onSettings={onSettings}
                   onUi={(key, value) => {
-                    const current = runtimeRef.current;
+                    const current = advanceClock();
                     update(
                       dispatch(
                         work,

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import template from "../../stories/template/story.json";
-import { dispatch, visible } from "../engine";
+import { advance, dispatch, visible } from "../engine";
 import { initialRuntime } from "../schema";
 import example from "../../tests/fixtures/story-example/story.json";
 import { compileStory } from "./compiler";
@@ -97,10 +97,17 @@ it("delivers the KakaoTalk reminder once and replies only when the matching thre
     "variable",
     "ui:twitter:" + likeKey,
   );
+  state = advance(work, state, 2999);
+  expect(visible(message, state)).toBe(false);
+  expect(state.notifications).toEqual([]);
+  state = advance(work, state, 1);
   expect(visible(message, state)).toBe(true);
   expect(state.notifications).toEqual(["kakao/小梅:小梅\n" + message.body]);
   expect(visible(reply, openThread(state, "Sam"))).toBe(false);
   state = openThread(state, "小梅");
+  state = advance(work, state, 999);
+  expect(visible(reply, state)).toBe(false);
+  state = advance(work, state, 1);
   expect(visible(reply, state)).toBe(true);
   expect(reply.outgoing).toBe(true);
   expect(reply.body).toBe("……");
