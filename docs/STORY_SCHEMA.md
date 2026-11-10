@@ -19,7 +19,7 @@
 
 KakaoTalk 的无消息联系人可以写在 `content.kakao`，以 `title` 填显示备注并设置 `meta.contact="true"`。同名会话可继续通过 `chats` 添加消息。会话内任一条记录有 `meta.pinned="true"` 时，该会话排在列表顶部。
 
-通知动作的 value 可用 App ID、冒号、标题、换行、正文的顺序编写，例如 `xianyu:降价提醒\n宝贝降价了`。既有的“App 名称：正文”格式仍可用。
+通知动作的 value 可用 App ID、冒号、标题、换行、正文的顺序编写，例如 `xianyu:降价提醒\n宝贝降价了`。既有的“App 名称：正文”格式仍可用。 要让通知直接打开聊天，可用 `kakao/小梅:小梅\n正文`。打开聊天时会触发 `openThread` 事件，目标格式为 `kakao:小梅`。
 
 测试step支持event/target、password、advanceMs、choose。只验证通知的路径可以省略 ending，通过 expectNotifications 检查通知列表（空数组表示没有通知）。测试是指定路径的可达性证据，不是对任意用户自定义条件的数学穷举证明。未知密码、隐藏内容、悬空引用、无测试结局会失败。
 

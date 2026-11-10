@@ -7,12 +7,14 @@ export function notificationContent(text: string, apps: Work["apps"]) {
   const separator = text.search(/[:：]/);
   const sender = separator > 0 ? text.slice(0, separator) : "信息";
   const titleEnd = text.indexOf("\n", separator + 1);
-  const appById = apps.find((a) => a.id === sender);
+  const [appId, thread] = sender.split("/", 2);
+  const appById = apps.find((a) => a.id === appId);
   if (appById && titleEnd > separator + 1) {
     return {
       title: text.slice(separator + 1, titleEnd),
       body: text.slice(titleEnd + 1),
       appId: appById.id,
+      thread,
     };
   }
   const app = apps.find((a) => a.name === sender);
@@ -20,6 +22,7 @@ export function notificationContent(text: string, apps: Work["apps"]) {
     title: sender,
     body: separator > 0 ? text.slice(separator + 1) : text,
     appId: app?.id ?? "messages",
+    thread: undefined,
   };
 }
 export function SystemNotifications({
@@ -31,7 +34,7 @@ export function SystemNotifications({
 }: {
   notices: string[];
   apps: Work["apps"];
-  onOpen: () => void;
+  onOpen: (notice: ReturnType<typeof notificationContent>) => void;
   onDismiss: (index: number) => void;
   compact?: boolean;
 }) {
@@ -62,7 +65,7 @@ export function SystemNotifications({
                 if (info.offset.x < -80) onDismiss(index);
               }}
             >
-              <button className="notice-open" onClick={onOpen}>
+              <button className="notice-open" onClick={() => onOpen(n)}>
                 <span className="notice-app-art">
                   <AppArtwork id={n.appId} />
                 </span>

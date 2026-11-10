@@ -134,6 +134,7 @@ function PhoneRuntime({
   onRuntime?: (s: Runtime) => void;
 }) {
   const [app, setApp] = useState("");
+  const [thread, setThread] = useState("");
   const [homeRequest, setHomeRequest] = useState(0);
   const [locked, setLocked] = useState(!creator);
   const [pinOpen, setPinOpen] = useState(false);
@@ -266,15 +267,17 @@ function PhoneRuntime({
     for (const id of appSnapshots.current.keys())
       if (!recent.includes(id) && id !== app) appSnapshots.current.delete(id);
   };
-  const open = (id: string) => {
+  const open = (id: string, initialThread = "") => {
     if (!work.apps.some((a) => a.id === id && a.installed)) return;
     setApp(id);
+    setThread(initialThread);
     setKeyboard(false);
     setRecent((v) => [id, ...v.filter((a) => a !== id)].slice(0, 8));
     setFolder("");
     setPanel("");
     onOpen?.(id);
     event("openApp", id);
+    if (initialThread) event("openThread", `${id}:${initialThread}`);
   };
   const installedApps = work.apps.filter((a) => a.installed);
   const apps = installedApps.filter((a) => a.visible);
@@ -299,10 +302,9 @@ function PhoneRuntime({
     if (!locked && work.phone.notifications && count > noticesSeen.current) {
       const notice = s.notifications.at(-1) || "";
       setBanner(notice);
+      const content = notificationContent(notice, work.apps);
       const duration =
-        notificationContent(notice, work.apps).appId === "xianyu"
-          ? 10000
-          : 4500;
+        content.thread || content.appId === "xianyu" ? 10000 : 4500;
       const timer = setTimeout(() => setBanner(""), duration);
       noticesSeen.current = count;
       return () => clearTimeout(timer);
@@ -459,6 +461,11 @@ function PhoneRuntime({
                   ]}
                   creator={creator}
                   state={s}
+                  thread={thread}
+                  setThread={(name) => {
+                    setThread(name);
+                    if (name) event("openThread", `${app}:${name}`);
+                  }}
                   onRead={(id) => event("read", id)}
                   onEdit={(item) => onEdit?.(app, item)}
                   onAdd={() => onAdd?.(app)}
@@ -562,9 +569,11 @@ function PhoneRuntime({
                     <SystemNotifications
                       notices={s.notifications}
                       apps={work.apps}
-                      onOpen={() => {
+                      onOpen={(notice) => {
                         setPanel("");
                         if (locked) beginUnlock();
+                        else if (notice.thread)
+                          open(notice.appId, notice.thread);
                         else if (installedApps.some((a) => a.id === "messages"))
                           open("messages");
                       }}
@@ -691,7 +700,9 @@ function PhoneRuntime({
               data-app={bannerNotice.appId}
               onClick={() => {
                 setBanner("");
-                setPanel("notification");
+                if (bannerNotice.thread)
+                  open(bannerNotice.appId, bannerNotice.thread);
+                else setPanel("notification");
               }}
             >
               <AppIcon id={bannerNotice.appId} small />
@@ -865,6 +876,8 @@ function AppContent({
   items,
   creator,
   state,
+  thread,
+  setThread,
   onRead,
   onEdit,
   onAdd,
@@ -878,6 +891,8 @@ function AppContent({
   items: Item[];
   creator: boolean;
   state: Runtime;
+  thread: string;
+  setThread: (name: string) => void;
   onRead: (id: string) => void;
   onEdit: (item: Item) => void;
   onAdd: () => void;
@@ -888,7 +903,6 @@ function AppContent({
 }) {
   const [detail, setDetail] = useState<Item | null>(null);
   const [photoList, setPhotoList] = useState<readonly Item[]>([]);
-  const [thread, setThread] = useState("");
   const [tab, setTab] = useState(app.tabs[0]);
   const [q, setQ] = useState("");
   const [pw, setPw] = useState("");

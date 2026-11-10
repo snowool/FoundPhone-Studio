@@ -3,7 +3,7 @@
   "id": "snowool-foundphone",
   "title": "捡手机",
   "description": "自定义手机预览",
-  "revision": 6,
+  "revision": 7,
   "phone": {
     "owner": "Bucky Barnes",
     "date": "2026-10-25",
@@ -505,6 +505,17 @@
     ],
     "twitter": [
       {
+        "id": "twitter-superhero-insurance",
+        "title": "超级英雄保险",
+        "body": "下班回家发现蜘蛛侠和绿巨人在我家门口打架。现在房子前半部分消失了，车在客厅。刚给老板发消息说明天可能去不了，他问我能不能居家办公。我也想问还能不能居家😣😣\n现在只想知道巴恩斯议员提的超级英雄保险通过了吗",
+        "sender": "Nora",
+        "kind": "post",
+        "time": "2026-07-29",
+        "meta": {
+          "handle": "noraafterwork"
+        }
+      },
+      {
         "id": "test-item-twitter",
         "title": "测试内容",
         "body": "这是一条测试内容。",
@@ -671,6 +682,21 @@
         "meta": {
           "contact": "true"
         }
+      },
+      {
+        "id": "kakao-xiaomei-meeting",
+        "title": "小梅",
+        "sender": "小梅",
+        "body": "明天早上九点，请准时带着你家队长到会场开会哦😉",
+        "hidden": true
+      },
+      {
+        "id": "kakao-xiaomei-meeting-reply",
+        "title": "小梅",
+        "sender": "Bucky Barnes",
+        "body": "……",
+        "hidden": true,
+        "outgoing": true
       }
     ],
     "messages": [
@@ -792,6 +818,51 @@
           "value": "xianyu:降价提醒\n你浏览过宝贝“HotToys 美国队长7.0倒模1/1比例”降价了"
         }
       ]
+    },
+    {
+      "id": "twitter-insurance-liked",
+      "label": "点赞后收到小梅的会议提醒",
+      "event": "variable",
+      "target": "ui:twitter:liked-twitter-superhero-insurance",
+      "conditions": [
+        {
+          "key": "ui:twitter:liked-twitter-superhero-insurance",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "actions": [
+        {
+          "type": "unlock",
+          "key": "kakao-xiaomei-meeting",
+          "value": true
+        },
+        {
+          "type": "notification",
+          "key": "",
+          "value": "kakao/小梅:小梅\n明天早上九点，请准时带着你家队长到会场开会哦😉"
+        }
+      ]
+    },
+    {
+      "id": "kakao-xiaomei-opened",
+      "label": "打开小梅的聊天后自动回复",
+      "event": "openThread",
+      "target": "kakao:小梅",
+      "conditions": [
+        {
+          "key": "unlocked:kakao-xiaomei-meeting",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "actions": [
+        {
+          "type": "unlock",
+          "key": "kakao-xiaomei-meeting-reply",
+          "value": true
+        }
+      ]
     }
   ],
   "tests": [
@@ -900,6 +971,16 @@
       "expectNotifications": [
         "xianyu:降价提醒\n你浏览过宝贝“HotToys 美国队长7.0倒模1/1比例”降价了"
       ]
+    },
+    {
+      "name": "未点赞时打开小梅的聊天不会收到提醒",
+      "steps": [
+        {
+          "event": "openThread",
+          "target": "kakao:小梅"
+        }
+      ],
+      "expectNotifications": []
     }
   ],
   "restrictAppCatalog": true

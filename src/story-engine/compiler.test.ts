@@ -1,4 +1,7 @@
 import { describe, it, expect } from "vitest";
+import template from "../../stories/template/story.json";
+import { dispatch, visible } from "../engine";
+import { initialRuntime } from "../schema";
 import example from "../../tests/fixtures/story-example/story.json";
 import { compileStory } from "./compiler";
 import { testStory } from "./testStory";
@@ -70,4 +73,37 @@ it("blank default has no story and needs no ending test", () => {
   expect(Object.values(work.data).flat()).toEqual([]);
   expect(work.mode).toBe("explore");
   expect(testStory(story, work)).toEqual([]);
+});
+
+it("delivers the KakaoTalk reminder once and replies only when the matching thread opens", () => {
+  const { work } = compileStory(template);
+  const message = work.data.kakao.find(
+    (item) => item.id === "kakao-xiaomei-meeting",
+  )!;
+  const reply = work.data.kakao.find(
+    (item) => item.id === "kakao-xiaomei-meeting-reply",
+  )!;
+  const likeKey = "liked-twitter-superhero-insurance";
+  const openThread = (
+    state: ReturnType<typeof initialRuntime>,
+    title: string,
+  ) => dispatch(work, state, "openThread", "kakao:" + title);
+  let state = openThread(initialRuntime(work), "小梅");
+  expect(visible(message, state)).toBe(false);
+  expect(visible(reply, state)).toBe(false);
+  state = dispatch(
+    work,
+    { ...state, ui: { twitter: { [likeKey]: true } } },
+    "variable",
+    "ui:twitter:" + likeKey,
+  );
+  expect(visible(message, state)).toBe(true);
+  expect(state.notifications).toEqual(["kakao/小梅:小梅\n" + message.body]);
+  expect(visible(reply, openThread(state, "Sam"))).toBe(false);
+  state = openThread(state, "小梅");
+  expect(visible(reply, state)).toBe(true);
+  expect(reply.outgoing).toBe(true);
+  expect(reply.body).toBe("……");
+  state = dispatch(work, state, "variable", "ui:twitter:" + likeKey);
+  expect(state.notifications).toHaveLength(1);
 });
