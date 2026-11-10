@@ -43,7 +43,7 @@ export type SkinProps = {
   items: Item[];
   creator: boolean;
   onRead: (id: string) => void;
-  onItem: (i: Item) => void;
+  onItem: (i: Item, photoList?: readonly Item[]) => void;
   onAdd: () => void;
   onBack: () => void;
   thread: string;

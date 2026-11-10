@@ -300,7 +300,9 @@ function PhoneRuntime({
       const notice = s.notifications.at(-1) || "";
       setBanner(notice);
       const duration =
-        notificationContent(notice, work.apps).appId === "xianyu" ? 10000 : 4500;
+        notificationContent(notice, work.apps).appId === "xianyu"
+          ? 10000
+          : 4500;
       const timer = setTimeout(() => setBanner(""), duration);
       noticesSeen.current = count;
       return () => clearTimeout(timer);
@@ -885,6 +887,7 @@ function AppContent({
   work: Work;
 }) {
   const [detail, setDetail] = useState<Item | null>(null);
+  const [photoList, setPhotoList] = useState<readonly Item[]>([]);
   const [thread, setThread] = useState("");
   const [tab, setTab] = useState(app.tabs[0]);
   const [q, setQ] = useState("");
@@ -903,14 +906,21 @@ function AppContent({
       : tab === app.tabs[0]
         ? shown
         : shown.filter((i) => i.folder === tab);
-  const read = (i: Item) => {
+  const read = (i: Item, album?: readonly Item[]) => {
     if (creator) {
       onEdit(i);
       return;
     }
+    if (album) setPhotoList(album);
     setDetail(i);
     if (!i.password || unlocks.includes(i.id)) onRead(i.id);
   };
+  const currentPhotos = photoList
+    .map((photo) => shown.find((item) => item.id === photo.id))
+    .filter((photo) => photo !== undefined);
+  const photoIndex = currentPhotos.findIndex((item) => item.id === detail?.id);
+  const previousPhoto = currentPhotos[photoIndex - 1];
+  const nextPhoto = photoIndex >= 0 ? currentPhotos[photoIndex + 1] : undefined;
   const chats = [...new Set(shown.map((i) => i.title))];
   const back = () => {
     if (detail) setDetail(null);
@@ -1029,7 +1039,14 @@ function AppContent({
             />
           ) : nativeDetailApps.has(app.id) &&
             (!detail.password || unlocks.includes(detail.id)) ? (
-            <NativeDetail app={app.id} item={detail} back={back} />
+            <NativeDetail
+              key={app.id === "photos" ? detail.id : app.id}
+              app={app.id}
+              item={detail}
+              back={back}
+              previousPhoto={previousPhoto && (() => read(previousPhoto))}
+              nextPhoto={nextPhoto && (() => read(nextPhoto))}
+            />
           ) : (
             <>
               <div className="app-nav">

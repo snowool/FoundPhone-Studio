@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useRef, useState, type PointerEvent } from "react";
 import {
   ChevronLeft,
+  ChevronRight,
   MoreHorizontal,
   Share,
   Heart,
@@ -27,14 +28,38 @@ export function NativeDetail({
   app,
   item,
   back,
+  previousPhoto,
+  nextPhoto,
 }: {
   app: string;
   item: Item;
   back: () => void;
+  previousPhoto?: () => void;
+  nextPhoto?: () => void;
 }) {
   const [favorite, setFavorite] = useState(item.favorite),
     [copied, setCopied] = useState(false),
     [call, setCall] = useState(false);
+  const swipe = useRef<{ id: number; x: number; y: number } | null>(null);
+  const startSwipe = (event: PointerEvent<HTMLDivElement>) => {
+    if (!event.isPrimary || event.button !== 0) return;
+    const target = event.target as Element;
+    if (target.closest("button")) return;
+    const video = target.closest("video");
+    if (video && event.clientY >= video.getBoundingClientRect().bottom - 48)
+      return;
+    swipe.current = { id: event.pointerId, x: event.clientX, y: event.clientY };
+    if (!video) event.currentTarget.setPointerCapture(event.pointerId);
+  };
+  const finishSwipe = (event: PointerEvent<HTMLDivElement>) => {
+    const start = swipe.current;
+    if (start?.id !== event.pointerId) return;
+    swipe.current = null;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy) * 1.2)
+      (dx > 0 ? previousPhoto : nextPhoto)?.();
+  };
   const media = safeMedia(item.media),
     name =
       app === "notes"
@@ -81,7 +106,14 @@ export function NativeDetail({
       )}
       {app === "photos" ? (
         <>
-          <div className="native-photo-stage">
+          <div
+            className="native-photo-stage"
+            onPointerDown={startSwipe}
+            onPointerUp={finishSwipe}
+            onPointerCancel={() => {
+              swipe.current = null;
+            }}
+          >
             {media ? (
               item.kind === "video" ? (
                 <video
@@ -91,13 +123,33 @@ export function NativeDetail({
                   playsInline
                 />
               ) : (
-                <img src={media} alt={item.title} />
+                <img src={media} alt={item.title} draggable={false} />
               )
             ) : (
               <div className="native-photo-caption">
                 <h2>{item.title}</h2>
                 <p>{item.body}</p>
               </div>
+            )}
+            {previousPhoto && (
+              <button
+                type="button"
+                className="native-photo-prev"
+                aria-label="上一张"
+                onClick={previousPhoto}
+              >
+                <ChevronLeft size={20} />
+              </button>
+            )}
+            {nextPhoto && (
+              <button
+                type="button"
+                className="native-photo-next"
+                aria-label="下一张"
+                onClick={nextPhoto}
+              >
+                <ChevronRight size={20} />
+              </button>
             )}
           </div>
           <footer className="native-detail-toolbar">

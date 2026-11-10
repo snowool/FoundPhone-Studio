@@ -225,7 +225,7 @@ export function PhotosSkin(p: Props) {
                 <button
                   aria-label={`查看${i.title}`}
                   key={i.id}
-                  onClick={() => p.onItem(i)}
+                  onClick={() => p.onItem(i, list)}
                 >
                   {i.kind === "video" ? (
                     <>

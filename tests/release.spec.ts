@@ -144,3 +144,31 @@ test("custom phone requires 0704 and exposes only its configured apps", async ({
     banner.locator('[data-original-icon="xianyu"] img'),
   ).toBeVisible();
 });
+
+test("the custom album supports swiping between photos", async ({ page }) => {
+  await page.setViewportSize({ width: 393, height: 852 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "轻触解锁" }).click();
+  for (const digit of "0704")
+    await page.getByRole("button", { name: "密码键" + digit }).click();
+
+  await page.getByRole("button", { name: "打开相册" }).click();
+  await page.getByRole("button", { name: "查看照片 01" }).click();
+  const stage = page.locator(".native-photo-stage");
+  const bounds = await stage.boundingBox();
+  if (!bounds) throw new Error("Photo viewer is not visible");
+
+  const swipe = async (from: number, to: number) => {
+    const y = bounds.y + bounds.height / 2;
+    await page.mouse.move(bounds.x + bounds.width * from, y);
+    await page.mouse.down();
+    await page.mouse.move(bounds.x + bounds.width * to, y, { steps: 5 });
+    await page.mouse.up();
+  };
+
+  await expect(stage.getByRole("button", { name: "上一张" })).toHaveCount(0);
+  await swipe(0.75, 0.25);
+  await expect(stage.getByRole("img", { name: "照片 02" })).toBeVisible();
+  await swipe(0.25, 0.75);
+  await expect(stage.getByRole("img", { name: "照片 01" })).toBeVisible();
+});
