@@ -549,14 +549,15 @@
   color: white;
   text-shadow: 0 1px 3px #0005;
 }
-.ios18 .wallpaper-p1 {
-  background: #24211e url("./wallpapers/p1.png") center/cover no-repeat;
+.ios18 .wallpaper-steve-and-cat {
+  background: #dce8ec url("./wallpapers/steve-and-cat.jpg") center/cover no-repeat;
 }
-.ios18 .wallpaper-p1 .wallpaper-orb {
+.ios18 .wallpaper-steve-and-cat .wallpaper-orb {
   display: none;
 }
-.ios18 .wallpaper-p1:not(.in-app) .status-bar,
-.ios18 .wallpaper-p1 .app-name {
+.ios18 .wallpaper-steve-and-cat:not(.in-app) .status-bar,
+.ios18 .wallpaper-steve-and-cat .app-name,
+.ios18 .wallpaper-steve-and-cat .lock-clock-block {
   color: white;
   text-shadow: 0 1px 4px #000;
 }

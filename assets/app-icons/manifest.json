@@ -191,6 +191,10 @@
     "kakao": {
       "file": "kakao.jpg",
       "sha256": "1033985cf59d38412bf2bd653844be8471559fa45af3b9479046b6226b10b322"
+    },
+    "xianyu": {
+      "file": "xianyu.jpg",
+      "sha256": "acf224b955b799de0a2529a0b5064e936a3122318905d0faff08a0ab7fea16da"
     }
   }
 }

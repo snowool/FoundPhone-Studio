@@ -12,6 +12,9 @@
   filter: none;
   box-shadow: none;
 }
+.original-icon-wrap[data-original-icon="xianyu"] > .original-app-artwork {
+  object-fit: cover;
+}
 .phone-shell .app-icon:has(.original-icon-wrap) {
   background: transparent !important;
   box-shadow: none;
