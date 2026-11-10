@@ -266,10 +266,16 @@ export function PhotosSkin(p: Props) {
 export function CameraSkin(p: Props) {
   const [mode, setMode] = useState("照片"),
     [index, setIndex] = useState(0);
-  const frames = p.items.filter((i) =>
-    mode === "视频" ? i.kind === "video" : i.kind !== "video",
+  const frames = p.items.filter(
+    (i) =>
+      i.meta.viewfinder === "true" ||
+      (mode === "视频" ? i.kind === "video" : i.kind !== "video"),
   );
   const frame = frames[index % Math.max(frames.length, 1)];
+  const viewfinder =
+    frame?.kind === "video" && frame.meta.viewfinder === "true"
+      ? safeMedia(frame.media)
+      : undefined;
   return (
     <div className="catalog-skin native-camera">
       <Header p={p} />
@@ -278,7 +284,20 @@ export function CameraSkin(p: Props) {
         <span>{mode === "视频" ? "HD · 30" : "4:3"}</span>
       </div>
       <div className="camera-view">
-        {frame ? <Media item={frame} /> : <p>未设置取景画面</p>}
+        {viewfinder ? (
+          <video
+            src={viewfinder}
+            aria-label="相机取景画面"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+        ) : frame ? (
+          <Media item={frame} />
+        ) : (
+          <p>未设置取景画面</p>
+        )}
         <div className="camera-grid" />
       </div>
       <div className="camera-mode">
