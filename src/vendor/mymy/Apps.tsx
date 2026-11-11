@@ -75,7 +75,7 @@ export function MymyKakao(p: SkinProps) {
     [query, setQuery] = useState(""),
     [menu, setMenu] = useState(false);
   const list = kakaoThreads(p.items);
-  const { messages, typing } = useScriptedMessages(p.items, p.thread);
+  const { messages, typing } = useScriptedMessages(p.items, p.thread, p.ui, p.onUi);
   const scroll = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const node = scroll.current;

@@ -284,6 +284,21 @@ function PhoneRuntime({
   const event = (event: string, target: string) => {
     if (!creator) update(dispatch(work, advanceClock(), event, target));
   };
+  useEffect(() => {
+    if (creator || !ready) return;
+    const presence = () => {
+      const target = !locked && !document.hidden && thread && app ? `${app}:${thread}` : "";
+      // Clear presence before advancing time, so leaving cannot send a due reply.
+      const present = dispatch(work, runtimeRef.current, "threadPresence", target);
+      const now = performance.now();
+      const next = advance(work, present, now - lastTick.current);
+      lastTick.current = now;
+      update(next);
+    };
+    presence();
+    document.addEventListener("visibilitychange", presence);
+    return () => document.removeEventListener("visibilitychange", presence);
+  }, [app, thread, locked, creator, ready, work.id, work.updatedAt]);
   const captureApp = () => {
     if (!app) return;
     const current = shell.current?.querySelector<HTMLElement>(".app-screen");

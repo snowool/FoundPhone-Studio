@@ -167,6 +167,13 @@ export function dispatch(
   target = "",
 ): Runtime {
   const s = structuredClone(previous);
+  if (event === "threadPresence") {
+    s.variables.activeThread = target;
+    s.scheduled = (s.scheduled ?? []).filter(timer => {
+      const node = w.nodes.find(n => n.id === timer.nodeId);
+      return !node?.conditions.some(c => c.key === "activeThread" && !testCondition(c, s));
+    });
+  }
   if (event === "choose") s.choices = [];
   if (event === "openApp" && !s.visited.includes(target))
     s.visited.push(target);

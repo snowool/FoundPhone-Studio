@@ -1,21 +1,28 @@
 import { useEffect, useRef, useState } from "react";
-import type { Item } from "./schema";
+import type { Item, UiValue } from "./schema";
 import "./scripted-messages.css";
 
 // Animate newly revealed messages only; opening saved history never replays it.
-export function useScriptedMessages(items: Item[], thread: string) {
+export function useScriptedMessages(items: Item[], thread: string, ui?: Record<string, UiValue>, onUi?: (key: string, value: UiValue) => void) {
+  const initialIds = () => items.filter(i => i.meta.scriptedPlayback !== "true" || ui?.["scripted-sent-" + i.id] === true).map(i => i.id);
   const latest = useRef(items);
   latest.current = items;
-  const [frame, setFrame] = useState({ thread, ids: items.map(i => i.id), text: "", active: "" });
+  const [frame, setFrame] = useState({ thread, ids: initialIds(), text: "", active: "" });
   const progress = useRef({ id: "", step: 0 });
   if (frame.thread !== thread) {
     progress.current = { id: "", step: 0 };
-    setFrame({ thread, ids: items.map(i => i.id), text: "", active: "" });
+    setFrame({ thread, ids: initialIds(), text: "", active: "" });
   }
+  useEffect(() => {
+    for (const item of items) {
+      if (item.meta.scriptedPlayback === "true" && frame.ids.includes(item.id) && !ui?.["scripted-sent-" + item.id]) onUi?.("scripted-sent-" + item.id, true);
+    }
+  }, [frame.ids, items, ui, onUi]);
   useEffect(() => {
     if (!thread) return;
     const timer = window.setInterval(() => {
       setFrame(current => {
+        if (document.hidden) return current;
         const next = latest.current.find(i => i.title === thread && i.meta.contact !== "true" && !current.ids.includes(i.id));
         if (!next) return current;
         if (!next.outgoing || next.media || !next.body) {
