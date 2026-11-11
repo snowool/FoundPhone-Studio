@@ -3,7 +3,7 @@
   "id": "snowool-foundphone",
   "title": "捡手机",
   "description": "自定义手机预览",
-  "revision": 9,
+  "revision": 10,
   "phone": {
     "owner": "Bucky Barnes",
     "date": "2026-10-25",
@@ -527,14 +527,6 @@
         "meta": {
           "handle": "noraafterwork"
         }
-      },
-      {
-        "id": "test-item-twitter",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
       }
     ],
     "spotify": [

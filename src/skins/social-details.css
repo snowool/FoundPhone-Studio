@@ -349,3 +349,14 @@
   font-size: inherit;
   line-height: inherit;
 }
+
+.ios18 .x-post-detail .post-detail-body > img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 60dvh;
+  object-fit: contain;
+  margin-top: 12px;
+  border-radius: 14px;
+}

@@ -628,3 +628,22 @@
   width: 25px;
   height: 25px;
 }
+
+/* Keep timeline media inside the phone's post column. */
+.mymy-ui.mymy-x .kzxv {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: auto;
+  padding: 0;
+  margin-top: 10px;
+  border-radius: 14px;
+}
+.mymy-ui.mymy-x .kzxv img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 55dvh;
+  object-fit: contain;
+}
