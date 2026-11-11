@@ -1,3 +1,4 @@
+import { useScriptedMessages, ScriptedKeyboard } from "../ScriptedMessages";
 import { QQThread } from "./QQThread";
 import { NativeComposer } from "../DeviceSystem";
 import {
@@ -112,6 +113,7 @@ function ChatRows({
 export function MessagesSkin(p: Props) {
   const { q, setQ, items } = useContent(p, "信息");
   const [unread, setUnread] = useState(false);
+  const { messages, typing } = useScriptedMessages(items, p.thread);
   return (
     <div className="catalog-skin native-messages">
       <Header
@@ -129,12 +131,13 @@ export function MessagesSkin(p: Props) {
         <>
           <Bubbles
             p={p}
-            items={items.filter(
-              (i) => i.title === p.thread && i.meta.contact !== "true",
-            )}
+            items={messages}
             className="sms-bubbles"
           />
-          <Composer p={p} />
+          {typing ? <>
+            <div className="catalog-composer"><input aria-label="巴基正在输入" readOnly value={typing.text} /></div>
+            <ScriptedKeyboard text={typing.text} />
+          </> : <Composer p={p} />}
         </>
       ) : (
         <div className="catalog-scroll">

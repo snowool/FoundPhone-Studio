@@ -4,7 +4,7 @@ import {
   SliderModule,
 } from "./vendor/ios-web/ControlModules";
 import { UnlockHandle } from "./vendor/ios-web/UnlockHandle";
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import {
   LockKeyhole,
   Flashlight,
@@ -47,12 +47,12 @@ export function NativeComposer({
   creator: boolean;
   onAdd: () => void;
 }) {
-  const open = useContext(KeyboardContext);
   return (
     <button
       className="native-compose-field"
-      aria-label={creator ? "添加消息" : "输入消息"}
-      onClick={() => (creator ? onAdd() : open(true))}
+      aria-label={creator ? "添加消息" : "仅播放预设对话"}
+      disabled={!creator}
+      onClick={() => creator && onAdd()}
     >
       {creator ? "添加消息" : ""}
     </button>

@@ -29,7 +29,8 @@ import {
 import type { SkinProps } from "../../AppSkins";
 import { Avatar, Media } from "../../skins/shared";
 import { useSkinState } from "../../skinState";
-import { makeItem, type Item } from "../../schema";
+import type { Item } from "../../schema";
+import { useScriptedMessages, ScriptedKeyboard } from "../../ScriptedMessages";
 import "./ui.css";
 import "./adapter.css";
 function kakaoThreads(items: Item[]) {
@@ -71,42 +72,11 @@ function Back({ onClick }: { onClick: () => void }) {
 }
 export function MymyKakao(p: SkinProps) {
   const [tab, setTab] = useSkinState<string>(p, "mymyTab", "聊天"),
-    [sent, setSent] = useSkinState<string[]>(p, "mymyKktSent", []),
-    [draft, setDraft] = useState(""),
     [query, setQuery] = useState(""),
     [menu, setMenu] = useState(false);
-  const list = kakaoThreads(p.items),
-    messages = [
-      ...p.items.filter(
-        (i) => i.title === p.thread && i.meta.contact !== "true",
-      ),
-      ...sent.flatMap((raw, index) => {
-        try {
-          const entry: unknown = JSON.parse(raw);
-          if (
-            !Array.isArray(entry) ||
-            entry.length !== 3 ||
-            !entry.every((v) => typeof v === "string") ||
-            entry[0] !== p.thread
-          )
-            return [];
-          return [
-            makeItem({
-              id: "local-kkt-" + index,
-              title: entry[0],
-              body: entry[1],
-              time: entry[2],
-              sender: p.owner || "机主",
-              outgoing: true,
-              meta: { local: "true" },
-            }),
-          ];
-        } catch {
-          return [];
-        }
-      }),
-    ],
-    scroll = useRef<HTMLDivElement>(null);
+  const list = kakaoThreads(p.items);
+  const { messages, typing } = useScriptedMessages(p.items, p.thread);
+  const scroll = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const node = scroll.current;
     if (node) node.scrollTop = node.scrollHeight;
@@ -165,46 +135,19 @@ export function MymyKakao(p: SkinProps) {
             })}
             {!messages.length && <Blank />}
           </div>
-          <form
-            className="kzinp"
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (draft.trim()) {
-                setSent([
-                  ...sent,
-                  JSON.stringify([
-                    p.thread,
-                    draft.trim(),
-                    p.virtualTime || "09:41",
-                  ]),
-                ]);
-                setDraft("");
-              }
-            }}
-          >
-            <button
-              type="button"
-              aria-label="添加聊天内容"
-              onClick={() => (p.creator ? p.onAdd() : setMenu(!menu))}
-            >
-              <Plus size={21} />
-            </button>
+          <div className="kzinp" aria-label="预设对话">
+            <Plus size={21} aria-hidden="true" />
             <input
               aria-label="KKT消息"
-              placeholder="输入消息"
-              value={draft}
-              maxLength={2000}
-              onChange={(e) => setDraft(e.target.value)}
+              placeholder="仅播放预设对话"
+              value={typing?.text || ""}
+              readOnly
+              tabIndex={-1}
             />
             <Smile size={22} />
-            <button
-              className={draft.trim() ? "go" : ""}
-              aria-label="发送KKT消息"
-              disabled={!draft.trim()}
-            >
-              ↑
-            </button>
-          </form>
+            <button type="button" aria-label="发送KKT消息" disabled>↑</button>
+          </div>
+          {typing && <ScriptedKeyboard text={typing.text} />}
           {menu && (
             <div className="mymy-local-menu">
               <strong>{p.thread}</strong>
