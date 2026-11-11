@@ -3,7 +3,7 @@
   "id": "snowool-foundphone",
   "title": "捡手机",
   "description": "自定义手机预览",
-  "revision": 11,
+  "revision": 12,
   "phone": {
     "owner": "Bucky Barnes",
     "date": "2026-10-25",
@@ -34,12 +34,10 @@
     "mail",
     "clock",
     "maps",
-    "weather",
     "settings",
     "kakao",
     "tiktok",
     "twitter",
-    "spotify",
     "netflix",
     "xianyu"
   ],
@@ -302,16 +300,7 @@
         "meta": {}
       }
     ],
-    "notes": [
-      {
-        "id": "test-item-notes",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
-      }
-    ],
+    "notes": [],
     "calendar": [
       {
         "id": "test-item-calendar",
@@ -322,24 +311,18 @@
         "meta": {}
       }
     ],
-    "mail": [
-      {
-        "id": "test-item-mail",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
-      }
-    ],
+    "mail": [],
     "clock": [
       {
-        "id": "test-item-clock",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
+        "id": "alarm-nine-am",
+        "title": "闹钟",
+        "body": "上午九点",
+        "time": "09:00",
         "kind": "text",
-        "meta": {}
+        "meta": {
+          "clock": "09:00",
+          "enabled": "true"
+        }
       }
     ],
     "maps": [
@@ -352,16 +335,7 @@
         "meta": {}
       }
     ],
-    "weather": [
-      {
-        "id": "test-item-weather",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
-      }
-    ],
+    "weather": [],
     "settings": [
       {
         "id": "test-item-settings",
@@ -529,16 +503,7 @@
         }
       }
     ],
-    "spotify": [
-      {
-        "id": "test-item-spotify",
-        "title": "测试内容",
-        "body": "这是一条测试内容。",
-        "sender": "测试用户",
-        "kind": "text",
-        "meta": {}
-      }
-    ],
+    "spotify": [],
     "netflix": [
       {
         "id": "netflix-lotr",

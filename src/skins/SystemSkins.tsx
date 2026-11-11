@@ -575,7 +575,11 @@ export function MailSkin(p: Props) {
 }
 export function ClockSkin(p: Props) {
   const { tab, setTab, items } = useContent(p, "闹钟");
-  const [enabled, setEnabled] = useSkinState<string[]>(p, "alarms", []),
+  const [enabled, setEnabled] = useSkinState<string[]>(
+    p,
+    "alarms",
+    items.filter((item) => meta(item, "enabled") === "true").map((item) => item.id),
+  ),
     [seconds, setSeconds] = useState(0),
     [running, setRunning] = useState(false);
   useEffect(() => {
