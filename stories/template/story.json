@@ -286,7 +286,7 @@
         "id": "test-item-camera",
         "title": "相机取景",
         "kind": "video",
-        "media": "./story-media/camera-viewfinder.mp4",
+        "media": "./story-media/camera-viewfinder-ad327ba1.mp4",
         "meta": {
           "viewfinder": "true"
         }
