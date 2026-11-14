@@ -1,3 +1,5 @@
+import { Checklist } from "../checklist";
+import type { Runtime } from "../schema";
 import { useRef, useState, type ReactNode, type PointerEvent } from "react";
 import {
   Search,
@@ -26,6 +28,7 @@ import {
 } from "./layout";
 type Props = {
   work: Work;
+  variables?: Runtime["variables"];
   storeOpen?: boolean;
   closeStore?: () => void;
   layout: DeviceLayout;
@@ -57,8 +60,10 @@ function WidgetFace({
   widget,
   work,
   time,
+  variables = {},
 }: {
   widget: Widget;
+  variables?: Runtime["variables"];
   work: Work;
   time: string;
 }) {
@@ -101,11 +106,7 @@ function WidgetFace({
       ) : widget.type === "notes" ? (
         <>
           <strong>{glass ? "备忘录 · 待办" : "备忘录"}</strong>
-          {checklist ? <div className="widget-checklist">
-            {checklist.body.split("\n").filter(Boolean).slice(0, 3).map((line, index) =>
-              <small key={index}><span aria-hidden="true">○</span> {line.replace(/^[-*] |^\[[ x]\] /, "")}</small>,
-            )}
-          </div> : (work.data.notes || [])
+          {checklist ? <Checklist item={checklist} variables={variables} compact /> : (work.data.notes || [])
             .filter((i) => !i.hidden && !i.password)
             .slice(0, 3)
             .map((i) => <small key={i.id}>{i.title}</small>)}
@@ -470,7 +471,7 @@ export function HomeLauncher(p: Props) {
       {entry.app ? (
         p.icon({ ...entry.app, ...(dock ? { name: "" } : {}) })
       ) : entry.widget ? (
-        <WidgetFace widget={entry.widget} work={p.work} time={p.time} />
+        <WidgetFace widget={entry.widget} work={p.work} variables={p.variables} time={p.time} />
       ) : (
         <span className="app-icon-wrap">
           <span className="folder-icon">

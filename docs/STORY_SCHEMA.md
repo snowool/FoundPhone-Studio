@@ -32,3 +32,9 @@ KakaoTalk 的无消息联系人可以写在 `content.kakao`，以 `title` 填显
 可用 `variables.homeWidgets` 字符串配置默认小组件，例如 `"weather,notes"`。支持现有的 calendar、clock、weather、notes、battery，按顺序放置在图标前，每个占用 2×2 网格。设置 `variables.homeWidgetStyle="glass"` 使用半透明磨砂卡片；天气卡会合并显示公开日程，备忘录卡优先显示 `meta.checklist="true"` 记录正文的前三行。天气为故事静态数据，不请求真实定位或天气服务。点击卡片沿用对应 App 的打开行为。
 
 启用作者默认小组件后，桌面布局按内容 revision 隔离；递增 revision 时应用新的默认布局，玩家剧情存档仍由原存档系统管理。
+
+### 自动任务清单
+
+备忘录 `meta.checklist="true"` 时按正文每行呈现一个方框。可用 `meta.taskIds` 逗号分隔指定稳定任务 ID，`meta.taskPrefix` 指定变量前缀。变量 `<前缀>:<任务ID>:done` 为 true 时自动填色，详情和桌面小组件同步，完成状态沿用玩家存档。方框只显示任务进度，不通过手动点击冒充剧情完成。
+
+当前婚礼清单的完成节点为 `wedding-complete-<任务ID>`，各筹备互动实际完成后可通过 next 连接相应节点，或发送 `variable` 事件、target 为 `wedding:<任务ID>:confirmed`。具体订场地、选日期等剧情尚未编写，单纯打开备忘录不会完成任务。

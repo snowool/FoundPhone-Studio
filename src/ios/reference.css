@@ -770,3 +770,13 @@
 .ios18 .wechat-ui .wx-chat-row.wx-chat-pinned {
   background: #ededed;
 }
+
+.wedding-checklist { display: grid; gap: 18px; padding: 12px 0 24px; }
+.checklist-progress { color: #8b805e; }
+.checklist-row { display: flex; align-items: flex-start; gap: 12px; line-height: 1.5; }
+.checklist-square { flex: 0 0 19px; width: 19px; height: 19px; border: 1.5px solid #d2a640; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; margin-top: 2px; box-sizing: border-box; }
+.completed .checklist-square { background: #d2a640; color: #fff; }
+.completed > span:last-child { opacity: .55; text-decoration: line-through; }
+.wedding-checklist.compact { gap: 8px; padding: 5px 0; width: 100%; flex: 1; }
+.compact .checklist-row { gap: 6px; font-size: 10px; white-space: nowrap; }
+.compact .checklist-square { flex-basis: 12px; width: 12px; height: 12px; font-size: 9px; }

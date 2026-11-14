@@ -550,6 +550,7 @@ function PhoneRuntime({
                 storeOpen={app === "appstore"}
                 closeStore={() => setApp("")}
                 work={work}
+                variables={s.variables}
                 layout={deviceLayout.layout}
                 change={deviceLayout.change}
                 importLayout={deviceLayout.importLayout}
@@ -1108,6 +1109,7 @@ function AppContent({
               key={app.id === "photos" ? detail.id : app.id}
               app={app.id}
               item={detail}
+              variables={state.variables}
               back={back}
               previousPhoto={previousPhoto && (() => read(previousPhoto))}
               nextPhoto={nextPhoto && (() => read(nextPhoto))}

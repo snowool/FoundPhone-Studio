@@ -1,3 +1,5 @@
+import { Checklist } from "../checklist";
+import type { Runtime } from "../schema";
 import { useRef, useState, type PointerEvent } from "react";
 import {
   ChevronLeft,
@@ -30,7 +32,9 @@ export function NativeDetail({
   back,
   previousPhoto,
   nextPhoto,
+  variables = {},
 }: {
+  variables?: Runtime["variables"];
   app: string;
   item: Item;
   back: () => void;
@@ -206,7 +210,7 @@ export function NativeDetail({
           <div className="native-detail-scroll native-note-paper">
             <time>{item.time}</time>
             <h1>{item.title}</h1>
-            <RichText value={item.richText} fallback={item.body} />
+            {item.meta.checklist === "true" ? <Checklist item={item} variables={variables} /> : <RichText value={item.richText} fallback={item.body} />}
           </div>
           <footer className="native-detail-toolbar">
             <button aria-label="返回文件夹" onClick={back}>

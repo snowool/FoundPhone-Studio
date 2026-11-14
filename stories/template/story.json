@@ -3,7 +3,7 @@
   "id": "snowool-steve-foundphone",
   "title": "捡到 Steve 的手机",
   "description": "自定义手机预览",
-  "revision": 15,
+  "revision": 16,
   "phone": {
     "owner": "Steve Rogers",
     "date": "2026-10-25",
@@ -92,13 +92,231 @@
           "pinned": "true"
         }
       }
+    ],
+    "notes": [
+      {
+        "id": "wedding-todo",
+        "title": "💍💒🤵🏼🤵🏻",
+        "body": "确认婚礼日期\n确认场地\n婚礼流程\n预约主持人\n订蛋糕\n试礼服\n发请柬\n伴娘伴郎\n训练阿尔派送戒指\n确认第一支舞的音乐\n蜜月度假",
+        "meta": {
+          "checklist": "true",
+          "taskIds": "date,venue,ceremony,officiant,cake,outfits,invitations,wedding-party,alpine,first-dance,honeymoon",
+          "taskPrefix": "wedding"
+        }
+      }
     ]
   },
   "variables": {
     "homeWidgets": "weather,notes",
-    "homeWidgetStyle": "glass"
+    "homeWidgetStyle": "glass",
+    "wedding:date:done": false,
+    "wedding:venue:done": false,
+    "wedding:ceremony:done": false,
+    "wedding:officiant:done": false,
+    "wedding:cake:done": false,
+    "wedding:outfits:done": false,
+    "wedding:invitations:done": false,
+    "wedding:wedding-party:done": false,
+    "wedding:alpine:done": false,
+    "wedding:first-dance:done": false,
+    "wedding:honeymoon:done": false
   },
-  "events": [],
-  "tests": [],
+  "events": [
+    {
+      "id": "wedding-complete-date",
+      "label": "完成：确认婚礼日期",
+      "event": "variable",
+      "target": "wedding:date:confirmed",
+      "actions": [
+        {
+          "type": "variable",
+          "key": "wedding:date:done",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "wedding-complete-venue",
+      "label": "完成：确认场地",
+      "event": "variable",
+      "target": "wedding:venue:confirmed",
+      "actions": [
+        {
+          "type": "variable",
+          "key": "wedding:venue:done",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "wedding-complete-ceremony",
+      "label": "完成：婚礼流程",
+      "event": "variable",
+      "target": "wedding:ceremony:confirmed",
+      "actions": [
+        {
+          "type": "variable",
+          "key": "wedding:ceremony:done",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "wedding-complete-officiant",
+      "label": "完成：预约主持人",
+      "event": "variable",
+      "target": "wedding:officiant:confirmed",
+      "actions": [
+        {
+          "type": "variable",
+          "key": "wedding:officiant:done",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "wedding-complete-cake",
+      "label": "完成：订蛋糕",
+      "event": "variable",
+      "target": "wedding:cake:confirmed",
+      "actions": [
+        {
+          "type": "variable",
+          "key": "wedding:cake:done",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "wedding-complete-outfits",
+      "label": "完成：试礼服",
+      "event": "variable",
+      "target": "wedding:outfits:confirmed",
+      "actions": [
+        {
+          "type": "variable",
+          "key": "wedding:outfits:done",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "wedding-complete-invitations",
+      "label": "完成：发请柬",
+      "event": "variable",
+      "target": "wedding:invitations:confirmed",
+      "actions": [
+        {
+          "type": "variable",
+          "key": "wedding:invitations:done",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "wedding-complete-wedding-party",
+      "label": "完成：伴娘伴郎",
+      "event": "variable",
+      "target": "wedding:wedding-party:confirmed",
+      "actions": [
+        {
+          "type": "variable",
+          "key": "wedding:wedding-party:done",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "wedding-complete-alpine",
+      "label": "完成：训练阿尔派送戒指",
+      "event": "variable",
+      "target": "wedding:alpine:confirmed",
+      "actions": [
+        {
+          "type": "variable",
+          "key": "wedding:alpine:done",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "wedding-complete-first-dance",
+      "label": "完成：确认第一支舞的音乐",
+      "event": "variable",
+      "target": "wedding:first-dance:confirmed",
+      "actions": [
+        {
+          "type": "variable",
+          "key": "wedding:first-dance:done",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "wedding-complete-honeymoon",
+      "label": "完成：蜜月度假",
+      "event": "variable",
+      "target": "wedding:honeymoon:confirmed",
+      "actions": [
+        {
+          "type": "variable",
+          "key": "wedding:honeymoon:done",
+          "value": true
+        }
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "name": "婚礼筹备任务完成事件可依次执行",
+      "steps": [
+        {
+          "event": "variable",
+          "target": "wedding:date:confirmed"
+        },
+        {
+          "event": "variable",
+          "target": "wedding:venue:confirmed"
+        },
+        {
+          "event": "variable",
+          "target": "wedding:ceremony:confirmed"
+        },
+        {
+          "event": "variable",
+          "target": "wedding:officiant:confirmed"
+        },
+        {
+          "event": "variable",
+          "target": "wedding:cake:confirmed"
+        },
+        {
+          "event": "variable",
+          "target": "wedding:outfits:confirmed"
+        },
+        {
+          "event": "variable",
+          "target": "wedding:invitations:confirmed"
+        },
+        {
+          "event": "variable",
+          "target": "wedding:wedding-party:confirmed"
+        },
+        {
+          "event": "variable",
+          "target": "wedding:alpine:confirmed"
+        },
+        {
+          "event": "variable",
+          "target": "wedding:first-dance:confirmed"
+        },
+        {
+          "event": "variable",
+          "target": "wedding:honeymoon:confirmed"
+        }
+      ],
+      "expectNotifications": []
+    }
+  ],
   "restrictAppCatalog": true
 }
