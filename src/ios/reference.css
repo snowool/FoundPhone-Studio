@@ -766,3 +766,7 @@
   color: #fff;
   text-shadow: 0 1px 4px #0008;
 }
+
+.ios18 .wechat-ui .wx-chat-row.wx-chat-pinned {
+  background: #ededed;
+}

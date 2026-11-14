@@ -171,6 +171,10 @@ export function WeChatSkin(p: SkinProps) {
         .map((i) => i.title),
     ),
   ];
+  conversations.sort((a, b) =>
+    Number(p.items.some((i) => i.title === b && i.meta.pinned === "true")) -
+    Number(p.items.some((i) => i.title === a && i.meta.pinned === "true")),
+  );
   const contacts = [
     ...new Set(p.items.map((i) => i.sender).filter((s) => s !== "我")),
   ];
@@ -279,7 +283,7 @@ export function WeChatSkin(p: SkinProps) {
       ) : p.thread ? (
         <>
           <MessageList
-            items={p.items.filter((i) => i.title === p.thread)}
+            items={p.items.filter((i) => i.title === p.thread && i.meta.contact !== "true")}
             creator={p.creator}
             onItem={p.onItem}
             onRead={p.onRead}
@@ -338,11 +342,15 @@ export function WeChatSkin(p: SkinProps) {
                     ),
                 )
                 .map((t) => {
-                  const list = p.items.filter((i) => i.title === t),
-                    last = list.at(-1)!;
+                  const entries = p.items.filter((i) => i.title === t),
+                    list = entries.filter((i) => i.meta.contact !== "true"),
+                    last = list.at(-1),
+                    contact = entries.find((i) => i.meta.contact === "true"),
+                    pinned = entries.some((i) => i.meta.pinned === "true");
                   return (
                     <button
-                      className="wx-chat-row"
+                      className={"wx-chat-row" + (pinned ? " wx-chat-pinned" : "")}
+                      data-pinned={pinned}
                       key={t}
                       onClick={() => {
                         setReadThreads((v) => (v.includes(t) ? v : [...v, t]));
@@ -351,7 +359,7 @@ export function WeChatSkin(p: SkinProps) {
                       }}
                     >
                       <span className="wx-chat-avatar">
-                        <Avatar name={t} src={last.avatar} />
+                        <Avatar name={t} src={last?.avatar || contact?.avatar} />
                         {!readThreads.includes(t) &&
                           list.some((i) => !i.read) && (
                             <b className="wx-unread">
@@ -361,9 +369,9 @@ export function WeChatSkin(p: SkinProps) {
                       </span>
                       <div>
                         <strong>{t}</strong>
-                        <p>{last.body}</p>
+                        <p>{last?.body || ""}</p>
                       </div>
-                      <time>{last.time.slice(-5)}</time>
+                      {last && <time>{last.time.slice(-5)}</time>}
                     </button>
                   );
                 })}
