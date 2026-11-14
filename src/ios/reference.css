@@ -753,3 +753,16 @@
   background: #fafafa;
   color: #ffadb7;
 }
+
+.ios18 .wallpaper-p1-deer {
+  background: #a37446 url("./wallpapers/p1-deer.jpg") center/cover no-repeat;
+}
+.ios18 .wallpaper-p1-deer .wallpaper-orb {
+  display: none;
+}
+.ios18 .wallpaper-p1-deer:not(.in-app) .status-bar,
+.ios18 .wallpaper-p1-deer .app-name,
+.ios18 .wallpaper-p1-deer .lock-clock-block {
+  color: #fff;
+  text-shadow: 0 1px 4px #0008;
+}

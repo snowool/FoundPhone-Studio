@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import template from "../../stories/template/story.json";
+import template from "../../stories/bucky/story.json";
 import { advance, dispatch, visible } from "../engine";
 import { initialRuntime } from "../schema";
 import example from "../../tests/fixtures/story-example/story.json";
