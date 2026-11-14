@@ -117,3 +117,16 @@ it("migrates preview folders once while preserving custom folders and widgets", 
     validateLayout(migrated, w).apps.find((a) => a.id === "wechat")!.folder,
   ).toBe("作者新建文件夹");
 });
+
+it("places authored weather and checklist widgets above apps without overlap", () => {
+  const w = work();
+  w.variables.homeWidgets = "weather,notes,weather,invalid";
+  const layout = defaultLayout(w);
+  expect(layout.widgets.map((widget) => widget.type)).toEqual(["weather", "notes"]);
+  const firstPage = packHome(homeEntries(layout))[0];
+  expect(firstPage.slice(0, 2).map(({ x, y, w, h }) => ({ x, y, w, h }))).toEqual([
+    { x: 0, y: 0, w: 2, h: 2 },
+    { x: 2, y: 0, w: 2, h: 2 },
+  ]);
+  expect(() => validateLayout(layout, w)).not.toThrow();
+});

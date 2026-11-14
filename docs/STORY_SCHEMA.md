@@ -26,3 +26,9 @@ KakaoTalk 的无消息联系人可以写在 `content.kakao`，以 `title` 填显
 媒体仅支持safeMedia允许的内嵌data URL格式。禁止HTML/JS脚本；富文本为安全结构化JSON。作品脚本是公开静态数据，谜题密码不属于安全保密机制。
 
 默认空白模板：stories/blank/story.json。引擎回归样例位于tests/fixtures/story-example，不作为内置作品。自然语言原稿：tests/fixtures/story-example/STORY.md。只改故事数据就能改变手机内容。
+
+### 默认桌面小组件
+
+可用 `variables.homeWidgets` 字符串配置默认小组件，例如 `"weather,notes"`。支持现有的 calendar、clock、weather、notes、battery，按顺序放置在图标前，每个占用 2×2 网格。设置 `variables.homeWidgetStyle="glass"` 使用半透明磨砂卡片；天气卡会合并显示公开日程，备忘录卡优先显示 `meta.checklist="true"` 记录正文的前三行。天气为故事静态数据，不请求真实定位或天气服务。点击卡片沿用对应 App 的打开行为。
+
+启用作者默认小组件后，桌面布局按内容 revision 隔离；递增 revision 时应用新的默认布局，玩家剧情存档仍由原存档系统管理。

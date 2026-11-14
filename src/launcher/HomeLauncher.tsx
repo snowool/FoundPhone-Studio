@@ -63,9 +63,14 @@ function WidgetFace({
   time: string;
 }) {
   const date = new Date((work.phone.date || "2026-10-25") + "T12:00:00Z");
-  const weather = work.data.weather?.[0];
+  const weather = work.data.weather?.find((item) => !item.hidden && !item.password);
+  const glass = work.variables.homeWidgetStyle === "glass";
+  const schedule = (work.data.calendar || []).filter((item) => !item.hidden && !item.password);
+  const checklist = (work.data.notes || []).find((item) =>
+    !item.hidden && !item.password && item.meta.checklist === "true",
+  );
   return (
-    <div className={"widget-face widget-" + widget.type}>
+    <div className={"widget-face widget-" + widget.type + (glass ? " widget-glass" : "")}>
       {widget.type === "calendar" ? (
         <>
           <span className="widget-red">
@@ -85,23 +90,27 @@ function WidgetFace({
         </>
       ) : widget.type === "weather" ? (
         <>
-          <small>{weather?.title || "未添加城市"}</small>
-          <b>{weather?.meta.temperature || "—"}°</b>
-          <CloudSun size={27} />
-          <small>{weather?.meta.condition || "暂无天气数据"}</small>
+          <small>📍 {weather?.title || "未添加城市"}</small>
+          <div className="widget-temperature"><b>{weather?.meta.temperature || "—"}°</b><CloudSun size={24} /></div>
+          <small>{weather?.meta.condition || "暂无天气数据"}{weather?.meta.high && ` · ${weather.meta.high}° / ${weather.meta.low || "—"}°`}</small>
+          {glass && <div className="widget-schedule">
+            <strong>日程</strong>
+            {schedule.length ? schedule.slice(0, 2).map((item) => <small key={item.id}>{item.time} {item.title}</small>) : <small>今天暂无日程</small>}
+          </div>}
         </>
       ) : widget.type === "notes" ? (
         <>
-          <strong>备忘录</strong>
-          {(work.data.notes || [])
+          <strong>{glass ? "备忘录 · 待办" : "备忘录"}</strong>
+          {checklist ? <div className="widget-checklist">
+            {checklist.body.split("\n").filter(Boolean).slice(0, 3).map((line, index) =>
+              <small key={index}><span aria-hidden="true">○</span> {line.replace(/^[-*] |^\[[ x]\] /, "")}</small>,
+            )}
+          </div> : (work.data.notes || [])
             .filter((i) => !i.hidden && !i.password)
             .slice(0, 3)
-            .map((i) => (
-              <small key={i.id}>{i.title}</small>
-            ))}
-          {!(work.data.notes || []).some((i) => !i.hidden && !i.password) && (
-            <small>无备忘录</small>
-          )}
+            .map((i) => <small key={i.id}>{i.title}</small>)}
+          {!(work.data.notes || []).some((i) => !i.hidden && !i.password) && <small>暂无待办事项</small>}
+          {glass && <small className="widget-footnote">点击查看备忘录</small>}
         </>
       ) : (
         <>

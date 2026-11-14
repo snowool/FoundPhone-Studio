@@ -54,6 +54,13 @@ export function ensureAppStore(work: Work): Work {
 }
 export function defaultLayout(input: Work): DeviceLayout {
   const w = ensureAppStore(input);
+  const widgets: Widget[] = typeof w.variables.homeWidgets === "string"
+    ? [...new Set(w.variables.homeWidgets.split(","))]
+        .filter((type): type is Widget["type"] =>
+          widgetSchema.shape.type.safeParse(type).success,
+        )
+        .map((type) => ({ id: "widget-authored-" + type, type, size: "small" }))
+    : [];
   return {
     version: 1,
     workId: w.id,
@@ -65,8 +72,8 @@ export function defaultLayout(input: Work): DeviceLayout {
           ? { ...a, installed: true, visible: true, folder: "", dock: false }
           : a,
       ),
-    widgets: [],
-    order: [],
+    widgets,
+    order: widgets.map((widget) => widget.id),
     cleared: [],
     positions: {},
   };
@@ -133,7 +140,8 @@ export function validateLayout(raw: unknown, input: Work) {
 }
 export function useDeviceLayout(authored: Work, creator = false) {
   const base = useMemo(() => ensureAppStore(authored), [authored]);
-  const key = "foundphone-layout-v1:" + base.id;
+  const key = "foundphone-layout-v1:" + base.id +
+    (base.variables.homeWidgets ? ":authored-" + base.updatedAt : "");
   const [stored, setStored] = useState(() => {
       try {
         const text = localStorage.getItem(key);

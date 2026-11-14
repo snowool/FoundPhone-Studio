@@ -3,7 +3,7 @@
   "id": "snowool-steve-foundphone",
   "title": "捡到 Steve 的手机",
   "description": "自定义手机预览",
-  "revision": 13,
+  "revision": 14,
   "phone": {
     "owner": "Steve Rogers",
     "date": "2026-10-25",
@@ -25,12 +25,64 @@
     "maps",
     "settings",
     "twitter",
-    "instagram"
+    {
+      "id": "music",
+      "name": "Apple Music",
+      "installed": true,
+      "visible": true,
+      "dock": true,
+      "folder": "",
+      "icon": ""
+    },
+    {
+      "id": "wechat",
+      "name": "WeChat",
+      "installed": true,
+      "visible": true,
+      "dock": false,
+      "folder": "",
+      "icon": ""
+    },
+    {
+      "id": "weather",
+      "name": "天气",
+      "installed": true,
+      "visible": false,
+      "dock": false,
+      "folder": "",
+      "icon": ""
+    },
+    {
+      "id": "calendar",
+      "name": "日历",
+      "installed": true,
+      "visible": false,
+      "dock": false,
+      "folder": "",
+      "icon": ""
+    }
   ],
   "contacts": [],
   "chats": [],
-  "content": {},
-  "variables": {},
+  "content": {
+    "weather": [
+      {
+        "id": "new-york-weather",
+        "title": "纽约",
+        "body": "10月25日 · 多云 · 最高16° 最低9°\n配合手机日期的秋季静态天气，非实时气象记录。",
+        "meta": {
+          "temperature": "12",
+          "condition": "多云",
+          "high": "16",
+          "low": "9"
+        }
+      }
+    ]
+  },
+  "variables": {
+    "homeWidgets": "weather,notes",
+    "homeWidgetStyle": "glass"
+  },
   "events": [],
   "tests": [],
   "restrictAppCatalog": true
