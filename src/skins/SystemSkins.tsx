@@ -448,78 +448,188 @@ export function NotesSkin(p: Props) {
     </div>
   );
 }
+const calendarMonths = [
+  "一月",
+  "二月",
+  "三月",
+  "四月",
+  "五月",
+  "六月",
+  "七月",
+  "八月",
+  "九月",
+  "十月",
+  "十一月",
+  "十二月",
+];
+function lunarLabel(date: Date) {
+  const parts = new Intl.DateTimeFormat("zh-CN-u-ca-chinese", {
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  }).formatToParts(date);
+  const day = Number(parts.find((p) => p.type === "day")?.value);
+  if (day === 1) return parts.find((p) => p.type === "month")?.value || "初一";
+  const digits = ["", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
+  return day < 10
+    ? "初" + digits[day]
+    : day === 10
+      ? "初十"
+      : day < 20
+        ? "十" + digits[day - 10]
+        : day === 20
+          ? "二十"
+          : day < 30
+            ? "廿" + digits[day - 20]
+            : "三十";
+}
 export function CalendarSkin(p: Props) {
-  const [month, setMonth] = useState(8),
-    [year, setYear] = useState(2026),
-    [day, setDay] = useState(1);
-  const prefix = `${year}-${String(month + 1).padStart(2, "0")}`;
-  const list = p.items.filter((i) =>
-    i.time.startsWith(`${prefix}-${String(day).padStart(2, "0")}`),
-  );
-  const move = (d: number) => {
-    const date = new Date(Date.UTC(year, month + d, 1));
-    setYear(date.getUTCFullYear());
-    setMonth(date.getUTCMonth());
-    setDay(1);
+  const initial =
+    p.items.find((i) => /^\d{4}-\d{2}/.test(i.time))?.time ||
+    p.virtualTime ||
+    "2026-11-01";
+  const [month, setMonth] = useState(Number(initial.slice(5, 7)) - 1);
+  const [year, setYear] = useState(Number(initial.slice(0, 4)));
+  const [selected, setSelected] = useState("");
+  const [searching, setSearching] = useState(false);
+  const [query, setQuery] = useState("");
+  const [agenda, setAgenda] = useState(false);
+  const today = (p.virtualTime || "2026-10-25").slice(0, 10);
+  const move = (delta: number) => {
+    const d = new Date(Date.UTC(year, month + delta, 1));
+    setYear(d.getUTCFullYear());
+    setMonth(d.getUTCMonth());
   };
-  const first = new Date(Date.UTC(year, month, 1)).getUTCDay(),
-    days = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+  const filtered = p.items.filter((i) => (i.title + i.body).includes(query));
   return (
-    <div className="catalog-skin native-calendar">
-      <Header p={p} />
-      <div className="catalog-scroll">
-        <div className="month-title">
-          <button aria-label="上个月" onClick={() => move(-1)}>
-            <ChevronLeft />
+    <div className="catalog-skin native-calendar calendar-reference">
+      <header className="calendar-toolbar">
+        <button className="calendar-pill" onClick={p.onBack} aria-label="返回">
+          <ChevronLeft size={22} />
+          {year}年
+        </button>
+        <div className="calendar-pill">
+          <button aria-label="切换日程列表" onClick={() => setAgenda(!agenda)}>
+            <Grid size={21} />
           </button>
-          <h2>
-            {year} 年 {month + 1} 月
-          </h2>
-          <button aria-label="下个月" onClick={() => move(1)}>
-            <ChevronRight />
-          </button>
-        </div>
-        <div className="calendar-grid">
-          {["日", "一", "二", "三", "四", "五", "六"].map((t) => (
-            <small key={t}>{t}</small>
-          ))}
-          {Array.from({ length: first }, (_, i) => (
-            <span key={"blank" + i} />
-          ))}
-          {Array.from({ length: days }, (_, i) => (
-            <button
-              className={day === i + 1 ? "selected" : ""}
-              key={i}
-              onClick={() => setDay(i + 1)}
-            >
-              {i + 1}
-              {p.items.some((x) =>
-                x.time.startsWith(
-                  `${prefix}-${String(i + 1).padStart(2, "0")}`,
-                ),
-              ) && <i />}
-            </button>
-          ))}
-        </div>
-        <h4 className="native-section">
-          {month + 1} 月 {day} 日
-        </h4>
-        {list.map((i) => (
           <button
-            className="calendar-event"
-            key={i.id}
-            onClick={() => p.onItem(i)}
+            aria-label="搜索日程"
+            onClick={() => setSearching(!searching)}
           >
-            <time>{i.time.slice(-5)}</time>
-            <div>
-              <strong>{i.title}</strong>
-              <p>{meta(i, "location", i.body)}</p>
-            </div>
+            <Search size={22} />
           </button>
-        ))}
-        <Empty items={list} label="当天没有日程" />
-        <Add p={p} label="添加日程" />
+          {p.creator && (
+            <button aria-label="添加日程" onClick={p.onAdd}>
+              ＋
+            </button>
+          )}
+        </div>
+      </header>
+      {searching && (
+        <SearchBox value={query} set={setQuery} placeholder="搜索日程" />
+      )}
+      <div className="calendar-heading">
+        <h1>{calendarMonths[month]}</h1>
+        <div>
+          <button aria-label="上个月" onClick={() => move(-1)}>
+            <ChevronLeft size={17} />
+          </button>
+          <button aria-label="下个月" onClick={() => move(1)}>
+            <ChevronRight size={17} />
+          </button>
+        </div>
       </div>
+      <div className="calendar-weekdays">
+        {["日", "一", "二", "三", "四", "五", "六"].map((t) => (
+          <span key={t}>{t}</span>
+        ))}
+      </div>
+      <div className="calendar-month-scroll">
+        {agenda || (searching && query) ? (
+          <div className="calendar-agenda">
+            {filtered.map((i) => (
+              <button key={i.id} onClick={() => p.onItem(i)}>
+                <time>{i.time.slice(0, 10)}</time>
+                <strong>{i.title}</strong>
+              </button>
+            ))}
+            <Empty items={filtered} label="没有日程" />
+          </div>
+        ) : (
+          [0, 1].map((offset) => {
+            const date = new Date(Date.UTC(year, month + offset, 1));
+            const y = date.getUTCFullYear(),
+              m = date.getUTCMonth();
+            const first = date.getUTCDay(),
+              days = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+            return (
+              <section className="calendar-month" key={`${y}-${m}`}>
+                {offset > 0 && <h2>{m + 1}月</h2>}
+                <div className="calendar-month-grid">
+                  {Array.from({ length: first }, (_, i) => (
+                    <div className="calendar-blank" key={`blank-${i}`} />
+                  ))}
+                  {Array.from({ length: days }, (_, i) => {
+                    const d = i + 1,
+                      key = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+                    const events = filtered.filter((x) =>
+                      x.time.startsWith(key),
+                    );
+                    const weekend =
+                      (first + i) % 7 === 0 || (first + i) % 7 === 6;
+                    return (
+                      <div
+                        key={key}
+                        className={`calendar-day-cell${weekend ? " weekend" : ""}`}
+                      >
+                        <button
+                          className={`calendar-date${key === today ? " today" : ""}${key === selected ? " picked" : ""}`}
+                          aria-label={key}
+                          onClick={() => setSelected(key)}
+                        >
+                          <b>{d}</b>
+                          <small>
+                            {lunarLabel(new Date(Date.UTC(y, m, d)))}
+                          </small>
+                        </button>
+                        {events.map((event) => (
+                          <button
+                            key={event.id}
+                            className="calendar-chip"
+                            aria-label={`${key} ${event.title}`}
+                            onClick={() => p.onItem(event)}
+                          >
+                            {event.title}
+                          </button>
+                        ))}
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            );
+          })
+        )}
+      </div>
+      <footer className="calendar-bottom">
+        <button
+          className="calendar-pill"
+          onClick={() => {
+            setYear(Number(today.slice(0, 4)));
+            setMonth(Number(today.slice(5, 7)) - 1);
+            setSelected(today);
+          }}
+        >
+          今天
+        </button>
+        <button
+          className="calendar-pill"
+          aria-label="切换月视图"
+          onClick={() => setAgenda(!agenda)}
+        >
+          <Calendar size={22} />
+        </button>
+      </footer>
     </div>
   );
 }
@@ -576,10 +686,12 @@ export function MailSkin(p: Props) {
 export function ClockSkin(p: Props) {
   const { tab, setTab, items } = useContent(p, "闹钟");
   const [enabled, setEnabled] = useSkinState<string[]>(
-    p,
-    "alarms",
-    items.filter((item) => meta(item, "enabled") === "true").map((item) => item.id),
-  ),
+      p,
+      "alarms",
+      items
+        .filter((item) => meta(item, "enabled") === "true")
+        .map((item) => item.id),
+    ),
     [seconds, setSeconds] = useState(0),
     [running, setRunning] = useState(false);
   useEffect(() => {
