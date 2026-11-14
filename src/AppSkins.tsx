@@ -8,6 +8,7 @@ import {
   Search,
   MessageCircle,
   Users,
+  UserPlus,
   Compass,
   User,
   Camera,
@@ -90,12 +91,14 @@ function MessageList({
   onItem,
   onRead,
   whatsapp = false,
+  ownerAvatar = "",
 }: {
   items: Item[];
   creator: boolean;
   onItem: (i: Item) => void;
   onRead: (id: string) => void;
   whatsapp?: boolean;
+  ownerAvatar?: string;
 }) {
   return (
     <div className={`skin-messages ${whatsapp ? "wa-wallpaper" : ""}`}>
@@ -127,7 +130,7 @@ function MessageList({
               {whatsapp && i.outgoing && <CheckCheck size={11} />}
             </small>
           </button>
-          {!whatsapp && i.outgoing && <Avatar name={i.sender} src={i.avatar} />}
+          {!whatsapp && i.outgoing && <Avatar name={i.sender} src={ownerAvatar || i.avatar} />}
         </div>
       ))}
     </div>
@@ -152,6 +155,38 @@ function Compose({
     </div>
   );
 }
+export function WeChatContacts({ items, query = "", onOpen }: {
+  items: Item[]; query?: string; onOpen: (name: string) => void;
+}) {
+  const contacts = [...new Map(items.filter((item) =>
+    item.meta.owner !== "true" && !["朋友圈", "我"].includes(item.folder) && item.sender !== "我",
+  ).map((item) => [item.sender, item])).values()]
+    .filter((item) => item.sender.toLowerCase().includes(query.toLowerCase()))
+    .sort((a, b) => a.sender.localeCompare(b.sender, "en", { sensitivity: "base" }));
+  const initial = (name: string) => /^[a-z]/i.test(name) ? name[0].toUpperCase() : "#";
+  const groups = [...new Set(contacts.map((item) => initial(item.sender)))];
+  return <div className="wx-addressbook">
+    <div className="wx-contact-groups">
+      {groups.map((letter) => <section key={letter} data-letter={letter}>
+        <div className="wx-letter-heading">{letter}</div>
+        {contacts.filter((item) => initial(item.sender) === letter).map((item) =>
+          <button key={item.sender} className="wx-contact" onClick={() => onOpen(item.title)}>
+            <Avatar name={item.sender} src={item.avatar} />
+            <span className="wx-contact-name">{item.sender}</span>
+          </button>,
+        )}
+      </section>)}
+      <div className="wx-contact-count">{contacts.length} 位联系人</div>
+    </div>
+    <nav className="wx-alphabet" aria-label="联系人字母索引">
+      {"ABCDEFGHIJKLMNOPQRSTUVWXYZ#".split("").map((letter) => <button key={letter}
+        disabled={!groups.includes(letter)} aria-label={`跳到 ${letter}`}
+        onClick={(event) => event.currentTarget.closest(".wx-addressbook")?.querySelector(`[data-letter="${letter}"]`)?.scrollIntoView({ block: "start", behavior: "smooth" })}>
+        {letter}
+      </button>)}
+    </nav>
+  </div>;
+}
 export function WeChatSkin(p: SkinProps) {
   const [tab, setTab] = useState("微信"),
     [query, setQuery] = useState(""),
@@ -175,9 +210,7 @@ export function WeChatSkin(p: SkinProps) {
     Number(p.items.some((i) => i.title === b && i.meta.pinned === "true")) -
     Number(p.items.some((i) => i.title === a && i.meta.pinned === "true")),
   );
-  const contacts = [
-    ...new Set(p.items.map((i) => i.sender).filter((s) => s !== "我")),
-  ];
+  const ownerAvatar = p.items.find((item) => item.meta.owner === "true")?.avatar;
   const posts = p.items.filter(
     (i) => i.folder === "朋友圈" || i.kind === "post",
   );
@@ -199,13 +232,15 @@ export function WeChatSkin(p: SkinProps) {
                 ? p.onThread("")
                 : moments
                   ? setMoments(false)
-                  : setUtility("收藏")
+                  : tab === "通讯录"
+                ? setSearchOpen(!searchOpen)
+                : setUtility("收藏")
           }
         >
           {utility || p.thread || moments ? (
             <ChevronLeft size={22} />
           ) : (
-            <Star size={22} />
+            tab === "通讯录" ? <Search size={20} /> : <Star size={22} />
           )}
         </button>
         <strong>
@@ -223,7 +258,7 @@ export function WeChatSkin(p: SkinProps) {
               : () => (p.thread ? setUtility("聊天信息") : setMenu(!menu))
           }
         >
-          {p.thread ? <MoreHorizontal size={22} /> : <CirclePlus size={22} />}
+          {p.thread ? <MoreHorizontal size={22} /> : tab === "通讯录" ? <UserPlus size={21} /> : <CirclePlus size={22} />}
         </button>
       </div>
       {menu && (
@@ -283,6 +318,7 @@ export function WeChatSkin(p: SkinProps) {
       ) : p.thread ? (
         <>
           <MessageList
+            ownerAvatar={ownerAvatar}
             items={p.items.filter((i) => i.title === p.thread && i.meta.contact !== "true")}
             creator={p.creator}
             onItem={p.onItem}
@@ -379,26 +415,8 @@ export function WeChatSkin(p: SkinProps) {
             </>
           ) : tab === "通讯录" ? (
             <>
-              <div className="wx-section-label">联系人</div>
-              {contacts.map((c) => (
-                <button
-                  key={c}
-                  className="wx-contact"
-                  onClick={() => {
-                    const item = p.items.find((i) => i.sender === c);
-                    if (item) {
-                      p.onThread(item.title);
-                      p.onRead(item.title);
-                    }
-                  }}
-                >
-                  <Avatar
-                    name={c}
-                    src={p.items.find((i) => i.sender === c)?.avatar}
-                  />
-                  {c}
-                </button>
-              ))}
+              {searchOpen && <label className="wx-search"><Search size={14} /><input aria-label="搜索联系人" placeholder="搜索联系人" value={query} onChange={(event) => setQuery(event.target.value)} /></label>}
+              <WeChatContacts items={p.items} query={query} onOpen={(name) => { p.onThread(name); p.onRead(name); }} />
             </>
           ) : tab === "发现" ? (
             <div className="wx-discover-groups">
@@ -428,7 +446,7 @@ export function WeChatSkin(p: SkinProps) {
           ) : (
             <>
               <div className="wx-profile">
-                <Avatar name={p.owner || "机主"} />
+                <Avatar name={p.owner || "机主"} src={ownerAvatar} />
                 <div>
                   <h2>{p.owner || "机主"}</h2>
                   <small>微信号：未设置</small>

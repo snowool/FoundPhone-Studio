@@ -22,3 +22,19 @@ it("pins empty contacts with their avatar without adding unread messages or bubb
   expect(thread).not.toContain("CONTACT_ONLY");
   expect(thread).not.toContain('class="skin-bubble');
 });
+
+it("groups compact address book contacts and excludes the owner's profile", async () => {
+  const { WeChatContacts } = await import("./AppSkins");
+  const html = renderToStaticMarkup(createElement(WeChatContacts, {
+    items: [
+      makeItem({ title: "Sam", sender: "Sam" }),
+      makeItem({ title: "bucky❤️", sender: "bucky❤️" }),
+      makeItem({ title: "Steve Rogers", sender: "Steve Rogers", folder: "我", meta: { owner: "true" } }),
+    ], onOpen() {},
+  }));
+  expect(html).toContain('data-letter="B"');
+  expect(html).toContain('data-letter="S"');
+  expect(html.indexOf("bucky❤️")).toBeLessThan(html.indexOf("Sam"));
+  expect(html).not.toContain("Steve Rogers");
+  expect(html).toContain("2 位联系人");
+});

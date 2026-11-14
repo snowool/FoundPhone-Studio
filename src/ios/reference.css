@@ -780,3 +780,21 @@
 .wedding-checklist.compact { gap: 8px; padding: 5px 0; width: 100%; flex: 1; }
 .compact .checklist-row { gap: 6px; font-size: 10px; white-space: nowrap; }
 .compact .checklist-square { flex-basis: 12px; width: 12px; height: 12px; font-size: 9px; }
+
+.ios18 .wechat-ui[data-tab="通讯录"] { background: #fff; color: #222; }
+.ios18 .wechat-ui[data-tab="通讯录"] .wx-nav { background: #f7f7f7; color: #222; }
+.ios18 .wechat-ui[data-tab="通讯录"] .wx-nav strong { font-size: 16px; }
+.ios18 .wechat-ui[data-tab="通讯录"] > .skin-scroll { position: relative; background: #fff; }
+.ios18 .wx-addressbook { position: relative; min-height: 100%; padding-right: 22px; }
+.ios18 .wx-letter-heading { padding: 5px 14px; background: #f3f3f3; color: #888; font-size: 11px; line-height: 16px; }
+.ios18 .wechat-ui .wx-addressbook .wx-contact { display: flex; align-items: center; justify-content: flex-end; gap: 10px; width: 100%; min-height: 51px; padding: 8px 12px; background: #fff; color: #222; border: 0; border-bottom: .5px solid #ededed; font-size: 13px; }
+.ios18 .wx-addressbook .skin-avatar { width: 33px; height: 33px; flex: 0 0 33px; border-radius: 5px; overflow: hidden; }
+.ios18 .wx-contact-name { width: 108px; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 400; }
+.ios18 .wx-contact-count { text-align: center; padding: 16px; color: #999; font-size: 11px; }
+.ios18 .wx-alphabet { position: sticky; float: right; width: 20px; margin-right: -21px; margin-top: -440px; top: 8px; display: flex; flex-direction: column; align-items: center; }
+.ios18 .wx-alphabet button { display: flex; align-items: center; justify-content: center; width: 18px; height: 14px; padding: 0; border: 0; background: transparent; color: #777; font-size: 9px; line-height: 14px; }
+.ios18 .wx-alphabet button:not(:disabled):active { color: #07c160; }
+.ios18 .wx-alphabet button:disabled { opacity: .4; }
+.ios18 .wx-addressbook { display: grid; grid-template-columns: minmax(0, 1fr) 22px; align-items: start; padding-right: 0; }
+.ios18 .wx-contact-groups { grid-column: 1; grid-row: 1; min-width: 0; }
+.ios18 .wx-alphabet { grid-column: 2; grid-row: 1; float: none; margin: 0; top: 8px; align-self: start; }
