@@ -1,7 +1,7 @@
 import { NativeComposer } from "./DeviceSystem";
 import { ScriptedKeyboard } from "./ScriptedMessages";
 import { useSkinState } from "./skinState";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ChevronLeft,
   Plus,
@@ -150,9 +150,25 @@ function Compose({
   suggestions?: string[];
   onSuggestion?: (label: string) => void;
 }) {
+  const [optionsOpen, setOptionsOpen] = useState(false);
   return (
     <>
-      {!wa && suggestions.length > 0 && (
+      <div className={`skin-compose ${wa ? "wa-compose" : ""}`}>
+        {wa ? <Plus size={20} /> : <Mic size={20} />}
+        {suggestions.length > 0 ? (
+          <button
+            className="native-compose-field"
+            aria-label="选择婚礼场地"
+            onClick={() => setOptionsOpen(true)}
+          />
+        ) : (
+          <NativeComposer creator={creator} onAdd={onAdd} />
+        )}
+
+        <Smile size={21} />
+        {wa ? <Mic size={20} /> : <Plus size={22} />}
+      </div>
+      {!wa && optionsOpen && suggestions.length > 0 && (
         <div className="wx-quick-replies" aria-label="婚礼场地选项">
           {suggestions.map((label) => (
             <button key={label} onClick={() => onSuggestion?.(label)}>
@@ -161,13 +177,29 @@ function Compose({
           ))}
         </div>
       )}
-      <div className={`skin-compose ${wa ? "wa-compose" : ""}`}>
-        {wa ? <Plus size={20} /> : <Mic size={20} />}
-        <NativeComposer creator={creator} onAdd={onAdd} />
-
+    </>
+  );
+}
+function ChoiceTyping({ label }: { label: string }) {
+  const [text, setText] = useState("");
+  useEffect(() => {
+    let index = 0;
+    const timer = window.setInterval(() => {
+      index += 1;
+      setText(label.slice(0, index));
+      if (index >= label.length) window.clearInterval(timer);
+    }, Math.max(120, Math.floor(1800 / label.length)));
+    return () => window.clearInterval(timer);
+  }, [label]);
+  return (
+    <>
+      <div className="skin-compose wx-choice-typing">
+        <Mic size={20} />
+        <span>{text}</span>
         <Smile size={21} />
-        {wa ? <Mic size={20} /> : <Plus size={22} />}
+        <Plus size={22} />
       </div>
+      <ScriptedKeyboard text={text} />
     </>
   );
 }
@@ -371,15 +403,7 @@ export function WeChatSkin(p: SkinProps) {
             onRead={p.onRead}
           />
           {typingChoice ? (
-            <>
-              <div className="skin-compose wx-choice-typing">
-                <Mic size={20} />
-                <span>{typingChoice}</span>
-                <Smile size={21} />
-                <Plus size={22} />
-              </div>
-              <ScriptedKeyboard text={typingChoice} />
-            </>
+            <ChoiceTyping label={typingChoice} />
           ) : (
             <Compose
               creator={p.creator}
