@@ -1435,7 +1435,8 @@
   display: grid;
   gap: 10px;
   padding: 16px 16px 12px;
-  background: #080808;
+  background: #fff;
+  border-top: 1px solid #ececec;
 }
 .wx-quick-replies button {
   display: block;
