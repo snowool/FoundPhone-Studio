@@ -3,7 +3,7 @@
   "id": "snowool-steve-foundphone",
   "title": "捡到 Steve 的手机",
   "description": "自定义手机预览",
-  "revision": 25,
+  "revision": 26,
   "phone": {
     "owner": "Steve Rogers",
     "date": "2026-10-25",
