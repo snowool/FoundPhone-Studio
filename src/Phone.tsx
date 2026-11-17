@@ -64,7 +64,6 @@ import {
   type UiValue,
 } from "./schema";
 import { dispatch, choose, visible, advance } from "./engine";
-import { db } from "./persistence";
 export function AppIcon({
   id,
   name,
@@ -163,8 +162,12 @@ function PhoneRuntime({
   const [pinError, setPinError] = useState("");
   const [folder, setFolder] = useState("");
   const [panel, setPanel] = useState("");
-  const [own, setOwn] = useState(() => initialRuntime(work));
-  const [ready, setReady] = useState(creator || !!external);
+  const [own, setOwn] = useState(() =>
+    creator || external
+      ? initialRuntime(work)
+      : dispatch(work, initialRuntime(work), "start"),
+  );
+  const [ready, setReady] = useState(true);
   const [loadError, setLoadError] = useState("");
   useEffect(() => {
     const el = shell.current;
@@ -211,35 +214,11 @@ function PhoneRuntime({
     onRuntime?.(next);
   };
   useEffect(() => {
-    let active = true;
     if (creator || external) return;
-    void db.saves
-      .get(work.id)
-      .then((saved) => {
-        if (!active) return;
-        if (saved && saved.state.revision === work.updatedAt)
-          setOwn(saved.state);
-        else {
-          setOwn(dispatch(work, initialRuntime(work), "start"));
-          if (saved) setLoadError("作品已更新，已开始新的进度。");
-        }
-        setReady(true);
-      })
-      .catch(() => {
-        setOwn(dispatch(work, initialRuntime(work), "start"));
-        setLoadError("无法读取本地存档。本次仍可游玩。");
-        setReady(true);
-      });
-    return () => {
-      active = false;
-    };
+    setOwn(dispatch(work, initialRuntime(work), "start"));
+    setLoadError("");
+    setReady(true);
   }, [work.id, work.updatedAt, creator, external]);
-  useEffect(() => {
-    if (!creator && !external && ready)
-      void db.saves
-        .put({ id: work.id, state: own })
-        .catch(() => setLoadError("存档失败，请检查浏览器存储权限。"));
-  }, [own, creator, work.id, external, ready]);
   useEffect(() => {
     lastTick.current = performance.now();
   }, [creator, ready, work.id, work.updatedAt]);
