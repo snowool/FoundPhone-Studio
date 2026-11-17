@@ -188,7 +188,7 @@ function ChoiceTyping({ label }: { label: string }) {
       index += 1;
       setText(label.slice(0, index));
       if (index >= label.length) window.clearInterval(timer);
-    }, Math.max(120, Math.floor(1800 / label.length)));
+    }, Math.max(80, Math.floor(900 / label.length)));
     return () => window.clearInterval(timer);
   }, [label]);
   return (
@@ -373,13 +373,21 @@ export function WeChatSkin(p: SkinProps) {
           const suggestions = threadItems
             .flatMap((i) => (i.meta.quickReplies || "").split("|"))
             .filter(Boolean);
+          const avatarForContact = (name: string) =>
+            p.items.find(
+              (i) => i.meta.contact === "true" && i.sender === name,
+            )?.avatar || "";
+          const displayThreadItems = threadItems.map((item) => ({
+            ...item,
+            avatar: item.avatar || avatarForContact(item.sender),
+          }));
           const chooseVenue = (label: string) => {
             if (venueChoice || typingChoice) return;
             setTypingChoice(label);
             window.setTimeout(() => {
               setVenueChoice(label);
               setTypingChoice("");
-            }, 2000);
+            }, 1000);
           };
           const selectedMessage = venueChoice
             ? makeItem({
@@ -397,7 +405,7 @@ export function WeChatSkin(p: SkinProps) {
           return <>
           <MessageList
             ownerAvatar={ownerAvatar}
-            items={selectedMessage ? [...threadItems, selectedMessage] : threadItems}
+            items={selectedMessage ? [...displayThreadItems, selectedMessage] : displayThreadItems}
             creator={p.creator}
             onItem={p.onItem}
             onRead={p.onRead}
