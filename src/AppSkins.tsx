@@ -1,4 +1,5 @@
 import { NativeComposer } from "./DeviceSystem";
+import { ScriptedKeyboard } from "./ScriptedMessages";
 import { useSkinState } from "./skinState";
 import { useState } from "react";
 import {
@@ -32,7 +33,7 @@ import {
   Layers,
   ShoppingBag,
 } from "lucide-react";
-import { safeMedia, type Item, type UiValue } from "./schema";
+import { makeItem, safeMedia, type Item, type UiValue } from "./schema";
 export type SkinProps = {
   ui?: Record<string, UiValue>;
   onUi?: (key: string, value: UiValue) => void;
@@ -141,18 +142,22 @@ function Compose({
   onAdd,
   wa = false,
   suggestions = [],
+  onSuggestion,
 }: {
   creator: boolean;
   onAdd: () => void;
   wa?: boolean;
   suggestions?: string[];
+  onSuggestion?: (label: string) => void;
 }) {
   return (
     <>
       {!wa && suggestions.length > 0 && (
         <div className="wx-quick-replies" aria-label="婚礼场地选项">
           {suggestions.map((label) => (
-            <span key={label}>{label}</span>
+            <button key={label} onClick={() => onSuggestion?.(label)}>
+              {label}
+            </button>
           ))}
         </div>
       )}
@@ -210,6 +215,8 @@ export function WeChatSkin(p: SkinProps) {
     "readThreads",
     [],
   );
+  const [venueChoice, setVenueChoice] = useSkinState<string>(p, "venueChoice", "");
+  const [typingChoice, setTypingChoice] = useState("");
   const conversations = [
     ...new Set(
       p.items
@@ -334,15 +341,53 @@ export function WeChatSkin(p: SkinProps) {
           const suggestions = threadItems
             .flatMap((i) => (i.meta.quickReplies || "").split("|"))
             .filter(Boolean);
+          const chooseVenue = (label: string) => {
+            if (venueChoice || typingChoice) return;
+            setTypingChoice(label);
+            window.setTimeout(() => {
+              setVenueChoice(label);
+              setTypingChoice("");
+            }, 2000);
+          };
+          const selectedMessage = venueChoice
+            ? makeItem({
+                id: "venue-choice-" + venueChoice,
+                title: p.thread,
+                sender: p.owner || "Steve Rogers",
+                avatar: ownerAvatar || "",
+                body: venueChoice,
+                kind: "text" as const,
+                time: p.virtualTime || "2026-10-25 09:36",
+                outgoing: true,
+                meta: {},
+              })
+            : null;
           return <>
           <MessageList
             ownerAvatar={ownerAvatar}
-            items={threadItems}
+            items={selectedMessage ? [...threadItems, selectedMessage] : threadItems}
             creator={p.creator}
             onItem={p.onItem}
             onRead={p.onRead}
           />
-          <Compose creator={p.creator} onAdd={p.onAdd} suggestions={suggestions} />
+          {typingChoice ? (
+            <>
+              <div className="skin-compose wx-choice-typing">
+                <Mic size={20} />
+                <span>{typingChoice}</span>
+                <Smile size={21} />
+                <Plus size={22} />
+              </div>
+              <ScriptedKeyboard text={typingChoice} />
+            </>
+          ) : (
+            <Compose
+              creator={p.creator}
+              onAdd={p.onAdd}
+              suggestions={venueChoice ? [] : suggestions}
+              onSuggestion={chooseVenue}
+            />
+          )}
           </>;
         })()
       ) : moments ? (
