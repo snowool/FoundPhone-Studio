@@ -49,9 +49,12 @@ export function useScriptedMessages(items: Item[], thread: string, ui?: Record<s
 
 export function ScriptedKeyboard({ text }: { text: string }) {
   const rows = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
-  const [tick, setTick] = useState(0);
+  const [activeKey, setActiveKey] = useState(-1);
   useEffect(() => {
-    const timer = window.setInterval(() => setTick((n) => n + 1), 115);
+    const timer = window.setInterval(
+      () => setActiveKey(Math.floor(Math.random() * 26)),
+      85,
+    );
     return () => window.clearInterval(timer);
   }, []);
   let key = 0;
@@ -59,7 +62,7 @@ export function ScriptedKeyboard({ text }: { text: string }) {
     {rows.map((row, n) => <div className="scripted-key-row" key={row}>
       {n === 2 && <span className="wide-key">⇧</span>}
       {Array.from(row).map((letter) => {
-        const active = text && tick % 26 === key++;
+        const active = Boolean(text) && activeKey === key++;
         return <span key={letter} className={active ? "key-lit" : ""}>{letter}</span>;
       })}
       {n === 2 && <span className="wide-key">⌫</span>}
