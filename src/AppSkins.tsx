@@ -140,19 +140,30 @@ function Compose({
   creator,
   onAdd,
   wa = false,
+  suggestions = [],
 }: {
   creator: boolean;
   onAdd: () => void;
   wa?: boolean;
+  suggestions?: string[];
 }) {
   return (
-    <div className={`skin-compose ${wa ? "wa-compose" : ""}`}>
-      {wa ? <Plus size={20} /> : <Mic size={20} />}
-      <NativeComposer creator={creator} onAdd={onAdd} />
+    <>
+      {!wa && suggestions.length > 0 && (
+        <div className="wx-quick-replies" aria-label="婚礼场地选项">
+          {suggestions.map((label) => (
+            <span key={label}>{label}</span>
+          ))}
+        </div>
+      )}
+      <div className={`skin-compose ${wa ? "wa-compose" : ""}`}>
+        {wa ? <Plus size={20} /> : <Mic size={20} />}
+        <NativeComposer creator={creator} onAdd={onAdd} />
 
-      <Smile size={21} />
-      {wa ? <Mic size={20} /> : <Plus size={22} />}
-    </div>
+        <Smile size={21} />
+        {wa ? <Mic size={20} /> : <Plus size={22} />}
+      </div>
+    </>
   );
 }
 export function WeChatContacts({ items, query = "", onOpen }: {
@@ -316,16 +327,24 @@ export function WeChatSkin(p: SkinProps) {
             utility !== "聊天信息" && <p className="skin-empty">暂无内容</p>}
         </div>
       ) : p.thread ? (
-        <>
+        (() => {
+          const threadItems = p.items.filter(
+            (i) => i.title === p.thread && i.meta.contact !== "true",
+          );
+          const suggestions = threadItems
+            .flatMap((i) => (i.meta.quickReplies || "").split("|"))
+            .filter(Boolean);
+          return <>
           <MessageList
             ownerAvatar={ownerAvatar}
-            items={p.items.filter((i) => i.title === p.thread && i.meta.contact !== "true")}
+            items={threadItems}
             creator={p.creator}
             onItem={p.onItem}
             onRead={p.onRead}
           />
-          <Compose creator={p.creator} onAdd={p.onAdd} />
-        </>
+          <Compose creator={p.creator} onAdd={p.onAdd} suggestions={suggestions} />
+          </>;
+        })()
       ) : moments ? (
         <div className="wx-moments">
           <div className="wx-moment-cover">

@@ -1431,6 +1431,21 @@
 .catalog-composer > svg {
   color: var(--app-accent, #848491);
 }
+.wx-quick-replies {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px 3px;
+  border-top: 1px solid #ececec;
+  background: #fafafa;
+}
+.wx-quick-replies span {
+  padding: 7px 11px;
+  border: 1px solid #d9d9d9;
+  border-radius: 16px;
+  background: #fff;
+  color: #333;
+  font-size: 12px;
+}
 .message-heading {
   display: flex;
   justify-content: space-between;

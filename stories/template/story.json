@@ -3,7 +3,7 @@
   "id": "snowool-steve-foundphone",
   "title": "捡到 Steve 的手机",
   "description": "自定义手机预览",
-  "revision": 26,
+  "revision": 27,
   "phone": {
     "owner": "Steve Rogers",
     "date": "2026-10-25",
@@ -224,7 +224,8 @@
         "time": "2026-10-25 09:34",
         "hidden": true,
         "meta": {
-          "pinned": "true"
+          "pinned": "true",
+          "quickReplies": "教堂婚礼|花园婚礼"
         }
       }
     ],
