@@ -49,10 +49,19 @@ export function useScriptedMessages(items: Item[], thread: string, ui?: Record<s
 
 export function ScriptedKeyboard({ text }: { text: string }) {
   const rows = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const timer = window.setInterval(() => setTick((n) => n + 1), 115);
+    return () => window.clearInterval(timer);
+  }, []);
+  let key = 0;
   return <div className="scripted-keyboard" aria-label="巴基正在自动打字" role="status">
     {rows.map((row, n) => <div className="scripted-key-row" key={row}>
       {n === 2 && <span className="wide-key">⇧</span>}
-      {Array.from(row).map((letter, index) => <span key={letter} className={text && (text.length % row.length === index) ? "key-lit" : ""}>{letter}</span>)}
+      {Array.from(row).map((letter) => {
+        const active = text && tick % 26 === key++;
+        return <span key={letter} className={active ? "key-lit" : ""}>{letter}</span>;
+      })}
       {n === 2 && <span className="wide-key">⌫</span>}
     </div>)}
     <div className="scripted-key-row"><span className="wide-key">123</span><span>🌐</span><span className="space-key">空格</span><span className="wide-key">发送</span></div>
