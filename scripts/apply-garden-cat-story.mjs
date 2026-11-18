@@ -97,7 +97,16 @@ if (!skins.includes("const selectedMessageIndex = selectedMessage")) {
     `            : null;\n          const selectedMessageIndex = selectedMessage\n            ? displayThreadItems.findIndex(\n                (item) => item.id === "wedding-venue-question",\n              ) + 1\n            : -1;\n          const displayedMessages = selectedMessage\n            ? [\n                ...displayThreadItems.slice(0, selectedMessageIndex),\n                selectedMessage,\n                ...displayThreadItems.slice(selectedMessageIndex),\n              ]\n            : displayThreadItems;\n          return <>\n          <MessageList\n            ownerAvatar={ownerAvatar}\n            items={displayedMessages}`,
   );
 }
+if (!skins.includes("const cakePending =")) {
+  skins = skins.replace(
+    `          const suggestions = threadItems\n            .flatMap((i) => (i.meta.quickReplies || "").split("|"))\n            .filter(Boolean);\n          const canTriggerCompose = threadItems.some(\n            (i) => i.meta.composeTrigger === "true",\n          );\n          const nextTypingText = threadItems.at(-1)?.meta.nextTyping || "";`,
+    `          const cakePending =\n            p.thread === "bucky❤️" &&\n            threadItems.some((item) => item.id === "bucky-cake-bucky-ate") &&\n            !threadItems.some((item) => item.id === "bucky-cake-bucky-happy");\n          const suggestions = cakePending\n            ? []\n            : threadItems\n            .flatMap((i) => (i.meta.quickReplies || "").split("|"))\n            .filter(Boolean);\n          const canTriggerCompose = threadItems.some(\n            (i) => i.meta.composeTrigger === "true",\n          );\n          const nextTypingText = [...threadItems]\n            .reverse()\n            .find((item) => item.meta.nextTyping)?.meta.nextTyping || "";`,
+  );
+}
 if (!skins.includes("const displayedMessages = selectedMessage")) {
   throw new Error("Chat ordering patch could not be applied");
+}
+if (!skins.includes("const cakePending =")) {
+  throw new Error("Cake reply patch could not be applied");
 }
 writeFileSync(skinsPath, skins);
