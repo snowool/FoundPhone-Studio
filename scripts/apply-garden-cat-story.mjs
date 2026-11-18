@@ -63,7 +63,7 @@ const sequence = [
   event("yelena-alert-delay", "五秒后 Yelena 发来紧急消息和弹窗", "wechat:bucky❤️", [unlock("yelena-alert"), { type: "notification", key: "", value: "wechat/yelena:yelena\ncap，出事了" }], cond("garden-steve-whats-wrong"), [], 5000),
   event("yelena-steve-where-reply", "Steve 询问巴基情况", "wechat:yelena", "yelena-steve-where-bucky", cond("yelena-alert")),
   event("yelena-steve-coming-reply", "Steve 两秒后自动发出我马上到", "wechat:yelena", "yelena-steve-coming", cond("yelena-steve-where-bucky"), ["yelena-bucky-cat-delay"]),
-  event("yelena-bucky-cat-delay", "两秒后 Yelena 说巴基变成猫", "wechat:yelena", ["yelena-bucky-cat", "yelena-bucky-cat-photo"], cond("yelena-steve-coming"), ["yelena-snake-story-delay"], 2000),
+  event("yelena-bucky-cat-delay", "两秒后 Yelena 说巴基变成猫", "wechat:yelena", [unlock("yelena-bucky-cat"), unlock("yelena-bucky-cat-photo")], cond("yelena-steve-coming"), ["yelena-snake-story-delay"], 2000),
   event("yelena-snake-story-delay", "两秒后 Yelena 说明小蛇经过", "wechat:yelena", "yelena-snake-story", cond("yelena-bucky-cat"), [], 2000),
   event("yelena-steve-question-reply", "Steve 对蛇的经过表示震惊", "wechat:yelena", "yelena-steve-question", cond("yelena-snake-story"), ["thor-wedding-1-delay"]),
   event("thor-wedding-1-delay", "Thor 一秒后送上祝福并弹窗", "wechat:yelena", [unlock("thor-wedding-1"), { type: "notification", key: "", value: "wechat/Thor:Thor\n吾友，新婚快乐🥳" }], cond("yelena-steve-question"), ["thor-wedding-2-delay"], 1000),
