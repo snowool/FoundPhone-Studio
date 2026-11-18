@@ -3,7 +3,7 @@
   "id": "snowool-steve-foundphone",
   "title": "捡到 Steve 的手机",
   "description": "自定义手机预览",
-  "revision": 31,
+  "revision": 32,
   "phone": {
     "owner": "Steve Rogers",
     "date": "2026-10-25",
@@ -477,7 +477,7 @@
     "wedding:outfits:done": true,
     "wedding:invitations:done": false,
     "wedding:wedding-party:done": false,
-    "wedding:alpine:done": false,
+    "wedding:alpine:done": true,
     "wedding:first-dance:done": false,
     "wedding:honeymoon:done": false
   },
@@ -771,6 +771,11 @@
         {
           "type": "unlock",
           "key": "bucky-cake-bucky-happy",
+          "value": true
+        },
+        {
+          "type": "variable",
+          "key": "wedding:cake:done",
           "value": true
         }
       ],
