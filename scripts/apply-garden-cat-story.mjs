@@ -129,6 +129,10 @@ if (!skins.includes("const cakePending =")) {
 if (skins.includes("optionsOpen && suggestions.length > 0")) {
   skins = skins.replace("optionsOpen && ", "");
 }
+if (skins.includes("const [optionsOpen, setOptionsOpen] = useState(false);")) {
+  skins = skins.replace("  const [optionsOpen, setOptionsOpen] = useState(false);\n", "");
+  skins = skins.replace("              setOptionsOpen(true);\n", "");
+}
 if (!skins.includes("const displayedMessages = selectedMessage")) {
   throw new Error("Chat ordering patch could not be applied");
 }
