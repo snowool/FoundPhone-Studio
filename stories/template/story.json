@@ -3,7 +3,7 @@
   "id": "snowool-steve-foundphone",
   "title": "捡到 Steve 的手机",
   "description": "自定义手机预览",
-  "revision": 30,
+  "revision": 31,
   "phone": {
     "owner": "Steve Rogers",
     "date": "2026-10-25",
@@ -307,7 +307,8 @@
         "hidden": true,
         "meta": {
           "pinned": "true",
-          "tapToSend": "true"
+          "tapToSend": "true",
+          "nextTyping": "剩下的在哪呀"
         }
       },
       {
@@ -332,7 +333,8 @@
         "time": "2026-10-24 10:36",
         "hidden": true,
         "meta": {
-          "pinned": "true"
+          "pinned": "true",
+          "nextTyping": "好哦，老公今天给你带巧克力味的看你喜欢哪个😉"
         }
       },
       {
