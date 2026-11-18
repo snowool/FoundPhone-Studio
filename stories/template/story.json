@@ -345,7 +345,7 @@
         "hidden": true,
         "meta": {
           "pinned": "true",
-          "composeTrigger": "true"
+          "tapToSend": "true"
         }
       },
       {
@@ -706,11 +706,14 @@
           "op": "eq",
           "value": true
         }
+      ],
+      "next": [
+        "bucky-cake-uncut-reply"
       ]
     },
     {
       "id": "bucky-cake-uncut-reply",
-      "label": "点击输入框后巴基说没有切",
+      "label": "Steve 发出追问后巴基回复没有切",
       "event": "compose",
       "target": "wechat:bucky❤️",
       "once": true,
@@ -727,7 +730,9 @@
           "op": "eq",
           "value": true
         }
-      ]
+      ],
+      "type": "delay",
+      "delayMs": 650
     },
     {
       "id": "bucky-cake-chocolate-reply",
@@ -748,11 +753,14 @@
           "op": "eq",
           "value": true
         }
+      ],
+      "next": [
+        "bucky-cake-happy-reply"
       ]
     },
     {
       "id": "bucky-cake-happy-reply",
-      "label": "Steve 发出巧克力蛋糕消息后巴基开心回应",
+      "label": "Steve 发出巧克力蛋糕消息后巴基自动开心回应",
       "event": "compose",
       "target": "wechat:bucky❤️",
       "once": true,
@@ -769,7 +777,9 @@
           "op": "eq",
           "value": true
         }
-      ]
+      ],
+      "type": "delay",
+      "delayMs": 650
     }
   ],
   "tests": [
@@ -910,16 +920,14 @@
           "target": "wechat:bucky❤️"
         },
         {
-          "event": "compose",
-          "target": "wechat:bucky❤️"
+          "advanceMs": 650
         },
         {
           "event": "compose",
           "target": "wechat:bucky❤️"
         },
         {
-          "event": "compose",
-          "target": "wechat:bucky❤️"
+          "advanceMs": 650
         }
       ],
       "expectUnlocked": [
