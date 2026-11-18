@@ -3,7 +3,10 @@ import { writeFileSync } from "node:fs";
 
 const source = "stories/template/story.json";
 const base = JSON.parse(
-  execFileSync("git", ["show", `da2b604:${source}`], { encoding: "utf8" }),
+  execFileSync("git", ["show", `da2b604:${source}`], {
+    encoding: "utf8",
+    maxBuffer: 10 * 1024 * 1024,
+  }),
 );
 
 base.revision = 34;
