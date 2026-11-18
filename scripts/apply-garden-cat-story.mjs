@@ -26,8 +26,7 @@ const messages = [
   ["thor-wedding-3", "Thor", "我弟弟说他给你送来惊喜礼物😏", {}],
 ];
 const oldIds = new Set(messages.map(([id]) => id));
-base.content.wechat = base.content.wechat.filter((item) => !oldIds.has(item.id));
-base.content.wechat.push(...messages.map(([id, sender, body, meta, outgoing]) => ({
+const gardenMessages = messages.map(([id, sender, body, meta, outgoing]) => ({
   id,
   title: id.startsWith("thor") ? "Thor" : id.startsWith("yelena") ? "yelena" : "bucky❤️",
   sender,
@@ -37,7 +36,15 @@ base.content.wechat.push(...messages.map(([id, sender, body, meta, outgoing]) =>
   hidden: true,
   ...(outgoing ? { outgoing: true } : {}),
   meta: id.startsWith("garden") ? { pinned: "true", ...meta } : meta,
-})));
+}));
+if (!base.content.wechat.some((item) => item.id === "wedding-venue-question")) {
+  throw new Error("Wedding venue question is missing");
+}
+base.content.wechat = base.content.wechat.filter((item) => !oldIds.has(item.id));
+const insertionIndex = base.content.wechat.findIndex(
+  (item) => item.id === "wedding-venue-question",
+);
+base.content.wechat.splice(insertionIndex + 1, 0, ...gardenMessages);
 
 const unlock = (key) => ({ type: "unlock", key, value: true });
 const cond = (key) => [{ key: `unlocked:${key}`, op: "eq", value: true }];
@@ -57,9 +64,9 @@ const sequence = [
   event("yelena-bucky-cat-delay", "两秒后 Yelena 说巴基变成猫", "wechat:yelena", "yelena-bucky-cat", cond("yelena-steve-coming"), ["yelena-snake-story-delay"], 2000),
   event("yelena-snake-story-delay", "两秒后 Yelena 说明小蛇经过", "wechat:yelena", "yelena-snake-story", cond("yelena-bucky-cat"), [], 2000),
   event("yelena-steve-question-reply", "Steve 对蛇的经过表示震惊", "wechat:yelena", "yelena-steve-question", cond("yelena-snake-story"), ["thor-wedding-1-delay"]),
-  event("thor-wedding-1-delay", "Thor 一秒后送上祝福", "wechat:yelena", "thor-wedding-1", cond("yelena-steve-question"), ["thor-wedding-2-delay"], 1000),
-  event("thor-wedding-2-delay", "Thor 一秒后说明来意", "wechat:yelena", "thor-wedding-2", cond("thor-wedding-1"), ["thor-wedding-3-delay"], 1000),
-  event("thor-wedding-3-delay", "Thor 一秒后提起 Loki 的礼物", "wechat:yelena", "thor-wedding-3", cond("thor-wedding-2"), [], 1000),
+  event("thor-wedding-1-delay", "Thor 一秒后送上祝福并弹窗", "wechat:yelena", [unlock("thor-wedding-1"), { type: "notification", key: "", value: "wechat/Thor:Thor\n吾友，新婚快乐🥳" }], cond("yelena-steve-question"), ["thor-wedding-2-delay"], 1000),
+  event("thor-wedding-2-delay", "Thor 一秒后说明来意并弹窗", "wechat:yelena", [unlock("thor-wedding-2"), { type: "notification", key: "", value: "wechat/Thor:Thor\nloki和我今天专门前往中庭送上祝福" }], cond("thor-wedding-1"), ["thor-wedding-3-delay"], 1000),
+  event("thor-wedding-3-delay", "Thor 一秒后提起 Loki 的礼物并弹窗", "wechat:yelena", [unlock("thor-wedding-3"), { type: "notification", key: "", value: "wechat/Thor:Thor\n我弟弟说他给你送来惊喜礼物😏" }], cond("thor-wedding-2"), [], 1000),
 ];
 const sequenceIds = new Set(sequence.map((item) => item.id));
 base.events = base.events.filter((item) => !sequenceIds.has(item.id));
@@ -71,6 +78,6 @@ base.tests.push({
     { event: "venueChoice", target: "wechat:bucky❤️:花园婚礼" }, { event: "compose", target: "wechat:bucky❤️" }, { advanceMs: 15000 }, { event: "compose", target: "wechat:bucky❤️" }, { advanceMs: 5000 }, { event: "compose", target: "wechat:yelena" }, { advanceMs: 2000 }, { event: "compose", target: "wechat:yelena" }, { advanceMs: 2000 }, { advanceMs: 2000 }, { event: "compose", target: "wechat:yelena" }, { advanceMs: 1000 }, { advanceMs: 1000 }, { advanceMs: 1000 },
   ],
   expectUnlocked: messages.map(([id]) => id),
-  expectNotifications: ["wechat/bucky❤️:bucky❤️\n我吃了一块😋", "wechat/yelena:yelena\ncap，出事了"],
+  expectNotifications: ["wechat/bucky❤️:bucky❤️\n我吃了一块😋", "wechat/yelena:yelena\ncap，出事了", "wechat/Thor:Thor\n吾友，新婚快乐🥳", "wechat/Thor:Thor\nloki和我今天专门前往中庭送上祝福", "wechat/Thor:Thor\n我弟弟说他给你送来惊喜礼物😏"],
 });
 writeFileSync(source, `${JSON.stringify(base, null, 2)}\n`);
