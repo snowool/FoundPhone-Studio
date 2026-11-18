@@ -1,7 +1,7 @@
 import { NativeComposer } from "./DeviceSystem";
 import { ScriptedKeyboard } from "./ScriptedMessages";
 import { useSkinState } from "./skinState";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   ChevronLeft,
   Plus,
@@ -104,9 +104,15 @@ function MessageList({
   return (
     <div className={`skin-messages ${whatsapp ? "wa-wallpaper" : ""}`}>
       <div className="skin-date">{items[0]?.time.slice(0, 10)}</div>
-      {items.map((i) => (
+      {items.map((i, index) => (
+        <Fragment key={i.id}>
+        {index > 0 &&
+          items[index - 1]?.time.slice(0, 10) !== i.time.slice(0, 10) && (
+            <div className="skin-date">
+              {i.time.slice(5, 10).replace("-", "月")}日 {i.time.slice(-5)}
+            </div>
+          )}
         <div
-          key={i.id}
           className={`skin-message ${i.outgoing ? "outgoing" : ""}`}
         >
           {!whatsapp && !i.outgoing && (
@@ -133,6 +139,7 @@ function MessageList({
           </button>
           {!whatsapp && i.outgoing && <Avatar name={i.sender} src={ownerAvatar || i.avatar} />}
         </div>
+        </Fragment>
       ))}
     </div>
   );
