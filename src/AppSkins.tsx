@@ -45,6 +45,7 @@ export type SkinProps = {
   items: Item[];
   creator: boolean;
   onRead: (id: string) => void;
+  onEvent?: (event: string, target: string) => void;
   onItem: (i: Item, photoList?: readonly Item[]) => void;
   onAdd: () => void;
   onBack: () => void;
@@ -150,12 +151,14 @@ function Compose({
   wa = false,
   suggestions = [],
   onSuggestion,
+  onTrigger,
 }: {
   creator: boolean;
   onAdd: () => void;
   wa?: boolean;
   suggestions?: string[];
   onSuggestion?: (label: string) => void;
+  onTrigger?: () => void;
 }) {
   const [optionsOpen, setOptionsOpen] = useState(false);
   return (
@@ -166,10 +169,13 @@ function Compose({
           <button
             className="native-compose-field"
             aria-label="选择婚礼场地"
-            onClick={() => setOptionsOpen(true)}
+            onClick={() => {
+              onTrigger?.();
+              setOptionsOpen(true);
+            }}
           />
         ) : (
-          <NativeComposer creator={creator} onAdd={onAdd} />
+          <NativeComposer creator={creator} onAdd={onAdd} onTrigger={onTrigger} />
         )}
 
         <Smile size={21} />
@@ -380,6 +386,12 @@ export function WeChatSkin(p: SkinProps) {
           const suggestions = threadItems
             .flatMap((i) => (i.meta.quickReplies || "").split("|"))
             .filter(Boolean);
+          const canTriggerCompose = threadItems.some(
+            (i) => i.meta.composeTrigger === "true",
+          );
+          const triggerCompose = canTriggerCompose
+            ? () => p.onEvent?.("compose", `${p.appId}:${p.thread}`)
+            : undefined;
           const avatarForContact = (name: string) =>
             p.items.find(
               (i) => i.meta.contact === "true" && i.sender === name,
@@ -425,6 +437,7 @@ export function WeChatSkin(p: SkinProps) {
               onAdd={p.onAdd}
               suggestions={venueChoice ? [] : suggestions}
               onSuggestion={chooseVenue}
+              onTrigger={triggerCompose}
             />
           )}
           </>;

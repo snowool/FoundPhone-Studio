@@ -497,6 +497,7 @@ function PhoneRuntime({
                     if (name) event("openThread", `${app}:${name}`);
                   }}
                   onRead={(id) => event("read", id)}
+                  onEvent={(eventName, target) => event(eventName, target)}
                   onEdit={(item) => onEdit?.(app, item)}
                   onAdd={() => onAdd?.(app)}
                   onBack={() => setApp("")}
@@ -910,6 +911,7 @@ function AppContent({
   thread,
   setThread,
   onRead,
+  onEvent,
   onEdit,
   onAdd,
   onBack,
@@ -925,6 +927,7 @@ function AppContent({
   thread: string;
   setThread: (name: string) => void;
   onRead: (id: string) => void;
+  onEvent: (event: string, target: string) => void;
   onEdit: (item: Item) => void;
   onAdd: () => void;
   onBack: () => void;
@@ -1063,6 +1066,7 @@ function AppContent({
               items={shown}
               creator={creator}
               onRead={onRead}
+              onEvent={onEvent}
               onItem={read}
               onAdd={onAdd}
               onBack={onBack}

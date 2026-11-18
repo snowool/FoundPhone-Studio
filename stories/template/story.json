@@ -3,7 +3,7 @@
   "id": "snowool-steve-foundphone",
   "title": "捡到 Steve 的手机",
   "description": "自定义手机预览",
-  "revision": 28,
+  "revision": 29,
   "phone": {
     "owner": "Steve Rogers",
     "date": "2026-10-25",
@@ -196,7 +196,9 @@
         "body": "我今天有一个小小的愿望",
         "time": "2026-10-22 09:41",
         "outgoing": true,
-        "meta": { "pinned": "true" }
+        "meta": {
+          "pinned": "true"
+        }
       },
       {
         "id": "bucky-rain-wish-bucky-question",
@@ -204,7 +206,9 @@
         "sender": "bucky❤️",
         "body": "是什么",
         "time": "2026-10-22 09:41",
-        "meta": { "pinned": "true" }
+        "meta": {
+          "pinned": "true"
+        }
       },
       {
         "id": "bucky-rain-wish-steve-walk",
@@ -213,7 +217,9 @@
         "body": "下雨天能和你牵着手散步☔️",
         "time": "2026-10-22 09:41",
         "outgoing": true,
-        "meta": { "pinned": "true" }
+        "meta": {
+          "pinned": "true"
+        }
       },
       {
         "id": "bucky-rain-wish-bucky-reply",
@@ -221,7 +227,9 @@
         "sender": "bucky❤️",
         "body": "你跟谁学的…",
         "time": "2026-10-22 09:42",
-        "meta": { "pinned": "true" }
+        "meta": {
+          "pinned": "true"
+        }
       },
       {
         "id": "bucky-rain-wish-steve-tony",
@@ -230,7 +238,9 @@
         "body": "😖😖tony说你会回我说你的愿望是下雨",
         "time": "2026-10-22 09:42",
         "outgoing": true,
-        "meta": { "pinned": "true" }
+        "meta": {
+          "pinned": "true"
+        }
       },
       {
         "id": "bucky-alpine-steve",
@@ -239,7 +249,9 @@
         "body": "阿尔派说她好想妈咪，bucky你什么时候回家😣😣",
         "time": "2026-10-23 18:05",
         "outgoing": true,
-        "meta": { "pinned": "true" }
+        "meta": {
+          "pinned": "true"
+        }
       },
       {
         "id": "bucky-alpine-bucky-work",
@@ -247,7 +259,9 @@
         "sender": "bucky❤️",
         "body": "还没下班呢stevie",
         "time": "2026-10-23 18:05",
-        "meta": { "pinned": "true" }
+        "meta": {
+          "pinned": "true"
+        }
       },
       {
         "id": "bucky-alpine-bucky-miss-you",
@@ -255,7 +269,9 @@
         "sender": "bucky❤️",
         "body": "我也好想你",
         "time": "2026-10-23 18:06",
-        "meta": { "pinned": "true" }
+        "meta": {
+          "pinned": "true"
+        }
       },
       {
         "id": "bucky-alpine-steve-reaction",
@@ -264,7 +280,9 @@
         "body": "😳😳",
         "time": "2026-10-23 18:06",
         "outgoing": true,
-        "meta": { "pinned": "true" }
+        "meta": {
+          "pinned": "true"
+        }
       },
       {
         "id": "wedding-venue-garden",
@@ -314,7 +332,8 @@
         "time": "2026-10-24 10:35",
         "meta": {
           "pinned": "true"
-        }
+        },
+        "outgoing": true
       },
       {
         "id": "bucky-cake-bucky-ate",
@@ -325,7 +344,8 @@
         "time": "2026-10-24 10:35",
         "hidden": true,
         "meta": {
-          "pinned": "true"
+          "pinned": "true",
+          "composeTrigger": "true"
         }
       },
       {
@@ -338,7 +358,8 @@
         "hidden": true,
         "meta": {
           "pinned": "true"
-        }
+        },
+        "outgoing": true
       },
       {
         "id": "bucky-cake-bucky-uncut",
@@ -362,7 +383,8 @@
         "hidden": true,
         "meta": {
           "pinned": "true"
-        }
+        },
+        "outgoing": true
       },
       {
         "id": "bucky-cake-bucky-happy",
@@ -667,9 +689,9 @@
     },
     {
       "id": "bucky-cake-ask-where",
-      "label": "点开巴基的回复后追问蛋糕",
-      "event": "read",
-      "target": "bucky-cake-bucky-ate",
+      "label": "点击输入框后 Steve 追问蛋糕",
+      "event": "compose",
+      "target": "wechat:bucky❤️",
       "once": true,
       "actions": [
         {
@@ -677,13 +699,20 @@
           "key": "bucky-cake-steve-where",
           "value": true
         }
+      ],
+      "conditions": [
+        {
+          "key": "unlocked:bucky-cake-bucky-ate",
+          "op": "eq",
+          "value": true
+        }
       ]
     },
     {
       "id": "bucky-cake-uncut-reply",
-      "label": "点开追问后巴基说没有切",
-      "event": "read",
-      "target": "bucky-cake-steve-where",
+      "label": "点击输入框后巴基说没有切",
+      "event": "compose",
+      "target": "wechat:bucky❤️",
       "once": true,
       "actions": [
         {
@@ -691,13 +720,20 @@
           "key": "bucky-cake-bucky-uncut",
           "value": true
         }
+      ],
+      "conditions": [
+        {
+          "key": "unlocked:bucky-cake-steve-where",
+          "op": "eq",
+          "value": true
+        }
       ]
     },
     {
       "id": "bucky-cake-chocolate-reply",
-      "label": "点开巴基的回答后发送巧克力蛋糕",
-      "event": "read",
-      "target": "bucky-cake-bucky-uncut",
+      "label": "点击输入框后 Steve 发送巧克力蛋糕",
+      "event": "compose",
+      "target": "wechat:bucky❤️",
       "once": true,
       "actions": [
         {
@@ -705,18 +741,32 @@
           "key": "bucky-cake-steve-chocolate",
           "value": true
         }
+      ],
+      "conditions": [
+        {
+          "key": "unlocked:bucky-cake-bucky-uncut",
+          "op": "eq",
+          "value": true
+        }
       ]
     },
     {
       "id": "bucky-cake-happy-reply",
-      "label": "点开巧克力蛋糕消息后巴基开心回应",
-      "event": "read",
-      "target": "bucky-cake-steve-chocolate",
+      "label": "Steve 发出巧克力蛋糕消息后巴基开心回应",
+      "event": "compose",
+      "target": "wechat:bucky❤️",
       "once": true,
       "actions": [
         {
           "type": "unlock",
           "key": "bucky-cake-bucky-happy",
+          "value": true
+        }
+      ],
+      "conditions": [
+        {
+          "key": "unlocked:bucky-cake-steve-chocolate",
+          "op": "eq",
           "value": true
         }
       ]
@@ -850,26 +900,26 @@
       ]
     },
     {
-      "name": "芝士蛋糕聊天按点击顺序出现",
+      "name": "芝士蛋糕聊天按点击输入框顺序出现",
       "steps": [
         {
           "advanceMs": 700
         },
         {
-          "event": "read",
-          "target": "bucky-cake-bucky-ate"
+          "event": "compose",
+          "target": "wechat:bucky❤️"
         },
         {
-          "event": "read",
-          "target": "bucky-cake-steve-where"
+          "event": "compose",
+          "target": "wechat:bucky❤️"
         },
         {
-          "event": "read",
-          "target": "bucky-cake-bucky-uncut"
+          "event": "compose",
+          "target": "wechat:bucky❤️"
         },
         {
-          "event": "read",
-          "target": "bucky-cake-steve-chocolate"
+          "event": "compose",
+          "target": "wechat:bucky❤️"
         }
       ],
       "expectUnlocked": [
