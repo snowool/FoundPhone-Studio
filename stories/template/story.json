@@ -190,6 +190,83 @@
         }
       },
       {
+        "id": "bucky-rain-wish-steve",
+        "title": "bucky❤️",
+        "sender": "Steve Rogers",
+        "body": "我今天有一个小小的愿望",
+        "time": "2026-10-22 09:41",
+        "outgoing": true,
+        "meta": { "pinned": "true" }
+      },
+      {
+        "id": "bucky-rain-wish-bucky-question",
+        "title": "bucky❤️",
+        "sender": "bucky❤️",
+        "body": "是什么",
+        "time": "2026-10-22 09:41",
+        "meta": { "pinned": "true" }
+      },
+      {
+        "id": "bucky-rain-wish-steve-walk",
+        "title": "bucky❤️",
+        "sender": "Steve Rogers",
+        "body": "下雨天能和你牵着手散步☔️",
+        "time": "2026-10-22 09:41",
+        "outgoing": true,
+        "meta": { "pinned": "true" }
+      },
+      {
+        "id": "bucky-rain-wish-bucky-reply",
+        "title": "bucky❤️",
+        "sender": "bucky❤️",
+        "body": "你跟谁学的…",
+        "time": "2026-10-22 09:42",
+        "meta": { "pinned": "true" }
+      },
+      {
+        "id": "bucky-rain-wish-steve-tony",
+        "title": "bucky❤️",
+        "sender": "Steve Rogers",
+        "body": "😖😖tony说你会回我说你的愿望是下雨",
+        "time": "2026-10-22 09:42",
+        "outgoing": true,
+        "meta": { "pinned": "true" }
+      },
+      {
+        "id": "bucky-alpine-steve",
+        "title": "bucky❤️",
+        "sender": "Steve Rogers",
+        "body": "阿尔派说她好想妈咪，bucky你什么时候回家😣😣",
+        "time": "2026-10-23 18:05",
+        "outgoing": true,
+        "meta": { "pinned": "true" }
+      },
+      {
+        "id": "bucky-alpine-bucky-work",
+        "title": "bucky❤️",
+        "sender": "bucky❤️",
+        "body": "还没下班呢stevie",
+        "time": "2026-10-23 18:05",
+        "meta": { "pinned": "true" }
+      },
+      {
+        "id": "bucky-alpine-bucky-miss-you",
+        "title": "bucky❤️",
+        "sender": "bucky❤️",
+        "body": "我也好想你",
+        "time": "2026-10-23 18:06",
+        "meta": { "pinned": "true" }
+      },
+      {
+        "id": "bucky-alpine-steve-reaction",
+        "title": "bucky❤️",
+        "sender": "Steve Rogers",
+        "body": "😳😳",
+        "time": "2026-10-23 18:06",
+        "outgoing": true,
+        "meta": { "pinned": "true" }
+      },
+      {
         "id": "wedding-venue-garden",
         "title": "bucky❤️",
         "sender": "bucky❤️",
