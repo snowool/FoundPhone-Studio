@@ -331,7 +331,8 @@
         "body": "buck我昨天带回来的芝士蛋糕呢",
         "time": "2026-10-24 10:35",
         "meta": {
-          "pinned": "true"
+          "pinned": "true",
+          "composeTrigger": "true"
         },
         "outgoing": true
       },
