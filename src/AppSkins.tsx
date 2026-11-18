@@ -262,6 +262,10 @@ export function WeChatSkin(p: SkinProps) {
   );
   const [venueChoice, setVenueChoice] = useSkinState<string>(p, "venueChoice", "");
   const [typingChoice, setTypingChoice] = useState("");
+  const [pendingSend, setPendingSend] = useState<{
+    thread: string;
+    text: string;
+  } | null>(null);
   const conversations = [
     ...new Set(
       p.items
@@ -389,8 +393,16 @@ export function WeChatSkin(p: SkinProps) {
           const canTriggerCompose = threadItems.some(
             (i) => i.meta.composeTrigger === "true",
           );
-          const triggerCompose = canTriggerCompose
-            ? () => p.onEvent?.("compose", `${p.appId}:${p.thread}`)
+          const nextTypingText = threadItems.at(-1)?.meta.nextTyping || "";
+          const triggerCompose = canTriggerCompose && nextTypingText
+            ? () => {
+                if (pendingSend) return;
+                setPendingSend({ thread: p.thread, text: nextTypingText });
+                window.setTimeout(() => {
+                  p.onEvent?.("compose", `${p.appId}:${p.thread}`);
+                  setPendingSend(null);
+                }, 1000);
+              }
             : undefined;
           const avatarForContact = (name: string) =>
             p.items.find(
@@ -408,10 +420,10 @@ export function WeChatSkin(p: SkinProps) {
               setTypingChoice("");
             }, 1000);
           };
-          const selectedMessage = venueChoice
+          const selectedMessage = venueChoice && p.thread === "bucky❤️"
             ? makeItem({
                 id: "venue-choice-" + venueChoice,
-                title: p.thread,
+                title: "bucky❤️",
                 sender: p.owner || "Steve Rogers",
                 avatar: ownerAvatar || "",
                 body: venueChoice,
@@ -431,6 +443,8 @@ export function WeChatSkin(p: SkinProps) {
           />
           {typingChoice ? (
             <ChoiceTyping label={typingChoice} />
+          ) : pendingSend?.thread === p.thread ? (
+            <ChoiceTyping label={pendingSend.text} />
           ) : (
             <Compose
               creator={p.creator}
