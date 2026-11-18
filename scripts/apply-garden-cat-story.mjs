@@ -71,6 +71,13 @@ const sequence = [
 const sequenceIds = new Set(sequence.map((item) => item.id));
 base.events = base.events.filter((item) => !sequenceIds.has(item.id));
 base.events.push(...sequence);
+const cakeHappyEvent = base.events.find(
+  (item) => item.id === "bucky-cake-happy-reply",
+);
+if (!cakeHappyEvent) throw new Error("Cake finale event is missing");
+cakeHappyEvent.next = [
+  ...new Set([...(cakeHappyEvent.next || []), "wedding-venue-after-photos"]),
+];
 base.tests = base.tests.filter((item) => item.name !== "花园婚礼后完整触发巴基变猫剧情");
 base.tests.push({
   name: "花园婚礼后完整触发巴基变猫剧情",
@@ -79,6 +86,28 @@ base.tests.push({
   ],
   expectUnlocked: messages.map(([id]) => id),
   expectNotifications: ["wechat/bucky❤️:bucky❤️\n我吃了一块😋", "wechat/yelena:yelena\ncap，出事了", "wechat/Thor:Thor\n吾友，新婚快乐🥳", "wechat/Thor:Thor\nloki和我今天专门前往中庭送上祝福", "wechat/Thor:Thor\n我弟弟说他给你送来惊喜礼物😏"],
+});
+base.tests = base.tests.filter((item) => item.name !== "蛋糕对话后自动衔接场地图片和新剧情");
+base.tests.push({
+  name: "蛋糕对话后自动衔接场地图片和新剧情",
+  steps: [
+    { advanceMs: 700 },
+    { event: "compose", target: "wechat:bucky❤️" },
+    { advanceMs: 650 },
+    { event: "compose", target: "wechat:bucky❤️" },
+    { advanceMs: 650 },
+    { advanceMs: 3000 },
+  ],
+  expectUnlocked: [
+    "bucky-cake-bucky-happy",
+    "wedding-venue-hall",
+    "wedding-venue-garden",
+    "wedding-venue-question",
+  ],
+  expectNotifications: [
+    "wechat/bucky❤️:bucky❤️\n我吃了一块😋",
+    "wechat/bucky❤️:bucky❤️\n你想好场地选哪个了吗",
+  ],
 });
 writeFileSync(source, `${JSON.stringify(base, null, 2)}\n`);
 
