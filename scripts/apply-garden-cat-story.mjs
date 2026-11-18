@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
 const source = "stories/template/story.json";
 const base = JSON.parse(
@@ -81,3 +81,23 @@ base.tests.push({
   expectNotifications: ["wechat/bucky❤️:bucky❤️\n我吃了一块😋", "wechat/yelena:yelena\ncap，出事了", "wechat/Thor:Thor\n吾友，新婚快乐🥳", "wechat/Thor:Thor\nloki和我今天专门前往中庭送上祝福", "wechat/Thor:Thor\n我弟弟说他给你送来惊喜礼物😏"],
 });
 writeFileSync(source, `${JSON.stringify(base, null, 2)}\n`);
+
+
+const skinsPath = "src/AppSkins.tsx";
+let skins = readFileSync(skinsPath, "utf8");
+if (!skins.includes("const scrollRef = useRef<HTMLDivElement>(null);")) {
+  skins = skins.replace(
+    `}) {\n  return (\n    <div className={\`skin-messages \${whatsapp ? "wa-wallpaper" : ""}\`}>`,
+    `}) {\n  const scrollRef = useRef<HTMLDivElement>(null);\n  useEffect(() => {\n    const list = scrollRef.current;\n    if (!list) return;\n    list.scrollTop = list.scrollHeight;\n  }, [items]);\n  return (\n    <div\n      ref={scrollRef}\n      className={\`skin-messages \${whatsapp ? "wa-wallpaper" : ""}\`}\n    >`,
+  );
+}
+if (!skins.includes("const selectedMessageIndex = selectedMessage")) {
+  skins = skins.replace(
+    `            : null;\n          return <>\n          <MessageList\n            ownerAvatar={ownerAvatar}\n            items={selectedMessage ? [...displayThreadItems, selectedMessage] : displayThreadItems}`,
+    `            : null;\n          const selectedMessageIndex = selectedMessage\n            ? displayThreadItems.findIndex(\n                (item) => item.id === "wedding-venue-question",\n              ) + 1\n            : -1;\n          const displayedMessages = selectedMessage\n            ? [\n                ...displayThreadItems.slice(0, selectedMessageIndex),\n                selectedMessage,\n                ...displayThreadItems.slice(selectedMessageIndex),\n              ]\n            : displayThreadItems;\n          return <>\n          <MessageList\n            ownerAvatar={ownerAvatar}\n            items={displayedMessages}`,
+  );
+}
+if (!skins.includes("const displayedMessages = selectedMessage")) {
+  throw new Error("Chat ordering patch could not be applied");
+}
+writeFileSync(skinsPath, skins);
