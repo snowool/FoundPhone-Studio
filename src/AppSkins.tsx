@@ -1,7 +1,7 @@
 import { NativeComposer } from "./DeviceSystem";
 import { ScriptedKeyboard } from "./ScriptedMessages";
 import { useSkinState } from "./skinState";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import {
   ChevronLeft,
   Plus,
@@ -266,6 +266,26 @@ export function WeChatSkin(p: SkinProps) {
     thread: string;
     text: string;
   } | null>(null);
+  const autoSendIds = useRef(new Set<string>());
+  useEffect(() => {
+    const item = [...p.items]
+      .reverse()
+      .find((candidate) =>
+        candidate.outgoing &&
+        candidate.meta.autoNextTyping &&
+        !autoSendIds.current.has(candidate.id),
+      );
+    if (!item || !p.onEvent) return;
+    autoSendIds.current.add(item.id);
+    const start = window.setTimeout(() => {
+      setPendingSend({ thread: item.title, text: item.meta.autoNextTyping });
+      window.setTimeout(() => {
+        p.onEvent?.("compose", `${p.appId}:${item.title}`);
+        setPendingSend(null);
+      }, 1000);
+    }, Number(item.meta.autoDelayMs || 0));
+    return () => window.clearTimeout(start);
+  }, [p.appId, p.items, p.onEvent]);
   const conversations = [
     ...new Set(
       p.items
@@ -418,6 +438,9 @@ export function WeChatSkin(p: SkinProps) {
             window.setTimeout(() => {
               setVenueChoice(label);
               setTypingChoice("");
+              if (label === "花园婚礼") {
+                p.onEvent?.("venueChoice", `${p.appId}:bucky❤️:${label}`);
+              }
             }, 1000);
           };
           const selectedMessage = venueChoice && p.thread === "bucky❤️"
