@@ -126,6 +126,9 @@ if (!skins.includes("const cakePending =")) {
     `          const cakePending =\n            p.thread === "bucky❤️" &&\n            threadItems.some((item) => item.id === "bucky-cake-bucky-ate") &&\n            !threadItems.some((item) => item.id === "bucky-cake-bucky-happy");\n          const suggestions = cakePending\n            ? []\n            : threadItems\n            .flatMap((i) => (i.meta.quickReplies || "").split("|"))\n            .filter(Boolean);\n          const canTriggerCompose = threadItems.some(\n            (i) => i.meta.composeTrigger === "true",\n          );\n          const nextTypingText = [...threadItems]\n            .reverse()\n            .find((item) => item.meta.nextTyping)?.meta.nextTyping || "";`,
   );
 }
+if (skins.includes("optionsOpen && suggestions.length > 0")) {
+  skins = skins.replace("optionsOpen && ", "");
+}
 if (!skins.includes("const displayedMessages = selectedMessage")) {
   throw new Error("Chat ordering patch could not be applied");
 }
