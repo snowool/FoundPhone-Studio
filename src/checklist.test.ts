@@ -17,18 +17,21 @@ it("completes only the corresponding wedding task and retains marks after save r
     "ceremony",
     "officiant",
     "outfits",
+    "alpine",
   ]);
   state = dispatch(work, state, "read", note.id);
   expect(completed(state.variables)).toEqual([
     "ceremony",
     "officiant",
     "outfits",
+    "alpine",
   ]);
   state = dispatch(work, state, "openApp", "calendar");
   expect(completed(state.variables)).toEqual([
     "ceremony",
     "officiant",
     "outfits",
+    "alpine",
   ]);
   state = dispatch(work, state, "read", "wedding-date-november-01");
   expect(completed(state.variables)).toEqual([
@@ -36,12 +39,14 @@ it("completes only the corresponding wedding task and retains marks after save r
     "ceremony",
     "officiant",
     "outfits",
+    "alpine",
   ]);
   expect(completed(JSON.parse(JSON.stringify(state)).variables)).toEqual([
     "date",
     "ceremony",
     "officiant",
     "outfits",
+    "alpine",
   ]);
   for (const task of checklistRows(note)) {
     state = dispatch(work, state, "variable", `wedding:${task.id}:confirmed`);
