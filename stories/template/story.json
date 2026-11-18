@@ -3,7 +3,7 @@
   "id": "snowool-steve-foundphone",
   "title": "捡到 Steve 的手机",
   "description": "自定义手机预览",
-  "revision": 27,
+  "revision": 28,
   "phone": {
     "owner": "Steve Rogers",
     "date": "2026-10-25",
@@ -304,6 +304,77 @@
           "pinned": "true",
           "quickReplies": "教堂婚礼|花园婚礼"
         }
+      },
+      {
+        "id": "bucky-cake-steve-start",
+        "title": "bucky❤️",
+        "sender": "Steve Rogers",
+        "kind": "text",
+        "body": "buck我昨天带回来的芝士蛋糕呢",
+        "time": "2026-10-24 10:35",
+        "meta": {
+          "pinned": "true"
+        }
+      },
+      {
+        "id": "bucky-cake-bucky-ate",
+        "title": "bucky❤️",
+        "sender": "bucky❤️",
+        "kind": "text",
+        "body": "我吃了一块😋",
+        "time": "2026-10-24 10:35",
+        "hidden": true,
+        "meta": {
+          "pinned": "true"
+        }
+      },
+      {
+        "id": "bucky-cake-steve-where",
+        "title": "bucky❤️",
+        "sender": "Steve Rogers",
+        "kind": "text",
+        "body": "剩下的在哪呀",
+        "time": "2026-10-24 10:36",
+        "hidden": true,
+        "meta": {
+          "pinned": "true"
+        }
+      },
+      {
+        "id": "bucky-cake-bucky-uncut",
+        "title": "bucky❤️",
+        "sender": "bucky❤️",
+        "kind": "text",
+        "body": "我没有切👿👿",
+        "time": "2026-10-24 10:36",
+        "hidden": true,
+        "meta": {
+          "pinned": "true"
+        }
+      },
+      {
+        "id": "bucky-cake-steve-chocolate",
+        "title": "bucky❤️",
+        "sender": "Steve Rogers",
+        "kind": "text",
+        "body": "好哦，老公今天给你带巧克力味的看你喜欢哪个😉",
+        "time": "2026-10-24 10:37",
+        "hidden": true,
+        "meta": {
+          "pinned": "true"
+        }
+      },
+      {
+        "id": "bucky-cake-bucky-happy",
+        "title": "bucky❤️",
+        "sender": "bucky❤️",
+        "kind": "text",
+        "body": "（๑⃙⃘๑⃙⃘´༥`๑⃙⃘๑⃙⃘) 𐂐",
+        "time": "2026-10-24 10:37",
+        "hidden": true,
+        "meta": {
+          "pinned": "true"
+        }
       }
     ],
     "calendar": [
@@ -572,6 +643,83 @@
           "value": "wechat/bucky❤️:bucky❤️\n你想好场地选哪个了吗"
         }
       ]
+    },
+    {
+      "id": "bucky-cake-after-startup",
+      "label": "开机后收到巴基的蛋糕回复",
+      "type": "delay",
+      "event": "start",
+      "target": "",
+      "delayMs": 700,
+      "once": true,
+      "actions": [
+        {
+          "type": "unlock",
+          "key": "bucky-cake-bucky-ate",
+          "value": true
+        },
+        {
+          "type": "notification",
+          "key": "",
+          "value": "wechat/bucky❤️:bucky❤️\n我吃了一块😋"
+        }
+      ]
+    },
+    {
+      "id": "bucky-cake-ask-where",
+      "label": "点开巴基的回复后追问蛋糕",
+      "event": "read",
+      "target": "bucky-cake-bucky-ate",
+      "once": true,
+      "actions": [
+        {
+          "type": "unlock",
+          "key": "bucky-cake-steve-where",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "bucky-cake-uncut-reply",
+      "label": "点开追问后巴基说没有切",
+      "event": "read",
+      "target": "bucky-cake-steve-where",
+      "once": true,
+      "actions": [
+        {
+          "type": "unlock",
+          "key": "bucky-cake-bucky-uncut",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "bucky-cake-chocolate-reply",
+      "label": "点开巴基的回答后发送巧克力蛋糕",
+      "event": "read",
+      "target": "bucky-cake-bucky-uncut",
+      "once": true,
+      "actions": [
+        {
+          "type": "unlock",
+          "key": "bucky-cake-steve-chocolate",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "bucky-cake-happy-reply",
+      "label": "点开巧克力蛋糕消息后巴基开心回应",
+      "event": "read",
+      "target": "bucky-cake-steve-chocolate",
+      "once": true,
+      "actions": [
+        {
+          "type": "unlock",
+          "key": "bucky-cake-bucky-happy",
+          "value": true
+        }
+      ]
     }
   ],
   "tests": [
@@ -636,7 +784,7 @@
       "expectNotifications": []
     },
     {
-      "name": "打开相册不到三秒没有通知",
+      "name": "打开相册不到三秒不触发场地消息",
       "steps": [
         {
           "event": "openApp",
@@ -646,7 +794,9 @@
           "advanceMs": 2999
         }
       ],
-      "expectNotifications": []
+      "expectNotifications": [
+        "wechat/bucky❤️:bucky❤️\n我吃了一块😋"
+      ]
     },
     {
       "name": "相册三秒后收到两张场地照片和文字且不重复",
@@ -684,17 +834,54 @@
         "wedding-venue-question"
       ],
       "expectNotifications": [
+        "wechat/bucky❤️:bucky❤️\n我吃了一块😋",
         "wechat/bucky❤️:bucky❤️\n你想好场地选哪个了吗"
       ]
     },
     {
-      "name": "未打开相册不触发场地消息",
+      "name": "未打开相册时只触发开机蛋糕消息",
       "steps": [
         {
           "advanceMs": 5000
         }
       ],
-      "expectNotifications": []
+      "expectNotifications": [
+        "wechat/bucky❤️:bucky❤️\n我吃了一块😋"
+      ]
+    },
+    {
+      "name": "芝士蛋糕聊天按点击顺序出现",
+      "steps": [
+        {
+          "advanceMs": 700
+        },
+        {
+          "event": "read",
+          "target": "bucky-cake-bucky-ate"
+        },
+        {
+          "event": "read",
+          "target": "bucky-cake-steve-where"
+        },
+        {
+          "event": "read",
+          "target": "bucky-cake-bucky-uncut"
+        },
+        {
+          "event": "read",
+          "target": "bucky-cake-steve-chocolate"
+        }
+      ],
+      "expectUnlocked": [
+        "bucky-cake-bucky-ate",
+        "bucky-cake-steve-where",
+        "bucky-cake-bucky-uncut",
+        "bucky-cake-steve-chocolate",
+        "bucky-cake-bucky-happy"
+      ],
+      "expectNotifications": [
+        "wechat/bucky❤️:bucky❤️\n我吃了一块😋"
+      ]
     }
   ],
   "restrictAppCatalog": true
