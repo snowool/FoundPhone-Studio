@@ -10,6 +10,33 @@ const base = JSON.parse(
 );
 
 base.revision = 34;
+const beforeCakeMessages = [
+  ["before-cake-bucky-late", "bucky❤️", "今天会晚点下班，晚饭不用等我你先吃"],
+  ["before-cake-steve-no-1", "Steve Rogers", "no no", true],
+  ["before-cake-bucky-pie", "bucky❤️", "给你带苹果派"],
+  ["before-cake-steve-no-2", "Steve Rogers", "no no", true],
+  ["before-cake-bucky-paint", "bucky❤️", "给你买新颜料"],
+  ["before-cake-steve-no-3", "Steve Rogers", "no no", true],
+  ["before-cake-bucky-kiss", "bucky❤️", "给你亲亲"],
+  ["before-cake-steve-ok", "Steve Rogers", "ok", true],
+  ["before-cake-steve-wink", "Steve Rogers", "😉", true],
+].map(([id, sender, body, outgoing]) => ({
+  id,
+  title: "bucky❤️",
+  sender,
+  body,
+  kind: "text",
+  time: "2026-10-24 10:34",
+  ...(outgoing ? { outgoing: true } : {}),
+  meta: { pinned: "true" },
+}));
+const beforeCakeIds = new Set(beforeCakeMessages.map((item) => item.id));
+base.content.wechat = base.content.wechat.filter((item) => !beforeCakeIds.has(item.id));
+const cakeStartIndex = base.content.wechat.findIndex(
+  (item) => item.id === "bucky-cake-steve-start",
+);
+if (cakeStartIndex < 0) throw new Error("Cheesecake conversation is missing");
+base.content.wechat.splice(cakeStartIndex, 0, ...beforeCakeMessages);
 const messages = [
   ["garden-bucky-see-venue", "bucky❤️", "那我下班和yelena去看一下场地", { composeTrigger: "true", nextTyping: "辛苦了buck，等你回家🤧" }],
   ["garden-steve-wait", "Steve Rogers", "辛苦了buck，等你回家🤧", {}, true],
