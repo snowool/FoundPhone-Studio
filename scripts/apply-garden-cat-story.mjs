@@ -81,7 +81,7 @@ base.tests.push({
     { event: "venueChoice", target: "wechat:bucky❤️:花园婚礼" }, { event: "compose", target: "wechat:bucky❤️" }, { advanceMs: 15000 }, { event: "compose", target: "wechat:bucky❤️" }, { advanceMs: 5000 }, { event: "compose", target: "wechat:yelena" }, { advanceMs: 2000 }, { event: "compose", target: "wechat:yelena" }, { advanceMs: 2000 }, { advanceMs: 2000 }, { event: "compose", target: "wechat:yelena" }, { advanceMs: 1000 }, { advanceMs: 1000 }, { advanceMs: 1000 },
   ],
   expectUnlocked: messages.map(([id]) => id),
-  expectNotifications: ["wechat/bucky❤️:bucky❤️\n我吃了一块😋", "wechat/yelena:yelena\ncap，出事了", "wechat/Thor:Thor\n吾友，新婚快乐🥳", "wechat/Thor:Thor\nloki和我今天专门前往中庭送上祝福", "wechat/Thor:Thor\n我弟弟说他给你送来惊喜礼物😏"],
+  expectNotifications: ["wechat/bucky❤️:bucky❤️\n我吃了一块😋", "wechat/bucky❤️:bucky❤️\nsjcoqhdkcochshcjcjdlsbjd", "wechat/yelena:yelena\ncap，出事了", "wechat/Thor:Thor\n吾友，新婚快乐🥳", "wechat/Thor:Thor\nloki和我今天专门前往中庭送上祝福", "wechat/Thor:Thor\n我弟弟说他给你送来惊喜礼物😏"],
 });
 base.tests = base.tests.filter((item) => item.name !== "蛋糕结束后打开相册才触发场地剧情");
 base.tests.push({
