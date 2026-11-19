@@ -10,6 +10,10 @@ const base = JSON.parse(
 );
 
 base.revision = 34;
+const removedHomeApps = new Set(["mail", "clock", "maps", "settings"]);
+base.installedApps = base.installedApps.filter((app) =>
+  !removedHomeApps.has(typeof app === "string" ? app : app.id),
+);
 const beforeCakeMessages = [
   ["before-cake-bucky-late", "bucky❤️", "今天会晚点下班，晚饭不用等我你先吃"],
   ["before-cake-steve-no-1", "Steve Rogers", "no no", true],

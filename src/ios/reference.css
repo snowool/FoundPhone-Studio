@@ -755,7 +755,9 @@
 }
 
 .ios18 .wallpaper-p1-deer {
-  background: #a37446 url("./wallpapers/p1-deer.jpg") center/cover no-repeat;
+  background: #213a25
+    url("https://snowool.github.io/FoundPhone-Studio/wallpapers/deer-flowers-v2.jpg?v=20261120")
+    center/cover no-repeat;
 }
 .ios18 .wallpaper-p1-deer .wallpaper-orb {
   display: none;
