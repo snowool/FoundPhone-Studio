@@ -26,7 +26,7 @@ const beforeCakeMessages = [
   sender,
   body,
   kind: "text",
-  time: "2026-10-24 10:34",
+  time: "2026-10-23 18:07",
   ...(outgoing ? { outgoing: true } : {}),
   meta: { pinned: "true" },
 }));
@@ -37,6 +37,17 @@ const cakeStartIndex = base.content.wechat.findIndex(
 );
 if (cakeStartIndex < 0) throw new Error("Cheesecake conversation is missing");
 base.content.wechat.splice(cakeStartIndex, 0, ...beforeCakeMessages);
+
+// 场地消息只能在蛋糕互动完成后，打开相册五秒才出现。
+const venueAfterPhotos = base.events.find(
+  (item) => item.id === "wedding-venue-after-photos",
+);
+if (!venueAfterPhotos) throw new Error("Wedding venue trigger is missing");
+Object.assign(venueAfterPhotos, {
+  label: "完成蛋糕聊天后打开相册五秒收到场地消息",
+  delayMs: 5000,
+  conditions: [{ key: "wedding:cake:done", op: "eq", value: true }],
+});
 const messages = [
   ["church-bucky-see-venue", "bucky❤️", "那我下班和yelena去看一下场地", {}],
   ["church-steve-wait", "Steve Rogers", "辛苦了buck，等你回家🤧", {}, true],
@@ -152,9 +163,11 @@ base.tests.push({
     .map(([id]) => id),
   expectNotifications: ["wechat/bucky❤️:bucky❤️\n我吃了一块😋", "wechat/bucky❤️:bucky❤️\nsjcoqhdkcochshcjcjdlsbjd", "wechat/yelena:yelena\ncap，出事了", "wechat/Thor:Thor\n吾友，新婚快乐🥳", "wechat/Thor:Thor\nloki和我今天专门前往中庭送上祝福", "wechat/Thor:Thor\n我弟弟说他给你送来惊喜礼物😏"],
 });
-base.tests = base.tests.filter((item) => item.name !== "蛋糕结束后打开相册才触发场地剧情");
+base.tests = base.tests.filter((item) =>
+  !item.name.includes("场地") && item.name !== "蛋糕结束后打开相册才触发场地剧情",
+);
 base.tests.push({
-  name: "蛋糕结束后打开相册才触发场地剧情",
+  name: "完成蛋糕互动后打开相册五秒触发场地剧情",
   steps: [
     { advanceMs: 700 },
     { event: "compose", target: "wechat:bucky❤️" },
@@ -162,7 +175,8 @@ base.tests.push({
     { event: "compose", target: "wechat:bucky❤️" },
     { advanceMs: 650 },
     { event: "openApp", target: "photos" },
-    { advanceMs: 3000 },
+    { advanceMs: 4999 },
+    { advanceMs: 1 },
   ],
   expectUnlocked: [
     "bucky-cake-bucky-happy",
