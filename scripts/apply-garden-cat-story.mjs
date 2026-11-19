@@ -68,7 +68,7 @@ const sequence = [
   event("yelena-steve-question-reply", "Steve 对蛇的经过表示震惊", "wechat:yelena", "yelena-steve-question", cond("yelena-snake-story"), ["thor-wedding-1-delay"]),
   event("thor-wedding-1-delay", "Thor 一秒后送上祝福并弹窗", "wechat:yelena", [unlock("thor-wedding-1"), { type: "notification", key: "", value: "wechat/Thor:Thor\n吾友，新婚快乐🥳" }], cond("yelena-steve-question"), ["thor-wedding-2-delay"], 1000),
   event("thor-wedding-2-delay", "Thor 一秒后说明来意并弹窗", "wechat:yelena", [unlock("thor-wedding-2"), { type: "notification", key: "", value: "wechat/Thor:Thor\nloki和我今天专门前往中庭送上祝福" }], cond("thor-wedding-1"), ["thor-wedding-3-delay"], 1000),
-  event("thor-wedding-3-delay", "Thor 一秒后提起 Loki 的礼物并弹窗", "wechat:yelena", [unlock("thor-wedding-3"), { type: "notification", key: "", value: "wechat/Thor:Thor\\n我弟弟说他给你送来惊喜礼物😏" }], cond("thor-wedding-2"), ["evil-god-blessing-ending"], 1000),
+  event("thor-wedding-3-delay", "Thor 一秒后提起 Loki 的礼物并弹窗", "wechat:yelena", [unlock("thor-wedding-3"), { type: "notification", key: "", value: "wechat/Thor:Thor\n我弟弟说他给你送来惊喜礼物😏" }], cond("thor-wedding-2"), ["evil-god-blessing-ending"], 1000),
   event("evil-god-blessing-ending", "Thor 三条祝福显示后触发邪神祝福结局", "wechat:yelena", [{ type: "ending", key: "", value: "邪神的祝福" }], cond("thor-wedding-3"), [], 1500),
 ];
 const sequenceIds = new Set(sequence.map((item) => item.id));
