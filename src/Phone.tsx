@@ -642,9 +642,9 @@ function PhoneRuntime({
           )}
           {!creator && s.endings.length > 0 && !locked && (
             <div className="story-overlay ending">
-              <span className="eyebrow">ENDING · {s.endings.length}</span>
-              <h2>故事在这里停泊。</h2>
-              <p>{s.endings[s.endings.length - 1]}</p>
+              <span className="eyebrow">结局达成 · {s.endings.length}/3</span>
+              <h2>{s.endings[s.endings.length - 1]}</h2>
+              <p>邪神的礼物已经抵达。故事暂时停泊于此。</p>
               <button
                 onClick={() => {
                   update(dispatch(work, initialRuntime(work), "start"));
