@@ -663,7 +663,7 @@ function PhoneRuntime({
           {lokiEndingReached && (
             <div className="loki-ending" role="dialog" aria-label="邪神的祝福结局">
               <img
-                src="/endings/evil-gods-blessing.jpeg"
+                src={`${import.meta.env.BASE_URL}endings/evil-gods-blessing.jpeg`}
                 alt="邪神的祝福：Steve Rogers 与 James Buchanan Barnes"
               />
               <button
