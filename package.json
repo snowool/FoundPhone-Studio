@@ -14,7 +14,7 @@
     "test:e2e": "node node_modules/@playwright/test/cli.js test",
     "licenses": "node scripts/licenses.mjs",
     "story:validate": "node scripts/story.mjs validate",
-    "story:build": "node scripts/story.mjs build && cp stories/template/published-work.json public/work.json",
+    "story:build": "node scripts/story.mjs build",
     "story:preview": "npm run dev",
     "story:test": "node scripts/story.mjs test"
   },
