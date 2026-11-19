@@ -194,6 +194,10 @@ function PhoneRuntime({
     };
   }, [creator, ready]);
   const s = external ?? own;
+  // The Loki ending is intentionally driven by the authored ending event:
+  // it waits until all three Thor messages have remained visible.
+  const lokiEndingReached =
+    !creator && s.endings.includes("邪神的祝福");
   const runtimeRef = useRef(s);
   const renderedRuntime = useRef(s);
   if (renderedRuntime.current !== s) {
@@ -640,7 +644,7 @@ function PhoneRuntime({
               ))}
             </div>
           )}
-          {!creator && s.endings.length > 0 && !locked && (
+          {!creator && s.endings.length > 0 && !locked && !lokiEndingReached && (
             <div className="story-overlay ending">
               <span className="eyebrow">结局达成 · {s.endings.length}/3</span>
               <h2>{s.endings[s.endings.length - 1]}</h2>
@@ -654,6 +658,27 @@ function PhoneRuntime({
               >
                 重新开始
               </button>
+            </div>
+          )}
+          {lokiEndingReached && (
+            <div className="loki-ending" role="dialog" aria-label="邪神的祝福结局">
+              <img
+                src="/endings/evil-gods-blessing.jpeg"
+                alt="邪神的祝福：Steve Rogers 与 James Buchanan Barnes"
+              />
+              <button
+                className="loki-ending-restart"
+                aria-label="重新开始游戏"
+                onClick={() => {
+                  update(dispatch(work, initialRuntime(work), "start"));
+                  setApp("");
+                  setThread("");
+                  setPanel("");
+                  setFolder("");
+                  setKeyboard(false);
+                  setLocked(true);
+                }}
+              />
             </div>
           )}
           {!creator && s.incomingCall && (

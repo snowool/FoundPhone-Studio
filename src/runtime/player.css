@@ -16,6 +16,55 @@
 .story-runtime .phone-shell {
   margin: auto;
 }
+
+/* Final card: darkness lands first, then the supplied card comes into view. */
+.loki-ending {
+  position: absolute;
+  z-index: 80;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #000;
+  animation: loki-ending-darken 1.35s ease both;
+}
+
+.loki-ending img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  animation: loki-ending-reveal 900ms ease 650ms forwards;
+}
+
+.loki-ending-restart {
+  position: absolute;
+  z-index: 1;
+  width: 47%;
+  height: 6.5%;
+  bottom: 9.3%;
+  left: 26.5%;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.loki-ending-restart:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+@keyframes loki-ending-darken {
+  from { background: rgba(0, 0, 0, 0); }
+  to { background: #000; }
+}
+
+@keyframes loki-ending-reveal {
+  from { opacity: 0; transform: scale(1.015); }
+  to { opacity: 1; transform: scale(1); }
+}
 @media (max-width: 430px) {
   .story-runtime {
     background: #000;
