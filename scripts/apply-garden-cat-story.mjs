@@ -58,7 +58,7 @@ const event = (id, label, trigger, key, conditions = [], next = [], delayMs) => 
 const sequence = [
   { id: "garden-choice-bucky-venue", label: "选择花园婚礼后巴基去看场地", event: "venueChoice", target: "wechat:bucky❤️:花园婚礼", once: true, actions: [unlock("garden-bucky-see-venue")] },
   event("garden-steve-wait-reply", "Steve 回复巴基后开始十五秒倒计时", "wechat:bucky❤️", "garden-steve-wait", cond("garden-bucky-see-venue"), ["garden-bucky-garble-delay"]),
-  event("garden-bucky-garble-delay", "十五秒后巴基发来乱码", "wechat:bucky❤️", [unlock("garden-bucky-garble"), { type: "notification", key: "", value: "wechat/bucky❤️:bucky❤️\\nsjcoqhdkcochshcjcjdlsbjd" }], cond("garden-steve-wait"), [], 15000),
+  event("garden-bucky-garble-delay", "十五秒后巴基发来乱码", "wechat:bucky❤️", [unlock("garden-bucky-garble"), { type: "notification", key: "", value: "wechat/bucky❤️:bucky❤️\nsjcoqhdkcochshcjcjdlsbjd" }], cond("garden-steve-wait"), [], 15000),
   event("garden-steve-whats-wrong-reply", "Steve 询问怎么了", "wechat:bucky❤️", "garden-steve-whats-wrong", cond("garden-bucky-garble"), ["yelena-alert-delay"]),
   event("yelena-alert-delay", "五秒后 Yelena 发来紧急消息和弹窗", "wechat:bucky❤️", [unlock("yelena-alert"), { type: "notification", key: "", value: "wechat/yelena:yelena\ncap，出事了" }], cond("garden-steve-whats-wrong"), [], 5000),
   event("yelena-steve-where-reply", "Steve 询问巴基情况", "wechat:yelena", "yelena-steve-where-bucky", cond("yelena-alert")),
