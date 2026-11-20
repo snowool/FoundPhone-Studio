@@ -130,7 +130,9 @@ function MessageList({
           )}
           <button
             className="skin-bubble"
-            onClick={() => (creator ? onItem(i) : onRead(i.id))}
+            onClick={() =>
+              creator || i.meta.expandMedia === "true" ? onItem(i) : onRead(i.id)
+            }
           >
             {["image", "audio", "video"].includes(i.kind) ? (
               <ItemMedia item={i} />

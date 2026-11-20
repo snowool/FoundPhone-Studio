@@ -908,7 +908,12 @@ function Media({ item }: { item: Item }) {
     ) : item.kind === "video" ? (
       <video controls playsInline src={src} />
     ) : (
-      <img loading="lazy" src={src} alt={item.title} />
+      <img
+        loading="lazy"
+        className={item.meta.animatedMedia === "true" ? "animated-invitation" : ""}
+        src={src}
+        alt={item.title}
+      />
     )
   ) : (
     <div

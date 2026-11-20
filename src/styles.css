@@ -1472,6 +1472,18 @@ svg {
   max-width: 100%;
   border-radius: 5px;
 }
+.detail-content .animated-invitation {
+  animation: invitation-open 1.15s cubic-bezier(.2,.8,.2,1) both;
+  transform-origin: center;
+}
+@keyframes invitation-open {
+  0% { opacity: 0; transform: perspective(900px) rotateY(-88deg) scale(.78); }
+  55% { opacity: 1; transform: perspective(900px) rotateY(8deg) scale(1.03); }
+  100% { opacity: 1; transform: perspective(900px) rotateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .detail-content .animated-invitation { animation: none; }
+}
 .detail-content audio {
   width: 100%;
 }
