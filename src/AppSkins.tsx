@@ -102,8 +102,17 @@ function MessageList({
   whatsapp?: boolean;
   ownerAvatar?: string;
 }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const list = scrollRef.current;
+    if (!list) return;
+    list.scrollTop = list.scrollHeight;
+  }, [items]);
   return (
-    <div className={`skin-messages ${whatsapp ? "wa-wallpaper" : ""}`}>
+    <div
+      ref={scrollRef}
+      className={`skin-messages ${whatsapp ? "wa-wallpaper" : ""}`}
+    >
       <div className="skin-date">{items[0]?.time.slice(0, 10)}</div>
       {items.map((i, index) => (
         <Fragment key={i.id}>
@@ -160,7 +169,6 @@ function Compose({
   onSuggestion?: (label: string) => void;
   onTrigger?: () => void;
 }) {
-  const [optionsOpen, setOptionsOpen] = useState(false);
   return (
     <>
       <div className={`skin-compose ${wa ? "wa-compose" : ""}`}>
@@ -171,7 +179,6 @@ function Compose({
             aria-label="选择婚礼场地"
             onClick={() => {
               onTrigger?.();
-              setOptionsOpen(true);
             }}
           />
         ) : (
@@ -181,7 +188,7 @@ function Compose({
         <Smile size={21} />
         {wa ? <Mic size={20} /> : <Plus size={22} />}
       </div>
-      {!wa && optionsOpen && suggestions.length > 0 && (
+      {!wa && suggestions.length > 0 && (
         <div className="wx-quick-replies" aria-label="婚礼场地选项">
           {suggestions.map((label) => (
             <button key={label} onClick={() => onSuggestion?.(label)}>
@@ -407,13 +414,21 @@ export function WeChatSkin(p: SkinProps) {
           const threadItems = p.items.filter(
             (i) => i.title === p.thread && i.meta.contact !== "true",
           );
-          const suggestions = threadItems
+          const cakePending =
+            p.thread === "bucky❤️" &&
+            threadItems.some((item) => item.id === "bucky-cake-bucky-ate") &&
+            !threadItems.some((item) => item.id === "bucky-cake-bucky-happy");
+          const suggestions = cakePending
+            ? []
+            : threadItems
             .flatMap((i) => (i.meta.quickReplies || "").split("|"))
             .filter(Boolean);
           const canTriggerCompose = threadItems.some(
             (i) => i.meta.composeTrigger === "true",
           );
-          const nextTypingText = threadItems.at(-1)?.meta.nextTyping || "";
+          const nextTypingText = [...threadItems]
+            .reverse()
+            .find((item) => item.meta.nextTyping)?.meta.nextTyping || "";
           const triggerCompose = canTriggerCompose && nextTypingText
             ? () => {
                 if (pendingSend) return;
@@ -438,9 +453,7 @@ export function WeChatSkin(p: SkinProps) {
             window.setTimeout(() => {
               setVenueChoice(label);
               setTypingChoice("");
-              if (label === "花园婚礼") {
-                p.onEvent?.("venueChoice", `${p.appId}:bucky❤️:${label}`);
-              }
+              p.onEvent?.("venueChoice", `${p.appId}:bucky❤️:${label}`);
             }, 1000);
           };
           const selectedMessage = venueChoice && p.thread === "bucky❤️"
@@ -456,10 +469,22 @@ export function WeChatSkin(p: SkinProps) {
                 meta: {},
               })
             : null;
+          const selectedMessageIndex = selectedMessage
+            ? displayThreadItems.findIndex(
+                (item) => item.id === "wedding-venue-question",
+              ) + 1
+            : -1;
+          const displayedMessages = selectedMessage
+            ? [
+                ...displayThreadItems.slice(0, selectedMessageIndex),
+                selectedMessage,
+                ...displayThreadItems.slice(selectedMessageIndex),
+              ]
+            : displayThreadItems;
           return <>
           <MessageList
             ownerAvatar={ownerAvatar}
-            items={selectedMessage ? [...displayThreadItems, selectedMessage] : displayThreadItems}
+            items={displayedMessages}
             creator={p.creator}
             onItem={p.onItem}
             onRead={p.onRead}

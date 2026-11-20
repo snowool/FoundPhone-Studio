@@ -223,10 +223,19 @@ if (skins.includes("const [optionsOpen, setOptionsOpen] = useState(false);")) {
   skins = skins.replace("  const [optionsOpen, setOptionsOpen] = useState(false);\n", "");
   skins = skins.replace("              setOptionsOpen(true);\n", "");
 }
+if (skins.includes(`if (label === "花园婚礼") {\n                p.onEvent?.("venueChoice", \`${"${p.appId}"}:bucky❤️:${"${label}"}\`);\n              }`)) {
+  skins = skins.replace(
+    `if (label === "花园婚礼") {\n                p.onEvent?.("venueChoice", \`${"${p.appId}"}:bucky❤️:${"${label}"}\`);\n              }`,
+    `p.onEvent?.("venueChoice", \`${"${p.appId}"}:bucky❤️:${"${label}"}\`);`,
+  );
+}
 if (!skins.includes("const displayedMessages = selectedMessage")) {
   throw new Error("Chat ordering patch could not be applied");
 }
 if (!skins.includes("const cakePending =")) {
   throw new Error("Cake reply patch could not be applied");
+}
+if (!skins.includes(`p.onEvent?.("venueChoice", \`${"${p.appId}"}:bucky❤️:${"${label}"}\`);`)) {
+  throw new Error("Venue choice event patch could not be applied");
 }
 writeFileSync(skinsPath, skins);
