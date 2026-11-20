@@ -53,12 +53,12 @@ Object.assign(venueAfterPhotos, {
   conditions: [{ key: "wedding:cake:done", op: "eq", value: true }],
 });
 const messages = [
-  ["church-bucky-see-venue", "bucky❤️", "那我下班和yelena去看一下场地", {}],
+  ["church-bucky-see-venue", "bucky❤️", "那我下班和yelena去看一下场地", { composeTrigger: "true", nextTyping: "辛苦了buck，等你回家🤧" }],
   ["church-steve-wait", "Steve Rogers", "辛苦了buck，等你回家🤧", {}, true],
   ["church-bucky-looks-like-you", "bucky❤️", "这个好像你", {}],
   ["church-bucky-puppy-image", "bucky❤️", "", {}, false, "./story-media/bucky-puppy.jpeg"],
-  ["church-bucky-puppy", "bucky❤️", "小狗", {}],
-  ["church-steve-who", "Steve Rogers", "他是谁", {}, true],
+  ["church-bucky-puppy", "bucky❤️", "小狗", { composeTrigger: "true", nextTyping: "他是谁" }],
+  ["church-steve-who", "Steve Rogers", "他是谁", { composeTrigger: "true", nextTyping: "不是说好只养我一只狗吗" }, true],
   ["church-steve-only-dog", "Steve Rogers", "不是说好只养我一只狗吗", {}, true],
   ["church-bucky-ellipsis", "bucky❤️", "。。。", {}],
   ["garden-bucky-see-venue", "bucky❤️", "那我下班和yelena去看一下场地", { composeTrigger: "true", nextTyping: "辛苦了buck，等你回家🤧" }],
@@ -66,7 +66,7 @@ const messages = [
   ["garden-bucky-garble", "bucky❤️", "sjcoqhdkcochshcjcjdlsbjd", { composeTrigger: "true", nextTyping: "怎么了" }],
   ["garden-steve-whats-wrong", "Steve Rogers", "怎么了", {}, true],
   ["yelena-alert", "yelena", "cap，出事了", { composeTrigger: "true", nextTyping: "bucky怎么回事，你在他身边吗" }],
-  ["yelena-steve-where-bucky", "Steve Rogers", "bucky怎么回事，你在他身边吗", { autoNextTyping: "我马上到", autoDelayMs: "1000" }, true],
+  ["yelena-steve-where-bucky", "Steve Rogers", "bucky怎么回事，你在他身边吗", { composeTrigger: "true", nextTyping: "我马上到" }, true],
   ["yelena-steve-coming", "Steve Rogers", "我马上到", {}, true],
   ["yelena-bucky-cat", "yelena", "bucky变成猫了！！", {}],
   ["yelena-bucky-cat-photo", "yelena", "", {}, false, "./story-media/yelena-bucky-cat.jpeg"],
@@ -100,11 +100,35 @@ base.content.wechat.splice(insertionIndex + 1, 0, ...gardenMessages);
 
 const unlock = (key) => ({ type: "unlock", key, value: true });
 const cond = (key) => [{ key: `unlocked:${key}`, op: "eq", value: true }];
-const event = (id, label, trigger, key, conditions = [], next = [], delayMs) => ({
-  id, label, event: "compose", target: trigger, once: true, conditions,
-  actions: Array.isArray(key) ? key : [unlock(key)], ...(next.length ? { next } : {}),
-  ...(delayMs ? { type: "delay", delayMs } : {}),
-});
+const wechatNotification = (id) => {
+  const item = base.content.wechat.find((candidate) => candidate.id === id);
+  if (!item || item.outgoing || item.meta.contact === "true") return null;
+  return {
+    type: "notification",
+    key: "",
+    value: `wechat/${item.title}:${item.sender}\n${item.body || "[图片]"}`,
+  };
+};
+const event = (id, label, trigger, key, conditions = [], next = [], delayMs) => {
+  const actions = Array.isArray(key) ? [...key] : [unlock(key)];
+  for (const action of [...actions]) {
+    if (action.type !== "unlock") continue;
+    const notification = wechatNotification(action.key);
+    if (
+      notification &&
+      !actions.some(
+        (existing) =>
+          existing.type === "notification" && existing.value === notification.value,
+      )
+    )
+      actions.push(notification);
+  }
+  return {
+    id, label, event: "compose", target: trigger, once: true, conditions,
+    actions, ...(next.length ? { next } : {}),
+    ...(delayMs ? { type: "delay", delayMs } : {}),
+  };
+};
 const sequence = [
   {
     id: "church-choice-bucky-venue",
@@ -112,23 +136,23 @@ const sequence = [
     event: "venueChoice",
     target: "wechat:bucky❤️:教堂婚礼",
     once: true,
-    actions: [unlock("church-bucky-see-venue")],
-    next: ["church-steve-wait-delay"],
+    actions: [unlock("church-bucky-see-venue"), wechatNotification("church-bucky-see-venue")],
+    next: [],
   },
-  event("church-steve-wait-delay", "Steve 回复巴基", "wechat:bucky❤️", "church-steve-wait", cond("church-bucky-see-venue"), ["church-bucky-looks-delay"], 800),
+  event("church-steve-wait-reply", "点击输入框后 Steve 回复巴基", "wechat:bucky❤️", "church-steve-wait", cond("church-bucky-see-venue"), ["church-bucky-looks-delay"]),
   event("church-bucky-looks-delay", "十秒后巴基说这个像你", "wechat:bucky❤️", "church-bucky-looks-like-you", cond("church-steve-wait"), ["church-bucky-puppy-image-delay"], 10000),
   event("church-bucky-puppy-image-delay", "两秒后巴基发来小狗照片", "wechat:bucky❤️", "church-bucky-puppy-image", cond("church-bucky-looks-like-you"), ["church-bucky-puppy-delay"], 2000),
-  event("church-bucky-puppy-delay", "一秒后巴基说小狗", "wechat:bucky❤️", "church-bucky-puppy", cond("church-bucky-puppy-image"), ["church-steve-who-delay"], 1000),
-  event("church-steve-who-delay", "两秒后 Steve 问他是谁", "wechat:bucky❤️", "church-steve-who", cond("church-bucky-puppy"), ["church-steve-only-dog-delay"], 2000),
-  event("church-steve-only-dog-delay", "一秒后 Steve 吃醋", "wechat:bucky❤️", "church-steve-only-dog", cond("church-steve-who"), ["church-bucky-ellipsis-delay"], 1000),
+  event("church-bucky-puppy-delay", "一秒后巴基说小狗", "wechat:bucky❤️", "church-bucky-puppy", cond("church-bucky-puppy-image"), [], 1000),
+  event("church-steve-who-reply", "点击输入框后 Steve 问他是谁", "wechat:bucky❤️", "church-steve-who", cond("church-bucky-puppy")),
+  event("church-steve-only-dog-reply", "点击输入框后 Steve 吃醋", "wechat:bucky❤️", "church-steve-only-dog", cond("church-steve-who"), ["church-bucky-ellipsis-delay"]),
   event("church-bucky-ellipsis-delay", "三秒后巴基无语", "wechat:bucky❤️", [unlock("church-bucky-ellipsis"), { type: "variable", key: "wedding:venue:confirmed", value: true }], cond("church-steve-only-dog"), [], 3000),
-  { id: "garden-choice-bucky-venue", label: "选择花园婚礼后巴基去看场地", event: "venueChoice", target: "wechat:bucky❤️:花园婚礼", once: true, actions: [unlock("garden-bucky-see-venue")] },
+  { id: "garden-choice-bucky-venue", label: "选择花园婚礼后巴基去看场地", event: "venueChoice", target: "wechat:bucky❤️:花园婚礼", once: true, actions: [unlock("garden-bucky-see-venue"), wechatNotification("garden-bucky-see-venue")] },
   event("garden-steve-wait-reply", "Steve 回复巴基后开始十五秒倒计时", "wechat:bucky❤️", "garden-steve-wait", cond("garden-bucky-see-venue"), ["garden-bucky-garble-delay"]),
   event("garden-bucky-garble-delay", "十五秒后巴基发来乱码", "wechat:bucky❤️", [unlock("garden-bucky-garble"), { type: "notification", key: "", value: "wechat/bucky❤️:bucky❤️\nsjcoqhdkcochshcjcjdlsbjd" }], cond("garden-steve-wait"), [], 15000),
   event("garden-steve-whats-wrong-reply", "Steve 询问怎么了", "wechat:bucky❤️", "garden-steve-whats-wrong", cond("garden-bucky-garble"), ["yelena-alert-delay"]),
   event("yelena-alert-delay", "五秒后 Yelena 发来紧急消息和弹窗", "wechat:bucky❤️", [unlock("yelena-alert"), { type: "notification", key: "", value: "wechat/yelena:yelena\ncap，出事了" }], cond("garden-steve-whats-wrong"), [], 5000),
   event("yelena-steve-where-reply", "Steve 询问巴基情况", "wechat:yelena", "yelena-steve-where-bucky", cond("yelena-alert")),
-  event("yelena-steve-coming-reply", "Steve 两秒后自动发出我马上到", "wechat:yelena", "yelena-steve-coming", cond("yelena-steve-where-bucky"), ["yelena-bucky-cat-delay"]),
+  event("yelena-steve-coming-reply", "点击输入框后 Steve 发出我马上到", "wechat:yelena", "yelena-steve-coming", cond("yelena-steve-where-bucky"), ["yelena-bucky-cat-delay"]),
   event("yelena-bucky-cat-delay", "两秒后 Yelena 说巴基变成猫", "wechat:yelena", [unlock("yelena-bucky-cat"), unlock("yelena-bucky-cat-photo")], cond("yelena-steve-coming"), ["yelena-snake-story-delay"], 2000),
   event("yelena-snake-story-delay", "两秒后 Yelena 说明小蛇经过", "wechat:yelena", "yelena-snake-story", cond("yelena-bucky-cat"), [], 2000),
   event("yelena-steve-question-reply", "Steve 对蛇的经过表示震惊", "wechat:yelena", "yelena-steve-question", cond("yelena-snake-story"), ["thor-wedding-1-delay"]),
@@ -146,26 +170,31 @@ base.tests.push({
   name: "教堂婚礼后完成小狗对话并确认场地",
   steps: [
     { event: "venueChoice", target: "wechat:bucky❤️:教堂婚礼" },
-    { advanceMs: 800 }, { advanceMs: 10000 }, { advanceMs: 2000 },
-    { advanceMs: 1000 }, { advanceMs: 2000 }, { advanceMs: 1000 },
-    { advanceMs: 3000 },
+    { event: "compose", target: "wechat:bucky❤️" },
+    { advanceMs: 10000 }, { advanceMs: 2000 }, { advanceMs: 1000 },
+    { event: "compose", target: "wechat:bucky❤️" },
+    { event: "compose", target: "wechat:bucky❤️" }, { advanceMs: 3000 },
   ],
   expectUnlocked: [
     "church-bucky-see-venue", "church-steve-wait", "church-bucky-looks-like-you",
     "church-bucky-puppy-image", "church-bucky-puppy", "church-steve-who",
     "church-steve-only-dog", "church-bucky-ellipsis",
   ],
-  expectNotifications: ["wechat/bucky❤️:bucky❤️\n我吃了一块😋"],
 });
 base.tests.push({
   name: "花园婚礼后完整触发巴基变猫剧情",
   steps: [
-    { event: "venueChoice", target: "wechat:bucky❤️:花园婚礼" }, { event: "compose", target: "wechat:bucky❤️" }, { advanceMs: 15000 }, { event: "compose", target: "wechat:bucky❤️" }, { advanceMs: 5000 }, { event: "compose", target: "wechat:yelena" }, { advanceMs: 2000 }, { event: "compose", target: "wechat:yelena" }, { advanceMs: 2000 }, { advanceMs: 2000 }, { event: "compose", target: "wechat:yelena" }, { advanceMs: 1000 }, { advanceMs: 1000 }, { advanceMs: 1000 },
+    { event: "venueChoice", target: "wechat:bucky❤️:花园婚礼" },
+    { event: "compose", target: "wechat:bucky❤️" }, { advanceMs: 15000 },
+    { event: "compose", target: "wechat:bucky❤️" }, { advanceMs: 5000 },
+    { event: "compose", target: "wechat:yelena" },
+    { event: "compose", target: "wechat:yelena" }, { advanceMs: 2000 },
+    { advanceMs: 2000 }, { event: "compose", target: "wechat:yelena" },
+    { advanceMs: 1000 }, { advanceMs: 1000 }, { advanceMs: 1000 },
   ],
   expectUnlocked: messages
     .filter(([id]) => !id.startsWith("church-"))
     .map(([id]) => id),
-  expectNotifications: ["wechat/bucky❤️:bucky❤️\n我吃了一块😋", "wechat/bucky❤️:bucky❤️\nsjcoqhdkcochshcjcjdlsbjd", "wechat/yelena:yelena\ncap，出事了", "wechat/Thor:Thor\n吾友，新婚快乐🥳", "wechat/Thor:Thor\nloki和我今天专门前往中庭送上祝福", "wechat/Thor:Thor\n我弟弟说他给你送来惊喜礼物😏"],
 });
 base.tests = base.tests.filter((item) =>
   !item.name.includes("场地") && item.name !== "蛋糕结束后打开相册才触发场地剧情",

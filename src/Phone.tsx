@@ -337,8 +337,7 @@ function PhoneRuntime({
       const notice = s.notifications.at(-1) || "";
       setBanner(notice);
       const content = notificationContent(notice, work.apps);
-      const duration =
-        content.thread || content.appId === "xianyu" ? 10000 : 4500;
+      const duration = content.appId === "wechat" ? 3000 : 4500;
       const timer = setTimeout(() => setBanner(""), duration);
       noticesSeen.current = count;
       return () => clearTimeout(timer);
