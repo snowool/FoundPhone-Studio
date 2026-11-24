@@ -575,10 +575,9 @@ export function WeChatSkin(p: SkinProps) {
             <span>朋友圈</span>
           </div>
           {posts.map((i) => (
-            <button
+            <article
               key={i.id}
               className="wx-moment-post"
-              onClick={() => p.onItem(i)}
             >
               <Avatar name={i.sender} />
               <div>
@@ -586,8 +585,30 @@ export function WeChatSkin(p: SkinProps) {
                 <p>{i.body}</p>
                 {i.media && <ItemMedia item={i} />}
                 <small>{i.time}</small>
+                {(i.meta.likes || i.meta.comments) && (
+                  <div className="wx-moment-reactions">
+                    {i.meta.likes && (
+                      <div className="wx-moment-likes">
+                        ♡ {i.meta.likes.split("|").join("，")}
+                      </div>
+                    )}
+                    {i.meta.comments && (
+                      <div className="wx-moment-comments">
+                        {i.meta.comments.split("|").map((comment) => {
+                          const [name, ...words] = comment.split("：");
+                          return (
+                            <p key={comment}>
+                              <strong>{name}</strong>
+                              {words.length > 0 && `：${words.join("：")}`}
+                            </p>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
-            </button>
+            </article>
           ))}
           {!posts.length && <p className="skin-empty">暂无朋友圈动态</p>}
           {p.creator && (

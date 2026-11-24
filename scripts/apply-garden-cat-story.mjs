@@ -9,7 +9,7 @@ const base = JSON.parse(
   }),
 );
 
-base.revision = 35;
+base.revision = 36;
 const removedHomeApps = new Set(["mail", "clock", "maps", "settings"]);
 base.installedApps = base.installedApps.filter((app) =>
   !removedHomeApps.has(typeof app === "string" ? app : app.id),
@@ -46,6 +46,24 @@ const cakeUncut = base.content.wechat.find(
 );
 if (!cakeUncut) throw new Error("Cheesecake reply is missing");
 cakeUncut.body = "我没说我切了🙂‍↕️";
+
+const samMoment = {
+  id: "sam-moment-husband",
+  title: "sam",
+  sender: "sam",
+  body: "一直不理解老公奴这个群体为，难道没了老公就活不下去吗",
+  kind: "post",
+  folder: "朋友圈",
+  time: "2026-10-25 11:20",
+  meta: {
+    likes: "natasha|tony|yelena",
+    comments: "natasha：点了|bucky：看完你这句话我在老公怀里哭了好久，他胸好软|sam回复bucky：🤮",
+  },
+};
+base.content.wechat = base.content.wechat.filter(
+  (item) => item.id !== samMoment.id,
+);
+base.content.wechat.push(samMoment);
 
 // 场地消息只能在蛋糕互动完成后，打开相册五秒才出现。
 const venueAfterPhotos = base.events.find(
