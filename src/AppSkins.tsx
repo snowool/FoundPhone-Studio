@@ -321,10 +321,20 @@ export function WeChatSkin(p: SkinProps) {
     }, Number(item.meta.autoDelayMs || 0));
     return () => window.clearTimeout(start);
   }, [p.appId, p.items, p.onEvent]);
+  const contactsHiddenFromChats = new Set(["sam", "loki"]);
   const conversations = [
     ...new Set(
       p.items
-        .filter((i) => !["朋友圈", "我"].includes(i.folder))
+        .filter(
+          (i) =>
+            !["朋友圈", "我"].includes(i.folder) &&
+            !(
+              i.meta.contact === "true" &&
+              contactsHiddenFromChats.has(
+                i.sender.toLowerCase().replace(/[^a-z]/g, ""),
+              )
+            ),
+        )
         .map((i) => i.title),
     ),
   ];

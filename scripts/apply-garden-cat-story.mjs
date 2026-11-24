@@ -124,15 +124,22 @@ const samMoment = {
   },
 };
 base.content.wechat = base.content.wechat.filter(
-  (item) =>
-    ![
+  (item) => {
+    const isPrivateSamOrLoki =
+      item.folder !== "朋友圈" &&
+      item.meta.contact !== "true" &&
+      ["sam", "loki"].includes(normalizeContactName(item.title));
+    return (
+      ![
       samMoment.id,
       samContact.id,
       "wechat-sam-contact",
       buckyMoment.id,
       thorMoment.id,
       lokiMoment.id,
-    ].includes(item.id),
+      ].includes(item.id) && !isPrivateSamOrLoki
+    );
+  },
 );
 base.content.wechat.push(
   samContact,
