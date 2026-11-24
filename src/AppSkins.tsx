@@ -496,10 +496,10 @@ export function WeChatSkin(p: SkinProps) {
                 avatar: ownerAvatar || "",
                 body: "",
                 kind: "image",
-                media: "./story-media/wedding-invitation-foldout.gif",
+                media: "./story-media/wedding-invitation.jpeg",
                 time: p.virtualTime || "2026-10-25 09:40",
                 outgoing: true,
-                meta: { animatedMedia: "true" },
+                meta: { invitationPreview: "true" },
               }),
             );
           }
