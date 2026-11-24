@@ -457,11 +457,14 @@ export function WeChatSkin(p: SkinProps) {
           const invitationsReady = p.items.some(
             (item) => item.id === "church-bucky-agreement",
           );
+          const invitationChoice = invitationChoices.find((choice) =>
+            choice.startsWith(`${p.thread}:`),
+          )?.slice(p.thread.length + 1);
           const invitationPrompt = Boolean(
             invitationsReady &&
               p.thread &&
               p.thread !== "bucky❤️" &&
-              !invitationChoices.some((choice) => choice.startsWith(`${p.thread}:`)),
+              !invitationChoice,
           );
           const nextTypingText = [...threadItems]
             .reverse()
@@ -484,6 +487,22 @@ export function WeChatSkin(p: SkinProps) {
             ...item,
             avatar: item.avatar || avatarForContact(item.sender),
           }));
+          if (invitationChoice === "是") {
+            displayThreadItems.push(
+              makeItem({
+                id: `wedding-invitation-sent-${p.thread}`,
+                title: p.thread,
+                sender: p.owner || "Steve Rogers",
+                avatar: ownerAvatar || "",
+                body: "",
+                kind: "image",
+                media: "./story-media/wedding-invitation-foldout.gif",
+                time: p.virtualTime || "2026-10-25 09:40",
+                outgoing: true,
+                meta: { animatedMedia: "true" },
+              }),
+            );
+          }
           const chooseVenue = (label: string) => {
             if (venueChoice || typingChoice) return;
             setTypingChoice(label);
