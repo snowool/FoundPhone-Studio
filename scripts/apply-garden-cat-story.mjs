@@ -63,7 +63,7 @@ const messages = [
   ["church-bucky-ellipsis", "bucky❤️", "。。。", {}],
   ["church-bucky-confiscate", "bucky❤️", "我要没收你的情话集了", { composeTrigger: "true", nextTyping: "🥲" }],
   ["church-steve-plead", "Steve Rogers", "🥲", {}, true],
-  ["church-bucky-invitation", "bucky❤️", "", { expandMedia: "true", animatedMedia: "true" }, false, "./story-media/wedding-invitation.jpeg"],
+  ["church-bucky-invitation", "bucky❤️", "", { expandMedia: "true", animatedMedia: "true" }, false, "./story-media/wedding-invitation-foldout.gif"],
   ["church-bucky-invitation-reminder", "bucky❤️", "stevie记得今天要发请柬", { composeTrigger: "true", nextTyping: "🙂‍↕️" }],
   ["church-steve-nod", "Steve Rogers", "🙂‍↕️", { composeTrigger: "true", nextTyping: "所有人？" }, true],
   ["church-steve-everyone", "Steve Rogers", "所有人？", {}, true],
