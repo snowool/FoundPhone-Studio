@@ -324,7 +324,11 @@ export function WeChatSkin(p: SkinProps) {
   const conversations = [
     ...new Set(
       p.items
-        .filter((i) => !["朋友圈", "我"].includes(i.folder))
+        .filter(
+          (i) =>
+            !["朋友圈", "我"].includes(i.folder) &&
+            i.meta.contact !== "true",
+        )
         .map((i) => i.title),
     ),
   ];
@@ -605,10 +609,11 @@ export function WeChatSkin(p: SkinProps) {
                       <div className="wx-moment-comments">
                         {i.meta.comments.split("|").map((comment) => {
                           const [name, ...words] = comment.split("：");
+                          const hasColon = comment.includes("：");
                           return (
                             <p key={comment}>
                               <strong>{name}</strong>
-                              {words.length > 0 && `：${words.join("：")}`}
+                              {hasColon && `：${words.join("：")}`}
                             </p>
                           );
                         })}

@@ -47,6 +47,68 @@ const cakeUncut = base.content.wechat.find(
 if (!cakeUncut) throw new Error("Cheesecake reply is missing");
 cakeUncut.body = "我没说我切了🙂‍↕️";
 
+const normalizeContactName = (name) =>
+  name.toLowerCase().replace(/[^a-z]/g, "");
+const contactAvatar = (name) =>
+  base.content.wechat.find(
+    (item) =>
+      item.meta.contact === "true" &&
+      normalizeContactName(item.sender) === normalizeContactName(name),
+  )?.avatar || "";
+
+const samContact = {
+  id: "sam-contact",
+  title: "sam",
+  sender: "sam",
+  body: "",
+  kind: "text",
+  folder: "",
+  time: "",
+  avatar: "./story-media/sam-avatar.jpeg",
+  meta: { contact: "true" },
+};
+const buckyMoment = {
+  id: "bucky-moment-tell-husband",
+  title: "bucky",
+  sender: "bucky",
+  body: "今天开始要少发朋友圈了，我要留着好多事以后躺在老公怀里一件一件给他讲的",
+  kind: "post",
+  folder: "朋友圈",
+  time: "2026-10-25 11:34",
+  avatar: contactAvatar("bucky"),
+  meta: {
+    likes: "steve|wanda|yelena|loki|natasha",
+    comments: "natasha：TD|steve：|bucky回复steve：😉|sam：你俩加个好友去私聊行吗|loki：中庭产浪漫好恶心|tony：这集真的太难看了|yelena：巴恩斯议员被夺舍了吗",
+  },
+};
+const thorMoment = {
+  id: "thor-moment-loki-praise",
+  title: "thor",
+  sender: "thor",
+  body: "我弟弟真是全世界最善解人意最善良可爱最温柔妥帖的弟弟🥺",
+  kind: "post",
+  folder: "朋友圈",
+  time: "2026-10-25 11:28",
+  avatar: contactAvatar("thor"),
+  meta: {
+    likes: "loki|steve",
+    comments: "sam：？|natasha：？|tony：？|bucky：原来那只不养了吗|wanda：？|yelena：？",
+  },
+};
+const lokiMoment = {
+  id: "loki-moment-fortune",
+  title: "loki",
+  sender: "loki",
+  body: "点赞免费算命",
+  kind: "post",
+  folder: "朋友圈",
+  time: "2026-10-25 11:24",
+  avatar: contactAvatar("loki"),
+  meta: {
+    likes: "thor|yelena|tony|wanda|sam|steve",
+    comments: "loki：@thor烂命一条|loki：@yelena烂命一条|loki：@tony烂命一条|loki：@wanda烂命一条|loki：@sam烂命一条|loki：@natasha烂命一条|loki：@steve烂命一条|loki：@bucky烂命一条|bucky：我没点赞。|loki回复bucky：无人在意好吧",
+  },
+};
 const samMoment = {
   id: "sam-moment-husband",
   title: "sam",
@@ -55,7 +117,7 @@ const samMoment = {
   kind: "post",
   folder: "朋友圈",
   time: "2026-10-25 11:20",
-  avatar: "./story-media/sam-avatar.png",
+  avatar: "./story-media/sam-avatar.jpeg",
   meta: {
     likes: "natasha|tony|yelena",
     comments: "natasha：点了|bucky：看完你这句话我在老公怀里哭了好久，他胸好软|sam回复bucky：🤮",
@@ -63,11 +125,22 @@ const samMoment = {
 };
 base.content.wechat = base.content.wechat.filter(
   (item) =>
-    item.id !== samMoment.id &&
-    item.id !== "sam-contact" &&
-    item.id !== "wechat-sam-contact",
+    ![
+      samMoment.id,
+      samContact.id,
+      "wechat-sam-contact",
+      buckyMoment.id,
+      thorMoment.id,
+      lokiMoment.id,
+    ].includes(item.id),
 );
-base.content.wechat.push(samMoment);
+base.content.wechat.push(
+  samContact,
+  buckyMoment,
+  thorMoment,
+  lokiMoment,
+  samMoment,
+);
 
 // 场地消息只能在蛋糕互动完成后，打开相册五秒才出现。
 const venueAfterPhotos = base.events.find(
