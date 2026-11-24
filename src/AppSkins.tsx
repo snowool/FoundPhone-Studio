@@ -168,6 +168,9 @@ function Compose({
   suggestions = [],
   onSuggestion,
   onTrigger,
+  invitationPrompt = false,
+  invitationContact = "此联系人",
+  onInvitationChoice,
 }: {
   creator: boolean;
   onAdd: () => void;
@@ -175,12 +178,19 @@ function Compose({
   suggestions?: string[];
   onSuggestion?: (label: string) => void;
   onTrigger?: () => void;
+  invitationPrompt?: boolean;
+  invitationContact?: string;
+  onInvitationChoice?: (choice: "是" | "不是") => void;
 }) {
   return (
     <>
       <div className={`skin-compose ${wa ? "wa-compose" : ""}`}>
         {wa ? <Plus size={20} /> : <Mic size={20} />}
-        {suggestions.length > 0 ? (
+        {invitationPrompt ? (
+          <button className="native-compose-field wx-invitation-field" aria-label={`是否给${invitationContact}发送请柬`}>
+            是否给{invitationContact}发送请柬
+          </button>
+        ) : suggestions.length > 0 ? (
           <button
             className="native-compose-field"
             aria-label="选择婚礼场地"
@@ -195,7 +205,13 @@ function Compose({
         <Smile size={21} />
         {wa ? <Mic size={20} /> : <Plus size={22} />}
       </div>
-      {!wa && suggestions.length > 0 && (
+      {!wa && invitationPrompt && (
+        <div className="wx-invitation-choices" aria-label="发送请柬选择">
+          <button onClick={() => onInvitationChoice?.("是")}>是</button>
+          <button onClick={() => onInvitationChoice?.("不是")}>不是</button>
+        </div>
+      )}
+      {!wa && !invitationPrompt && suggestions.length > 0 && (
         <div className="wx-quick-replies" aria-label="婚礼场地选项">
           {suggestions.map((label) => (
             <button key={label} onClick={() => onSuggestion?.(label)}>
@@ -275,6 +291,11 @@ export function WeChatSkin(p: SkinProps) {
     [],
   );
   const [venueChoice, setVenueChoice] = useSkinState<string>(p, "venueChoice", "");
+  const [invitationChoices, setInvitationChoices] = useSkinState<string[]>(
+    p,
+    "invitationChoices",
+    [],
+  );
   const [typingChoice, setTypingChoice] = useState("");
   const [pendingSend, setPendingSend] = useState<{
     thread: string;
@@ -433,6 +454,15 @@ export function WeChatSkin(p: SkinProps) {
           const canTriggerCompose = threadItems.some(
             (i) => i.meta.composeTrigger === "true",
           );
+          const invitationsReady = p.items.some(
+            (item) => item.id === "church-bucky-agreement",
+          );
+          const invitationPrompt = Boolean(
+            invitationsReady &&
+              p.thread &&
+              p.thread !== "bucky❤️" &&
+              !invitationChoices.some((choice) => choice.startsWith(`${p.thread}:`)),
+          );
           const nextTypingText = [...threadItems]
             .reverse()
             .find((item) => item.meta.nextTyping)?.meta.nextTyping || "";
@@ -507,6 +537,14 @@ export function WeChatSkin(p: SkinProps) {
               suggestions={venueChoice ? [] : suggestions}
               onSuggestion={chooseVenue}
               onTrigger={triggerCompose}
+              invitationPrompt={invitationPrompt}
+              invitationContact={p.thread}
+              onInvitationChoice={(choice) =>
+                setInvitationChoices([
+                  ...invitationChoices,
+                  `${p.thread}:${choice}`,
+                ])
+              }
             />
           )}
           </>;

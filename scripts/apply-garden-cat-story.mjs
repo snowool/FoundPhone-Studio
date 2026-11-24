@@ -9,7 +9,7 @@ const base = JSON.parse(
   }),
 );
 
-base.revision = 34;
+base.revision = 35;
 const removedHomeApps = new Set(["mail", "clock", "maps", "settings"]);
 base.installedApps = base.installedApps.filter((app) =>
   !removedHomeApps.has(typeof app === "string" ? app : app.id),
