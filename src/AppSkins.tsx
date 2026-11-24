@@ -63,7 +63,7 @@ function Avatar({
 }) {
   return (
     <span className={`skin-avatar ${round ? "round" : ""}`}>
-      {safeMedia(src)?.startsWith("data:image/") ? (
+      {safeMedia(src) ? (
         <img src={safeMedia(src)} alt="" />
       ) : (
         name.slice(0, 1)
@@ -344,7 +344,7 @@ export function WeChatSkin(p: SkinProps) {
       data-moments={moments}
       data-utility={!!utility}
     >
-      <div className="app-nav wx-nav">
+      <div className={`app-nav wx-nav ${moments ? "wx-moments-nav" : ""}`}>
         <button
           aria-label={utility || p.thread || moments ? "返回" : "收藏"}
           onClick={() =>
@@ -368,7 +368,7 @@ export function WeChatSkin(p: SkinProps) {
         <strong>
           {utility ||
             p.thread ||
-            (moments ? "朋友圈" : tab === "微信" ? p.name : tab)}
+            (moments ? "" : tab === "微信" ? p.name : tab)}
         </strong>
         <button
           aria-label={
@@ -377,10 +377,15 @@ export function WeChatSkin(p: SkinProps) {
           onClick={
             p.creator
               ? p.onAdd
-              : () => (p.thread ? setUtility("聊天信息") : setMenu(!menu))
+              : () =>
+                  p.thread
+                    ? setUtility("聊天信息")
+                    : moments
+                      ? undefined
+                      : setMenu(!menu)
           }
         >
-          {p.thread ? <MoreHorizontal size={22} /> : tab === "通讯录" ? <UserPlus size={21} /> : <CirclePlus size={22} />}
+          {p.thread ? <MoreHorizontal size={22} /> : moments ? <Camera size={22} /> : tab === "通讯录" ? <UserPlus size={21} /> : <CirclePlus size={22} />}
         </button>
       </div>
       {menu && (
@@ -574,8 +579,9 @@ export function WeChatSkin(p: SkinProps) {
             className="wx-moment-cover"
             style={{ backgroundImage: 'url("./story-media/moments-cover.jpeg")' }}
           >
-            <Camera size={32} />
-            <span>朋友圈</span>
+            <div className="wx-moment-profile" aria-label="我的头像">
+              <Avatar name={p.owner || "Steve Rogers"} src={ownerAvatar} />
+            </div>
           </div>
           {posts.map((i) => (
             <article

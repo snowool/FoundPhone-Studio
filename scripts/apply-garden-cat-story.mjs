@@ -9,7 +9,7 @@ const base = JSON.parse(
   }),
 );
 
-base.revision = 37;
+base.revision = 38;
 const removedHomeApps = new Set(["mail", "clock", "maps", "settings"]);
 base.installedApps = base.installedApps.filter((app) =>
   !removedHomeApps.has(typeof app === "string" ? app : app.id),
@@ -61,10 +61,21 @@ const samMoment = {
     comments: "natasha：点了|bucky：看完你这句话我在老公怀里哭了好久，他胸好软|sam回复bucky：🤮",
   },
 };
+const samContact = {
+  id: "sam-contact",
+  title: "sam",
+  sender: "sam",
+  body: "",
+  kind: "text",
+  folder: "",
+  time: "2026-10-25 11:20",
+  avatar: "./story-media/sam-avatar.png",
+  meta: { contact: "true" },
+};
 base.content.wechat = base.content.wechat.filter(
-  (item) => item.id !== samMoment.id,
+  (item) => item.id !== samMoment.id && item.id !== samContact.id,
 );
-base.content.wechat.push(samMoment);
+base.content.wechat.push(samContact, samMoment);
 
 // 场地消息只能在蛋糕互动完成后，打开相册五秒才出现。
 const venueAfterPhotos = base.events.find(
