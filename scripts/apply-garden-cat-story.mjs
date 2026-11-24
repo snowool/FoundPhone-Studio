@@ -9,7 +9,7 @@ const base = JSON.parse(
   }),
 );
 
-base.revision = 36;
+base.revision = 37;
 const removedHomeApps = new Set(["mail", "clock", "maps", "settings"]);
 base.installedApps = base.installedApps.filter((app) =>
   !removedHomeApps.has(typeof app === "string" ? app : app.id),
@@ -55,6 +55,7 @@ const samMoment = {
   kind: "post",
   folder: "朋友圈",
   time: "2026-10-25 11:20",
+  avatar: "./story-media/sam-avatar.png",
   meta: {
     likes: "natasha|tony|yelena",
     comments: "natasha：点了|bucky：看完你这句话我在老公怀里哭了好久，他胸好软|sam回复bucky：🤮",

@@ -570,7 +570,10 @@ export function WeChatSkin(p: SkinProps) {
         })()
       ) : moments ? (
         <div className="wx-moments">
-          <div className="wx-moment-cover">
+          <div
+            className="wx-moment-cover"
+            style={{ backgroundImage: 'url("./story-media/moments-cover.jpeg")' }}
+          >
             <Camera size={32} />
             <span>朋友圈</span>
           </div>
@@ -579,7 +582,7 @@ export function WeChatSkin(p: SkinProps) {
               key={i.id}
               className="wx-moment-post"
             >
-              <Avatar name={i.sender} />
+              <Avatar name={i.sender} src={i.avatar} />
               <div>
                 <strong>{i.sender}</strong>
                 <p>{i.body}</p>

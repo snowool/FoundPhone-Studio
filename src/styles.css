@@ -4103,6 +4103,8 @@ label {
 .wx-moment-cover {
   height: 140px;
   background: #8f9e96;
+  background-position: center 42%;
+  background-size: cover;
   display: flex;
   flex-direction: column;
   align-items: center;
