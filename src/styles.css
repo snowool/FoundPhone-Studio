@@ -4048,6 +4048,17 @@ label {
   object-fit: cover;
   border-radius: 3px;
 }
+.skin-bubble.has-invitation-preview {
+  width: 238px;
+  max-width: 238px;
+  padding: 4px;
+}
+.skin-bubble .invitation-preview {
+  display: block;
+  width: 100%;
+  max-height: none;
+  object-fit: contain;
+}
 .skin-bubble audio {
   width: 180px;
   height: 35px;

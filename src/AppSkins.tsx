@@ -79,7 +79,12 @@ function ItemMedia({ item }: { item: Item }) {
     ) : item.kind === "video" ? (
       <video controls playsInline src={src} />
     ) : (
-      <img loading="lazy" alt={item.title} src={src} />
+      <img
+        loading="lazy"
+        className={item.meta.invitationPreview === "true" ? "invitation-preview" : ""}
+        alt={item.title}
+        src={src}
+      />
     )
   ) : (
     <div className="skin-photo">
@@ -129,7 +134,7 @@ function MessageList({
             <Avatar name={i.sender} src={i.avatar} />
           )}
           <button
-            className="skin-bubble"
+            className={`skin-bubble ${i.meta.invitationPreview === "true" ? "has-invitation-preview" : ""}`}
             onClick={() =>
               creator || i.meta.expandMedia === "true" ? onItem(i) : onRead(i.id)
             }

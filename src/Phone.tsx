@@ -900,8 +900,8 @@ function AppSearch({
     </>
   );
 }
-function Media({ item }: { item: Item }) {
-  const src = safeMedia(item.media);
+function Media({ item, detail = false }: { item: Item; detail?: boolean }) {
+  const src = safeMedia(detail ? item.meta.detailMedia || item.media : item.media);
   return src ? (
     item.kind === "audio" ? (
       <audio controls src={src} />
@@ -910,7 +910,7 @@ function Media({ item }: { item: Item }) {
     ) : (
       <img
         loading="lazy"
-        className={item.meta.animatedMedia === "true" ? "animated-invitation" : ""}
+        className={detail && item.meta.detailMedia ? "animated-invitation" : item.meta.animatedMedia === "true" ? "animated-invitation" : ""}
         src={src}
         alt={item.title}
       />
@@ -1042,7 +1042,7 @@ function AppContent({
           </small>
           <h2>{detail.title}</h2>
           {(detail.media || ["media", "social"].includes(app.engine)) && (
-            <Media item={detail} />
+            <Media item={detail} detail />
           )}
           <RichText value={detail.richText} fallback={detail.body} />
           <dl className="item-metadata">

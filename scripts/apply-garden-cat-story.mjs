@@ -41,6 +41,11 @@ const cakeStartIndex = base.content.wechat.findIndex(
 );
 if (cakeStartIndex < 0) throw new Error("Cheesecake conversation is missing");
 base.content.wechat.splice(cakeStartIndex, 0, ...beforeCakeMessages);
+const cakeUncut = base.content.wechat.find(
+  (item) => item.id === "bucky-cake-bucky-uncut",
+);
+if (!cakeUncut) throw new Error("Cheesecake reply is missing");
+cakeUncut.body = "我没说我切了🙂‍↕️";
 
 // 场地消息只能在蛋糕互动完成后，打开相册五秒才出现。
 const venueAfterPhotos = base.events.find(
@@ -63,7 +68,7 @@ const messages = [
   ["church-bucky-ellipsis", "bucky❤️", "。。。", {}],
   ["church-bucky-confiscate", "bucky❤️", "我要没收你的情话集了", { composeTrigger: "true", nextTyping: "🥲" }],
   ["church-steve-plead", "Steve Rogers", "🥲", {}, true],
-  ["church-bucky-invitation", "bucky❤️", "", { expandMedia: "true", animatedMedia: "true" }, false, "./story-media/wedding-invitation-foldout.gif"],
+  ["church-bucky-invitation", "bucky❤️", "", { expandMedia: "true", invitationPreview: "true", detailMedia: "./story-media/wedding-invitation-foldout.gif" }, false, "./story-media/wedding-invitation.jpeg"],
   ["church-bucky-invitation-reminder", "bucky❤️", "stevie记得今天要发请柬", { composeTrigger: "true", nextTyping: "🙂‍↕️" }],
   ["church-steve-nod", "Steve Rogers", "🙂‍↕️", { composeTrigger: "true", nextTyping: "所有人？" }, true],
   ["church-steve-everyone", "Steve Rogers", "所有人？", {}, true],
