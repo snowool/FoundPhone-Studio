@@ -324,11 +324,7 @@ export function WeChatSkin(p: SkinProps) {
   const conversations = [
     ...new Set(
       p.items
-        .filter(
-          (i) =>
-            !["朋友圈", "我"].includes(i.folder) &&
-            i.meta.contact !== "true",
-        )
+        .filter((i) => !["朋友圈", "我"].includes(i.folder))
         .map((i) => i.title),
     ),
   ];
