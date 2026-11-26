@@ -9,7 +9,7 @@ const base = JSON.parse(
   }),
 );
 
-base.revision = 41;
+base.revision = 42;
 const removedHomeApps = new Set(["mail", "clock", "maps", "settings"]);
 base.installedApps = base.installedApps.filter((app) =>
   !removedHomeApps.has(typeof app === "string" ? app : app.id),
@@ -77,6 +77,7 @@ const buckyMoment = {
   time: "2026-10-25 11:34",
   avatar: contactAvatar("bucky"),
   meta: {
+    momentOnly: "true",
     likes: "steve|wanda|yelena|loki|natasha",
     comments: "natasha：TD|steve：|bucky回复steve：😉|sam：你俩加个好友去私聊行吗|loki：中庭产浪漫好恶心|tony：这集真的太难看了|yelena：巴恩斯议员被夺舍了吗",
   },
@@ -91,6 +92,7 @@ const thorMoment = {
   time: "2026-10-25 11:28",
   avatar: contactAvatar("thor"),
   meta: {
+    momentOnly: "true",
     likes: "loki|steve",
     comments: "sam：？|natasha：？|tony：？|bucky：原来那只不养了吗|wanda：？|yelena：？",
   },
@@ -105,6 +107,7 @@ const lokiMoment = {
   time: "2026-10-25 11:24",
   avatar: contactAvatar("loki"),
   meta: {
+    momentOnly: "true",
     likes: "thor|yelena|tony|wanda|sam|steve",
     comments: "loki：@thor烂命一条|loki：@yelena烂命一条|loki：@tony烂命一条|loki：@wanda烂命一条|loki：@sam烂命一条|loki：@natasha烂命一条|loki：@steve烂命一条|loki：@bucky烂命一条|bucky：我没点赞。|loki回复bucky：无人在意好吧",
   },
@@ -119,6 +122,7 @@ const samMoment = {
   time: "2026-10-25 11:20",
   avatar: "./story-media/sam-avatar.jpeg",
   meta: {
+    momentOnly: "true",
     likes: "natasha|tony|yelena",
     comments: "natasha：点了|bucky：看完你这句话我在老公怀里哭了好久，他胸好软|sam回复bucky：🤮",
   },
@@ -134,6 +138,7 @@ const wandaMoment = {
   avatar: contactAvatar("wanda"),
   media: "./story-media/wanda-moment.jpeg",
   meta: {
+    momentOnly: "true",
     likes: "natasha|bucky|steve|thor|sam|tony|yelena|loki",
     comments: "natasha：我去，你拿个洋娃娃拍张照就说是自己啊|yelena：ㅎㄹ...真的疯了 完全是 legend 啊ㅋㅋ这种程度真的不是天才吗 ㅅㅂ…做到这种程度的话就完全是神吧ㅠㅠ…以后也请一直幸福地生活下去吧♡ 今天完全展现出可爱的角度呢 是路过的蚂蚁都会惊叹的程度啊…|bucky：好漂亮|wanda回复yelena：好害羞！|wanda回复bucky：你也素…|wanda回复natasha：🫪🫪",
   },
@@ -159,8 +164,8 @@ base.content.wechat = base.content.wechat.filter(
 );
 base.content.wechat.push(
   samContact,
-  wandaMoment,
   buckyMoment,
+  wandaMoment,
   thorMoment,
   lokiMoment,
   samMoment,
