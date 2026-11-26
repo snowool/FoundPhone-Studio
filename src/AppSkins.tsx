@@ -80,7 +80,8 @@ function ItemMedia({ item }: { item: Item }) {
       <video controls playsInline src={src} />
     ) : (
       <img
-        loading="lazy"
+        loading={item.meta.invitationPreview === "true" ? "eager" : "lazy"}
+        decoding={item.meta.invitationPreview === "true" ? "sync" : "async"}
         className={item.meta.invitationPreview === "true" ? "invitation-preview" : ""}
         alt={item.title}
         src={src}
