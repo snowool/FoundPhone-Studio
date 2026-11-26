@@ -616,6 +616,13 @@ export function MymyX(p: SkinProps) {
       : marks.includes(id);
   const toggle = (id: string, v: string[], set: (x: string[]) => void) =>
     set(v.includes(id) ? v.filter((x) => x !== id) : [...v, id]);
+  const compactCount = (count: number) => {
+    if (count >= 10000) {
+      const value = count / 10000;
+      return `${Number.isInteger(value) ? value : value.toFixed(1)}w`;
+    }
+    return String(count);
+  };
   return (
     <div
       className={"mymy-ui mymy-x " + (dark ? "x-reference-dark" : "")}
@@ -674,6 +681,7 @@ export function MymyX(p: SkinProps) {
                       p.onItem(i);
                     }}
                   >
+                    {i.title && <b className="kzx-title">{i.title}</b>}
                     {i.body}
                   </button>
                   {i.media && (
@@ -699,7 +707,10 @@ export function MymyX(p: SkinProps) {
                       onClick={() => toggle(i.id, reposts, setReposts)}
                     >
                       <Repeat2 />
-                      {reposts.includes(i.id) ? 1 : 0}
+                      {compactCount(
+                        Number(i.meta.reposts || 0) +
+                          (reposts.includes(i.id) ? 1 : 0),
+                      )}
                     </button>
                     <button
                       aria-label={"点赞" + i.title}
@@ -710,7 +721,7 @@ export function MymyX(p: SkinProps) {
                       }}
                     >
                       <Heart fill={isLiked(i.id) ? "#f91880" : "none"} />
-                      {i.likes + (isLiked(i.id) ? 1 : 0)}
+                      {compactCount(i.likes + (isLiked(i.id) ? 1 : 0))}
                     </button>
                     <span>
                       <BarChart2 />

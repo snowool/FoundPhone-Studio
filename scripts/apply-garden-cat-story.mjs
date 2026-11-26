@@ -149,6 +149,23 @@ base.content.wechat.push(
   samMoment,
 );
 
+const alpineNewsPost = {
+  id: "twitter-alpine-news",
+  title: "Steve Rogers&Bucky Barnes关系再上一层楼，秘密喜迎新家庭成员",
+  sender: "HeroWatch Daily",
+  body: "据知情人士透露Barnes议员与Rogers队长秘密孕育新生命，一只小白猫Alpine，代表二人关系更进一步。",
+  kind: "post",
+  time: "2026-10-25 12:18",
+  media: "./story-media/x-alpine-news.jpeg",
+  meta: { handle: "hero_watch_47", reposts: "83700" },
+  likes: 260000,
+  comments: [],
+};
+base.content.twitter = (base.content.twitter || []).filter(
+  (item) => item.id !== alpineNewsPost.id,
+);
+base.content.twitter.push(alpineNewsPost);
+
 // 场地消息只能在蛋糕互动完成后，打开相册五秒才出现。
 const venueAfterPhotos = base.events.find(
   (item) => item.id === "wedding-venue-after-photos",

@@ -813,6 +813,13 @@
   white-space: pre-wrap;
   word-break: break-word;
 }
+.mymy-ui .kzx-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 22px;
+  margin-bottom: 3px;
+}
 .mymy-ui .kzxac {
   display: flex;
   justify-content: space-between;
