@@ -321,7 +321,9 @@ export function WeChatSkin(p: SkinProps) {
     }, Number(item.meta.autoDelayMs || 0));
     return () => window.clearTimeout(start);
   }, [p.appId, p.items, p.onEvent]);
-  const contactsHiddenFromChats = new Set(["sam", "loki"]);
+  // Sam stays in the address book only; Loki has no chat history but remains
+  // visible on the WeChat home list as an empty contact thread.
+  const contactsHiddenFromChats = new Set(["sam"]);
   const conversations = [
     ...new Set(
       p.items
