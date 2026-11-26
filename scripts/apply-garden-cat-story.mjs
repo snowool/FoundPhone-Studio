@@ -95,20 +95,6 @@ const thorMoment = {
     comments: "sam：？|natasha：？|tony：？|bucky：原来那只不养了吗|wanda：？|yelena：？",
   },
 };
-const lokiMoment = {
-  id: "loki-moment-fortune",
-  title: "loki",
-  sender: "loki",
-  body: "点赞免费算命",
-  kind: "post",
-  folder: "朋友圈",
-  time: "2026-10-25 11:24",
-  avatar: contactAvatar("loki"),
-  meta: {
-    likes: "thor|yelena|tony|wanda|sam|steve",
-    comments: "loki：@thor烂命一条|loki：@yelena烂命一条|loki：@tony烂命一条|loki：@wanda烂命一条|loki：@sam烂命一条|loki：@natasha烂命一条|loki：@steve烂命一条|loki：@bucky烂命一条|bucky：我没点赞。|loki回复bucky：无人在意好吧",
-  },
-};
 const samMoment = {
   id: "sam-moment-husband",
   title: "sam",
@@ -136,7 +122,6 @@ base.content.wechat = base.content.wechat.filter(
       "wechat-sam-contact",
       buckyMoment.id,
       thorMoment.id,
-      lokiMoment.id,
       ].includes(item.id) && !isPrivateSamOrLoki
     );
   },
@@ -145,7 +130,6 @@ base.content.wechat.push(
   samContact,
   buckyMoment,
   thorMoment,
-  lokiMoment,
   samMoment,
 );
 
