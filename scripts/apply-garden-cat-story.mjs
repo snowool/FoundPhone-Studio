@@ -9,7 +9,7 @@ const base = JSON.parse(
   }),
 );
 
-base.revision = 38;
+base.revision = 39;
 const removedHomeApps = new Set(["mail", "clock", "maps", "settings"]);
 base.installedApps = base.installedApps.filter((app) =>
   !removedHomeApps.has(typeof app === "string" ? app : app.id),
@@ -95,18 +95,18 @@ const thorMoment = {
     comments: "sam：？|natasha：？|tony：？|bucky：原来那只不养了吗|wanda：？|yelena：？",
   },
 };
-const samMoment = {
-  id: "sam-moment-husband",
-  title: "sam",
-  sender: "sam",
-  body: "一直不理解老公奴这个群体为，难道没了老公就活不下去吗",
+const lokiMoment = {
+  id: "loki-moment-fortune",
+  title: "loki",
+  sender: "loki",
+  body: "点赞免费算命",
   kind: "post",
   folder: "朋友圈",
-  time: "2026-10-25 11:20",
-  avatar: "./story-media/sam-avatar.jpeg",
+  time: "2026-10-25 11:24",
+  avatar: contactAvatar("loki"),
   meta: {
-    likes: "natasha|tony|yelena",
-    comments: "natasha：点了|bucky：看完你这句话我在老公怀里哭了好久，他胸好软|sam回复bucky：🤮",
+    likes: "thor|yelena|tony|wanda|sam|steve",
+    comments: "loki：@thor烂命一条|loki：@yelena烂命一条|loki：@tony烂命一条|loki：@wanda烂命一条|loki：@sam烂命一条|loki：@natasha烂命一条|loki：@steve烂命一条|loki：@bucky烂命一条|bucky：我没点赞。|loki回复bucky：无人在意好吧",
   },
 };
 base.content.wechat = base.content.wechat.filter(
@@ -117,11 +117,12 @@ base.content.wechat = base.content.wechat.filter(
       ["sam", "loki"].includes(normalizeContactName(item.title));
     return (
       ![
-      samMoment.id,
+      "sam-moment-husband",
       samContact.id,
       "wechat-sam-contact",
       buckyMoment.id,
       thorMoment.id,
+      lokiMoment.id,
       ].includes(item.id) && !isPrivateSamOrLoki
     );
   },
@@ -130,7 +131,7 @@ base.content.wechat.push(
   samContact,
   buckyMoment,
   thorMoment,
-  samMoment,
+  lokiMoment,
 );
 
 const alpineNewsPost = {
