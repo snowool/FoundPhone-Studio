@@ -330,6 +330,7 @@ export function WeChatSkin(p: SkinProps) {
         .filter(
           (i) =>
             !["朋友圈", "我"].includes(i.folder) &&
+            i.meta.momentOnly !== "true" &&
             !(
               i.meta.contact === "true" &&
               contactsHiddenFromChats.has(
@@ -457,7 +458,9 @@ export function WeChatSkin(p: SkinProps) {
       ) : p.thread ? (
         (() => {
           const threadItems = p.items.filter(
-            (i) => i.title === p.thread && i.meta.contact !== "true",
+            (i) => i.title === p.thread &&
+              i.meta.contact !== "true" &&
+              i.meta.momentOnly !== "true",
           );
           const cakePending =
             p.thread === "bucky❤️" &&
@@ -664,7 +667,9 @@ export function WeChatSkin(p: SkinProps) {
                 )
                 .map((t) => {
                   const entries = p.items.filter((i) => i.title === t),
-                    list = entries.filter((i) => i.meta.contact !== "true"),
+                    list = entries.filter(
+      (i) => i.meta.contact !== "true" && i.meta.momentOnly !== "true",
+    ),
                     last = list.at(-1),
                     contact = entries.find((i) => i.meta.contact === "true"),
                     pinned = entries.some((i) => i.meta.pinned === "true");
