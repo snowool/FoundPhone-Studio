@@ -685,13 +685,22 @@ export function MymyX(p: SkinProps) {
                     {i.body}
                   </button>
                   {i.media && (
-                    <button
-                      className="kzxv"
-                      aria-label="打开媒体"
-                      onClick={() => p.onItem(i)}
-                    >
+                    <div className={i.meta.extraMedia ? "kzxv kzxv-gallery" : "kzxv"}>
+                      <button
+                        aria-label="打开媒体"
+                        onClick={() => p.onItem(i)}
+                      >
                       <Media item={i} />
-                    </button>
+                      </button>
+                      {i.meta.extraMedia && (
+                        <button
+                          aria-label="打开第二张图片"
+                          onClick={() => p.onItem(i)}
+                        >
+                          <img src={i.meta.extraMedia} alt={`${i.title} 第二张图片`} />
+                        </button>
+                      )}
+                    </div>
                   )}
                   <div className="kzxac">
                     <button

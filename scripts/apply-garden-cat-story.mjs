@@ -157,7 +157,11 @@ const alpineNewsPost = {
   kind: "post",
   time: "2026-10-25 12:18",
   media: "./story-media/x-alpine-news.jpeg",
-  meta: { handle: "hero_watch_47", reposts: "83700" },
+  meta: {
+    handle: "hero_watch_47",
+    reposts: "83700",
+    extraMedia: "./story-media/x-alpine-comic.jpeg",
+  },
   likes: 260000,
   comments: [],
 };

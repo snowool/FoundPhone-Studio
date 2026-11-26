@@ -647,3 +647,20 @@
   max-height: 55dvh;
   object-fit: contain;
 }
+.mymy-ui.mymy-x .kzxv-gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  padding: 0;
+  overflow: hidden;
+}
+.mymy-ui.mymy-x .kzxv-gallery button {
+  min-width: 0;
+  overflow: hidden;
+}
+.mymy-ui.mymy-x .kzxv-gallery img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  border-radius: 0;
+}
