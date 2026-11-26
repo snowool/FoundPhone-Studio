@@ -714,7 +714,7 @@ export function WeChatSkin(p: SkinProps) {
                 return (
                   <button
                     key={String(label)}
-                    className="wx-discovery"
+                    className={"wx-discovery" + (label === "朋友圈" ? " wx-discovery-unread" : "")}
                     onClick={() =>
                       label === "朋友圈"
                         ? setMoments(true)
@@ -723,6 +723,7 @@ export function WeChatSkin(p: SkinProps) {
                   >
                     <Glyph size={22} style={{ color: String(color) }} />
                     {String(label)}
+                    {label === "朋友圈" && <i className="wx-unread-dot" aria-hidden="true" />}
                     <span>›</span>
                   </button>
                 );

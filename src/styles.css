@@ -3599,6 +3599,17 @@ label {
   margin-left: auto;
   color: #bbb;
 }
+.wx-discovery-unread {
+  position: relative;
+}
+.wx-unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fa5151;
+  margin-left: 3px;
+  box-shadow: 0 0 0 2px #fff;
+}
 .wx-profile {
   background: #fff;
   display: flex;

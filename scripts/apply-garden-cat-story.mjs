@@ -9,7 +9,7 @@ const base = JSON.parse(
   }),
 );
 
-base.revision = 39;
+base.revision = 40;
 const removedHomeApps = new Set(["mail", "clock", "maps", "settings"]);
 base.installedApps = base.installedApps.filter((app) =>
   !removedHomeApps.has(typeof app === "string" ? app : app.id),
@@ -95,18 +95,19 @@ const thorMoment = {
     comments: "sam：？|natasha：？|tony：？|bucky：原来那只不养了吗|wanda：？|yelena：？",
   },
 };
-const lokiMoment = {
-  id: "loki-moment-fortune",
-  title: "loki",
-  sender: "loki",
-  body: "点赞免费算命",
+const wandaMoment = {
+  id: "wanda-moment-outing",
+  title: "wanda",
+  sender: "wanda",
+  body: "就酱粗去玩",
   kind: "post",
   folder: "朋友圈",
-  time: "2026-10-25 11:24",
-  avatar: contactAvatar("loki"),
+  time: "2026-10-25 11:40",
+  avatar: contactAvatar("wanda"),
+  media: "./story-media/wanda-moment.jpeg",
   meta: {
-    likes: "thor|yelena|tony|wanda|sam|steve",
-    comments: "loki：@thor烂命一条|loki：@yelena烂命一条|loki：@tony烂命一条|loki：@wanda烂命一条|loki：@sam烂命一条|loki：@natasha烂命一条|loki：@steve烂命一条|loki：@bucky烂命一条|bucky：我没点赞。|loki回复bucky：无人在意好吧",
+    likes: "natasha|bucky|steve|thor|sam|tony|yelena|loki",
+    comments: "natasha：我去，你拿个洋娃娃拍张照就说是自己啊|yelena：ㅎㄹ...真的疯了 完全是 legend 啊ㅋㅋ这种程度真的不是天才吗 ㅅㅂ…做到这种程度的话就完全是神吧ㅠㅠ…以后也请一直幸福地生活下去吧♡ 今天完全展现出可爱的角度呢 是路过的蚂蚁都会惊叹的程度啊…|bucky：好漂亮|wanda回复yelena：好害羞！|wanda回复bucky：你也素…|wanda回复natasha：🫪🫪",
   },
 };
 base.content.wechat = base.content.wechat.filter(
@@ -122,16 +123,17 @@ base.content.wechat = base.content.wechat.filter(
       "wechat-sam-contact",
       buckyMoment.id,
       thorMoment.id,
-      lokiMoment.id,
+      "loki-moment-fortune",
+      wandaMoment.id,
       ].includes(item.id) && !isPrivateSamOrLoki
     );
   },
 );
 base.content.wechat.push(
   samContact,
+  wandaMoment,
   buckyMoment,
   thorMoment,
-  lokiMoment,
 );
 
 const alpineNewsPost = {
