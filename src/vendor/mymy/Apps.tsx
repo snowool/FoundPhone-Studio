@@ -659,8 +659,9 @@ export function MymyX(p: SkinProps) {
           />
         )}
         <div className="kzxfd">
-          {p.items
+          {[...p.items]
             .filter((i) => (i.title + i.body).includes(query))
+            .sort((a, b) => Number(b.meta.xTop || 0) - Number(a.meta.xTop || 0))
             .map((i) => (
               <article className="kzxt" key={i.id}>
                 <Avatar name={i.sender} src={i.avatar} />
