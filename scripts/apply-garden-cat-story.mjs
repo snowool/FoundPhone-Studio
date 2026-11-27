@@ -360,11 +360,12 @@ base.tests.push({
     { event: "compose", target: "wechat:yelena" },
     { event: "compose", target: "wechat:yelena" }, { advanceMs: 2000 },
     { advanceMs: 2000 }, { event: "compose", target: "wechat:yelena" },
-    { advanceMs: 1000 }, { advanceMs: 1000 }, { advanceMs: 1000 },
+    { advanceMs: 1000 }, { advanceMs: 1000 }, { advanceMs: 1000 }, { advanceMs: 1500 },
   ],
   expectUnlocked: messages
     .filter(([id]) => !id.startsWith("church-"))
     .map(([id]) => id),
+  ending: "邪神的祝福",
 });
 base.tests = base.tests.filter((item) =>
   !item.name.includes("场地") && item.name !== "蛋糕结束后打开相册才触发场地剧情",
