@@ -187,10 +187,25 @@ const alpineNewsPost = {
   likes: 260000,
   comments: [],
 };
+const rogersFamilyNewsPost = {
+  id: "twitter-rogers-family-outing",
+  title: "与罗杰斯一家同行？！",
+  sender: "HeroWatch Daily",
+  body: "史蒂夫·罗杰斯与巴基·巴恩斯婚后首次公开亮相，巴恩斯先生虽然是回归家庭男人，但状态却像正值壮年，老树发新芽，令不少粉丝大赞：罗杰斯太太如此保持弗爆身形，定是为了靠色相留住老公！",
+  kind: "post",
+  time: "2026-10-25 12:22",
+  media: "./story-media/x-rogers-family-outing.jpeg",
+  meta: {
+    handle: "hero_watch_47",
+    reposts: "96200",
+  },
+  likes: 318000,
+  comments: [],
+};
 base.content.twitter = (base.content.twitter || []).filter(
-  (item) => item.id !== alpineNewsPost.id,
+  (item) => ![alpineNewsPost.id, rogersFamilyNewsPost.id].includes(item.id),
 );
-base.content.twitter.push(alpineNewsPost);
+base.content.twitter.push(alpineNewsPost, rogersFamilyNewsPost);
 
 // 场地消息只能在蛋糕互动完成后，打开相册五秒才出现。
 const venueAfterPhotos = base.events.find(
