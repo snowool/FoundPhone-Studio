@@ -579,12 +579,17 @@ export function WeChatSkin(p: SkinProps) {
               onTrigger={triggerCompose}
               invitationPrompt={invitationPrompt}
               invitationContact={p.thread}
-              onInvitationChoice={(choice) =>
+              onInvitationChoice={(choice) => {
                 setInvitationChoices([
                   ...invitationChoices,
                   `${p.thread}:${choice}`,
-                ])
-              }
+                ]);
+                // The story only advances once an invitation is actually sent.
+                // "不是" merely closes the question for this contact.
+                if (choice === "是") {
+                  p.onEvent?.("invitationChoice", `${p.appId}:${p.thread}`);
+                }
+              }}
             />
           )}
           </>;
