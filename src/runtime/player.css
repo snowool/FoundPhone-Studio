@@ -57,6 +57,11 @@
   outline-offset: 3px;
 }
 
+/* The “去未来” card places its restart control lower than the other cards. */
+.future-ending .loki-ending-restart {
+  top: 72.5%;
+}
+
 @keyframes loki-ending-darken {
   from { background: rgba(0, 0, 0, 0); }
   to { background: #000; }

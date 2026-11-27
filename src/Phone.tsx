@@ -200,6 +200,8 @@ function PhoneRuntime({
     !creator && s.endings.includes("邪神的祝福");
   const coneyEndingReached =
     !creator && s.endings.includes("康尼岛之夜");
+  const futureEndingReached =
+    !creator && s.endings.includes("去未来");
   const runtimeRef = useRef(s);
   const renderedRuntime = useRef(s);
   if (renderedRuntime.current !== s) {
@@ -645,7 +647,7 @@ function PhoneRuntime({
               ))}
             </div>
           )}
-          {!creator && s.endings.length > 0 && !locked && !lokiEndingReached && !coneyEndingReached && (
+          {!creator && s.endings.length > 0 && !locked && !lokiEndingReached && !coneyEndingReached && !futureEndingReached && (
             <div className="story-overlay ending">
               <span className="eyebrow">结局达成 · {s.endings.length}/3</span>
               <h2>{s.endings[s.endings.length - 1]}</h2>
@@ -687,6 +689,27 @@ function PhoneRuntime({
               <img
                 src={`${import.meta.env.BASE_URL}endings/coney-island-night.png`}
                 alt="康尼岛之夜"
+              />
+              <button
+                className="loki-ending-restart"
+                aria-label="重新开始游戏"
+                onClick={() => {
+                  update(dispatch(work, initialRuntime(work), "start"));
+                  setApp("");
+                  setThread("");
+                  setPanel("");
+                  setFolder("");
+                  setKeyboard(false);
+                  setLocked(true);
+                }}
+              />
+            </div>
+          )}
+          {futureEndingReached && (
+            <div className="loki-ending future-ending" role="dialog" aria-label="去未来结局">
+              <img
+                src={`${import.meta.env.BASE_URL}endings/go-future.jpeg`}
+                alt="去未来"
               />
               <button
                 className="loki-ending-restart"
