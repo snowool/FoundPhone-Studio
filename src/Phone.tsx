@@ -198,6 +198,8 @@ function PhoneRuntime({
   // it waits until all three Thor messages have remained visible.
   const lokiEndingReached =
     !creator && s.endings.includes("邪神的祝福");
+  const coneyEndingReached =
+    !creator && s.endings.includes("康尼岛之夜");
   const runtimeRef = useRef(s);
   const renderedRuntime = useRef(s);
   if (renderedRuntime.current !== s) {
@@ -643,7 +645,7 @@ function PhoneRuntime({
               ))}
             </div>
           )}
-          {!creator && s.endings.length > 0 && !locked && !lokiEndingReached && (
+          {!creator && s.endings.length > 0 && !locked && !lokiEndingReached && !coneyEndingReached && (
             <div className="story-overlay ending">
               <span className="eyebrow">结局达成 · {s.endings.length}/3</span>
               <h2>{s.endings[s.endings.length - 1]}</h2>
@@ -664,6 +666,27 @@ function PhoneRuntime({
               <img
                 src={`${import.meta.env.BASE_URL}endings/evil-gods-blessing.jpeg`}
                 alt="邪神的祝福：Steve Rogers 与 James Buchanan Barnes"
+              />
+              <button
+                className="loki-ending-restart"
+                aria-label="重新开始游戏"
+                onClick={() => {
+                  update(dispatch(work, initialRuntime(work), "start"));
+                  setApp("");
+                  setThread("");
+                  setPanel("");
+                  setFolder("");
+                  setKeyboard(false);
+                  setLocked(true);
+                }}
+              />
+            </div>
+          )}
+          {coneyEndingReached && (
+            <div className="loki-ending" role="dialog" aria-label="康尼岛之夜结局">
+              <img
+                src={`${import.meta.env.BASE_URL}endings/coney-island-night.png`}
+                alt="康尼岛之夜"
               />
               <button
                 className="loki-ending-restart"

@@ -202,10 +202,44 @@ const rogersFamilyNewsPost = {
   likes: 318000,
   comments: [],
 };
+const coneySecretWeddingPost = {
+  id: "twitter-coney-secret-wedding",
+  title: "秘密婚礼曝光！",
+  sender: "babo Sakura",
+  body: "跟随知情人士竟意外撞破美国队长与冬日战士私情，待业家庭主父与国会议员婚礼在布鲁克林一教堂秘密举行，真让他赘到了！",
+  kind: "post",
+  time: "2026-10-25 12:35",
+  hidden: true,
+  meta: { handle: "babo_sakura", reposts: "24100", views: "38.6万" },
+  likes: 126000,
+  comments: [],
+};
+const coneyRunawayPost = {
+  id: "twitter-coney-runaway",
+  title: "美国队长临阵逃婚？",
+  sender: "babo Sakura",
+  body: "记者突袭婚礼之后罗杰斯队长竟临阵脱逃，与新婚妻子手牵手逃离之，疑似有民众在康尼岛摩天轮附近发现二人身影。",
+  kind: "post",
+  time: "2026-10-25 12:45",
+  hidden: true,
+  meta: { handle: "babo_sakura", reposts: "31900", views: "45.2万" },
+  likes: 184000,
+  comments: [],
+};
 base.content.twitter = (base.content.twitter || []).filter(
-  (item) => ![alpineNewsPost.id, rogersFamilyNewsPost.id].includes(item.id),
+  (item) => ![
+    alpineNewsPost.id,
+    rogersFamilyNewsPost.id,
+    coneySecretWeddingPost.id,
+    coneyRunawayPost.id,
+  ].includes(item.id),
 );
-base.content.twitter.push(alpineNewsPost, rogersFamilyNewsPost);
+base.content.twitter.push(
+  alpineNewsPost,
+  rogersFamilyNewsPost,
+  coneySecretWeddingPost,
+  coneyRunawayPost,
+);
 const randomLikes = [78600, 142000, 96300, 218000, 67400, 189000, 115000];
 const randomReposts = [15200, 38400, 21700, 56200, 11800, 47300, 29600];
 base.content.twitter = base.content.twitter.map((item, index) => ({
@@ -337,6 +371,78 @@ const sequence = [
   event("church-steve-nod-reply", "点击输入框后 Steve 应下", "wechat:bucky❤️", "church-steve-nod", cond("church-bucky-invitation-reminder")),
   event("church-steve-everyone-reply", "点击输入框后 Steve 询问所有人", "wechat:bucky❤️", "church-steve-everyone", cond("church-steve-nod"), ["church-bucky-agreement-delay"]),
   event("church-bucky-agreement-delay", "两秒后巴基提醒约定", "wechat:bucky❤️", "church-bucky-agreement", cond("church-steve-everyone"), [], 2000),
+  {
+    id: "coney-tony-invitation-sent",
+    label: "给 Tony 发送请柬后触发康尼岛支线",
+    event: "invitationChoice",
+    target: "wechat:Tony",
+    once: true,
+    conditions: [],
+    actions: [{ type: "variable", key: "coney:tony-invited", value: true }],
+    next: ["coney-secret-wedding-delay"],
+  },
+  {
+    id: "coney-secret-wedding-delay",
+    label: "十五秒后黑叉发布秘密婚礼帖子",
+    type: "delay",
+    event: "invitationChoice",
+    target: "wechat:Tony",
+    once: true,
+    delayMs: 15000,
+    conditions: [{ key: "coney:tony-invited", op: "eq", value: true }],
+    actions: [
+      unlock("twitter-coney-secret-wedding"),
+      { type: "notification", key: "", value: "twitter/babo Sakura\n秘密婚礼曝光！" },
+    ],
+    next: [],
+  },
+  {
+    id: "coney-secret-wedding-read",
+    label: "读完秘密婚礼帖子",
+    event: "read",
+    target: "twitter-coney-secret-wedding",
+    once: true,
+    conditions: [cond("twitter-coney-secret-wedding")[0]],
+    actions: [],
+    next: ["coney-runaway-delay"],
+  },
+  {
+    id: "coney-runaway-delay",
+    label: "十秒后黑叉发布逃婚帖子",
+    type: "delay",
+    event: "read",
+    target: "twitter-coney-secret-wedding",
+    once: true,
+    delayMs: 10000,
+    conditions: [cond("twitter-coney-secret-wedding")[0]],
+    actions: [
+      unlock("twitter-coney-runaway"),
+      { type: "notification", key: "", value: "twitter/babo Sakura\n美国队长临阵逃婚？" },
+    ],
+    next: [],
+  },
+  {
+    id: "coney-runaway-read",
+    label: "读完逃婚帖子",
+    event: "read",
+    target: "twitter-coney-runaway",
+    once: true,
+    conditions: [cond("twitter-coney-runaway")[0]],
+    actions: [],
+    next: ["coney-island-ending-delay"],
+  },
+  {
+    id: "coney-island-ending-delay",
+    label: "十秒后触发康尼岛之夜结局",
+    type: "delay",
+    event: "read",
+    target: "twitter-coney-runaway",
+    once: true,
+    delayMs: 10000,
+    conditions: [cond("twitter-coney-runaway")[0]],
+    actions: [{ type: "ending", key: "", value: "康尼岛之夜" }],
+    next: [],
+  },
   {
     id: "wedding-invitation-sent-sam",
     label: "给 Sam 发送请柬",
