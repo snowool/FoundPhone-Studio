@@ -372,6 +372,18 @@ const sequence = [
   event("church-steve-everyone-reply", "点击输入框后 Steve 询问所有人", "wechat:bucky❤️", "church-steve-everyone", cond("church-steve-nod"), ["church-bucky-agreement-delay"]),
   event("church-bucky-agreement-delay", "两秒后巴基提醒约定", "wechat:bucky❤️", "church-bucky-agreement", cond("church-steve-everyone"), [], 2000),
   {
+    id: "wedding-first-dance-music-selected",
+    label: "在 Apple Music 选择第一支舞音乐",
+    event: "musicSelected",
+    target: "music:its-been-a-long-long-time",
+    once: true,
+    conditions: [],
+    actions: [
+      { type: "variable", key: "wedding:first-dance:confirmed", value: true },
+    ],
+    next: [],
+  },
+  {
     id: "coney-tony-invitation-sent",
     label: "给 Tony 发送请柬后触发康尼岛支线",
     event: "invitationChoice",

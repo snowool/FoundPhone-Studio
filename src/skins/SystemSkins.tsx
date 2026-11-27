@@ -907,7 +907,19 @@ export function MusicSkin(p: Props) {
           <button aria-label="下载"><Download size={25} /></button>
         </div>
         <div className="music-song-list" aria-label="歌单曲目">
-          <article className="music-song-row">
+          <article
+            className="music-song-row"
+            role="button"
+            tabIndex={0}
+            aria-label="选择 It’s Been A Long, Long Time 作为第一支舞音乐"
+            onClick={() => p.onEvent?.("musicSelected", "music:its-been-a-long-long-time")}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                p.onEvent?.("musicSelected", "music:its-been-a-long-long-time");
+              }
+            }}
+          >
             <Star className="music-song-favorite" size={17} fill="currentColor" />
             <img
               src={`${import.meta.env.BASE_URL}story-media/its-been-a-long-long-time.jpeg`}
