@@ -1186,14 +1186,52 @@
   font-size: 17px;
   font-weight: 700;
 }
-.music-empty-tracks {
-  display: flex;
-  flex-direction: column;
+.music-song-list {
+  margin-top: 27px;
+  border-top: 1px solid #d8d8dc;
+}
+.music-song-row {
+  display: grid;
+  grid-template-columns: 20px 54px minmax(0, 1fr) 31px;
   align-items: center;
-  gap: 9px;
-  margin-top: 43px;
-  color: #9b9ba1;
-  font-size: 13px;
+  gap: 10px;
+  min-height: 76px;
+  border-bottom: 1px solid #d8d8dc;
+}
+.music-song-favorite {
+  color: #6d6d73;
+}
+.music-song-row img {
+  width: 54px;
+  height: 54px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+.music-song-row > span {
+  min-width: 0;
+}
+.music-song-row strong,
+.music-song-row small {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.music-song-row strong {
+  font-size: 15px;
+  font-weight: 500;
+}
+.music-song-row small {
+  margin-top: 5px;
+  color: #77777d;
+  font-size: 11px;
+}
+.music-song-more {
+  padding: 0;
+  color: #77777d;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 1px;
 }
 .music-mini-player {
   display: flex;

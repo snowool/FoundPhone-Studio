@@ -898,7 +898,7 @@ export function MusicSkin(p: Props) {
         <div className="music-star-cover" aria-hidden="true">★</div>
         <section className="music-playlist-details">
           <h1>喜爱歌曲 <span>★</span></h1>
-          <p>真夜</p>
+          <p>Stevie</p>
           <small>40分钟前更新</small>
         </section>
         <div className="music-playlist-actions">
@@ -906,9 +906,19 @@ export function MusicSkin(p: Props) {
           <button className="music-play-button" aria-label="播放"><Play size={24} fill="currentColor" />播放</button>
           <button aria-label="下载"><Download size={25} /></button>
         </div>
-        <div className="music-empty-tracks" aria-label="暂无乐曲">
-          <Music size={32} />
-          <span>暂无乐曲</span>
+        <div className="music-song-list" aria-label="歌单曲目">
+          <article className="music-song-row">
+            <Star className="music-song-favorite" size={17} fill="currentColor" />
+            <img
+              src={`${import.meta.env.BASE_URL}story-media/its-been-a-long-long-time.jpeg`}
+              alt="It’s Been A Long, Long Time 封面"
+            />
+            <span>
+              <strong>It’s Been A Long, Long Time</strong>
+              <small>Harry James and His Orchestra</small>
+            </span>
+            <button aria-label="更多歌曲选项" className="music-song-more">•••</button>
+          </article>
         </div>
       </div>
       <div className="music-mini-player" aria-label="当前未播放音乐">
