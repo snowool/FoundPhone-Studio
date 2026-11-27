@@ -1,5 +1,4 @@
 export { WeatherSkin, HealthSkin } from "./CalibratedSystemApps";
-import { AudioPlayer, useTrack } from "../audio";
 import { useSkinState } from "../skinState";
 import {
   Calendar,
@@ -21,7 +20,8 @@ import {
   Phone,
   Play,
   Search,
-  SkipForward,
+  Share,
+  Shuffle,
   Star,
   Users,
   Wallet,
@@ -881,81 +881,48 @@ export function FilesSkin(p: Props) {
   );
 }
 export function MusicSkin(p: Props) {
-  const { tab, setTab, items } = useContent(p, "资料库");
-  const [song, setSong] = useTrack(p, items);
   return (
-    <div className="catalog-skin native-music">
-      <Header p={p} />
-      <div className="catalog-scroll">
-        <h1>{tab}</h1>
-        {tab === "歌单" ? (
-          <div className="music-albums">
-            {groupItems(items, "我的音乐").map((g) => (
-              <button
-                key={g}
-                onClick={() => {
-                  const i = items.find((i) => (i.folder || "我的音乐") === g);
-                  if (i) setSong(i);
-                }}
-              >
-                <Music size={51} />
-                <strong>{g}</strong>
-              </button>
-            ))}
-          </div>
-        ) : (
-          items.map((i, n) => (
-            <button
-              className="music-track"
-              key={i.id}
-              onClick={() => {
-                setSong(i);
-              }}
-            >
-              <small>{n + 1}</small>
-              <span>
-                <strong>{i.title}</strong>
-                <small>
-                  {i.sender} · {meta(i, "album")}
-                </small>
-              </span>
-              <span>{meta(i, "duration")}</span>
-            </button>
-          ))
-        )}
-        <Empty items={items} />
-      </div>
-      {song && (
-        <div className="native-now-playing">
-          <button onClick={() => p.onItem(song)}>
-            <Music size={20} />
-            {song.title}
+    <div className="catalog-skin native-music music-playlist">
+      <header className="app-nav catalog-nav" data-authoring={p.creator}>
+        <button aria-label="返回" onClick={p.onBack}>
+          <ChevronLeft size={28} />
+        </button>
+        <div>
+          <button aria-label="分享" className="music-share-button">
+            <Share size={23} />
           </button>
-          {song.kind === "audio" && safeMedia(song.media) ? (
-            <AudioPlayer p={p} item={song} />
-          ) : (
-            <button onClick={() => p.onItem(song)}>查看歌曲内容</button>
-          )}
-          <button
-            aria-label="下一首"
-            onClick={() =>
-              setSong(
-                items[
-                  (items.findIndex((i) => i.id === song.id) + 1) % items.length
-                ],
-              )
-            }
-          >
-            <SkipForward size={18} />
-          </button>
+          <button aria-label="更多选项" className="music-more-button">•••</button>
         </div>
-      )}
-      <Tabs
-        tabs={["资料库", "歌单"]}
-        value={tab}
-        set={setTab}
-        icons={[<Music />, <Folder />]}
-      />
+      </header>
+      <div className="music-playlist-scroll">
+        <div className="music-star-cover" aria-hidden="true">★</div>
+        <section className="music-playlist-details">
+          <h1>喜爱歌曲 <span>★</span></h1>
+          <p>真夜</p>
+          <small>40分钟前更新</small>
+        </section>
+        <div className="music-playlist-actions">
+          <button aria-label="随机播放"><Shuffle size={25} /></button>
+          <button className="music-play-button" aria-label="播放"><Play size={24} fill="currentColor" />播放</button>
+          <button aria-label="下载"><Download size={25} /></button>
+        </div>
+        <div className="music-empty-tracks" aria-label="暂无乐曲">
+          <Music size={32} />
+          <span>暂无乐曲</span>
+        </div>
+      </div>
+      <div className="music-mini-player" aria-label="当前未播放音乐">
+        <span className="music-mini-art"><Music size={21} /></span>
+        <span>还没有正在播放的乐曲</span>
+        <Play size={20} fill="currentColor" />
+      </div>
+      <nav className="music-bottom-tabs" aria-label="音乐导航">
+        <button><strong>⌂</strong><span>主页</span></button>
+        <button><Grid size={23} /><span>新发现</span></button>
+        <button><span className="music-radio-mark">◉</span><span>广播</span></button>
+        <button className="selected"><Music size={24} fill="currentColor" /><span>资料库</span></button>
+        <button><Search size={24} /><span>搜索</span></button>
+      </nav>
     </div>
   );
 }
