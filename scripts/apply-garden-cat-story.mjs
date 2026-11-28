@@ -385,7 +385,7 @@ const sequence = [
   },
   {
     id: "future-ending-ready",
-    label: "十项婚礼任务全部完成且未邀请 Tony",
+    label: "除蜜月外九项婚礼任务完成且未邀请 Tony",
     event: "variable",
     target: "",
     once: true,
@@ -400,7 +400,6 @@ const sequence = [
       { key: "wedding:wedding-party:done", op: "eq", value: true },
       { key: "wedding:alpine:done", op: "eq", value: true },
       { key: "wedding:first-dance:done", op: "eq", value: true },
-      { key: "wedding:honeymoon:done", op: "eq", value: true },
       { key: "coney:tony-invited", op: "neq", value: true },
     ],
     actions: [],
