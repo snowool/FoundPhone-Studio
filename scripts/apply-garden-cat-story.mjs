@@ -205,24 +205,24 @@ const rogersFamilyNewsPost = {
 const coneySecretWeddingPost = {
   id: "twitter-coney-secret-wedding",
   title: "秘密婚礼曝光！",
-  sender: "babo Sakura",
+  sender: "snow_1211ool",
   body: "跟随知情人士竟意外撞破美国队长与冬日战士私情，待业家庭主父与国会议员婚礼在布鲁克林一教堂秘密举行，真让他赘到了！",
   kind: "post",
   time: "2026-10-25 12:35",
   hidden: true,
-  meta: { handle: "babo_sakura", reposts: "24100", views: "38.6万", xTop: "1" },
+  meta: { handle: "snow_1211ool", reposts: "24100", views: "38.6万", xTop: "1" },
   likes: 126000,
   comments: [],
 };
 const coneyRunawayPost = {
   id: "twitter-coney-runaway",
   title: "美国队长临阵逃婚？",
-  sender: "babo Sakura",
+  sender: "snow_1211ool",
   body: "记者突袭婚礼之后罗杰斯队长竟临阵脱逃，与新婚妻子手牵手逃离之，疑似有民众在康尼岛摩天轮附近发现二人身影。",
   kind: "post",
   time: "2026-10-25 12:45",
   hidden: true,
-  meta: { handle: "babo_sakura", reposts: "31900", views: "45.2万", xTop: "2" },
+  meta: { handle: "snow_1211ool", reposts: "31900", views: "45.2万", xTop: "2" },
   likes: 184000,
   comments: [],
 };
@@ -244,11 +244,11 @@ const randomLikes = [78600, 142000, 96300, 218000, 67400, 189000, 115000];
 const randomReposts = [15200, 38400, 21700, 56200, 11800, 47300, 29600];
 base.content.twitter = base.content.twitter.map((item, index) => ({
   ...item,
-  sender: "babo Sakura",
+  sender: "snow_1211ool",
   likes: randomLikes[index % randomLikes.length],
   meta: {
     ...item.meta,
-    handle: "babo_sakura",
+    handle: "snow_1211ool",
     reposts: String(randomReposts[index % randomReposts.length]),
   },
 }));
@@ -452,7 +452,7 @@ const sequence = [
     conditions: [{ key: "coney:tony-invited", op: "eq", value: true }],
     actions: [
       unlock("twitter-coney-secret-wedding"),
-      { type: "notification", key: "", value: "twitter/babo Sakura\n秘密婚礼曝光！" },
+      { type: "notification", key: "", value: "twitter/snow_1211ool\n秘密婚礼曝光！" },
     ],
     next: [],
   },
@@ -477,7 +477,7 @@ const sequence = [
     conditions: [cond("twitter-coney-secret-wedding")[0]],
     actions: [
       unlock("twitter-coney-runaway"),
-      { type: "notification", key: "", value: "twitter/babo Sakura\n美国队长临阵逃婚？" },
+      { type: "notification", key: "", value: "twitter/snow_1211ool\n美国队长临阵逃婚？" },
     ],
     next: [],
   },
