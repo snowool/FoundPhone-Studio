@@ -384,6 +384,28 @@ const sequence = [
     next: [],
   },
   {
+    id: "future-ending-after-opening-notes",
+    label: "任务全部完成后打开备忘录查看清单",
+    event: "openApp",
+    target: "notes",
+    once: true,
+    conditions: [
+      { key: "wedding:date:done", op: "eq", value: true },
+      { key: "wedding:venue:done", op: "eq", value: true },
+      { key: "wedding:ceremony:done", op: "eq", value: true },
+      { key: "wedding:officiant:done", op: "eq", value: true },
+      { key: "wedding:cake:done", op: "eq", value: true },
+      { key: "wedding:outfits:done", op: "eq", value: true },
+      { key: "wedding:invitations:done", op: "eq", value: true },
+      { key: "wedding:wedding-party:done", op: "eq", value: true },
+      { key: "wedding:alpine:done", op: "eq", value: true },
+      { key: "wedding:first-dance:done", op: "eq", value: true },
+      { key: "coney:tony-invited", op: "neq", value: true },
+    ],
+    actions: [],
+    next: ["future-ending-delay"],
+  },
+  {
     id: "future-ending-delay",
     label: "十项任务复核完成后渐暗进入去未来",
     type: "delay",
@@ -535,11 +557,6 @@ const sequence = [
 const sequenceIds = new Set(sequence.map((item) => item.id));
 base.events = base.events.filter((item) => !sequenceIds.has(item.id));
 base.events.push(...sequence);
-// Recheck the ending directly after each checklist item becomes completed.
-// This runs after the variable update, so the last required checkmark can trigger it.
-for (const completion of base.events.filter((item) => item.id.startsWith("wedding-complete-"))) {
-  completion.next = [...new Set([...(completion.next || []), "future-ending-delay"])];
-}
 base.tests = base.tests.filter((item) => item.name !== "花园婚礼后完整触发巴基变猫剧情");
 base.tests = base.tests.filter((item) => item.name !== "教堂婚礼后完成小狗对话并确认场地");
 base.tests.push({
