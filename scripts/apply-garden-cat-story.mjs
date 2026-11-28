@@ -385,7 +385,7 @@ const sequence = [
   },
   {
     id: "future-ending-ready",
-    label: "除蜜月外九项婚礼任务完成且未邀请 Tony",
+    label: "除蜜月外十项婚礼任务完成且未邀请 Tony",
     event: "variable",
     target: "",
     once: true,
@@ -407,13 +407,25 @@ const sequence = [
   },
   {
     id: "future-ending-delay",
-    label: "全部任务完成后渐暗进入去未来",
+    label: "十项任务复核完成后渐暗进入去未来",
     type: "delay",
     event: "variable",
     target: "",
     once: true,
     delayMs: 1500,
+    // Check the complete checklist again at the final moment. This prevents
+    // any earlier task update from ever displaying the ending prematurely.
     conditions: [
+      { key: "wedding:date:done", op: "eq", value: true },
+      { key: "wedding:venue:done", op: "eq", value: true },
+      { key: "wedding:ceremony:done", op: "eq", value: true },
+      { key: "wedding:officiant:done", op: "eq", value: true },
+      { key: "wedding:cake:done", op: "eq", value: true },
+      { key: "wedding:outfits:done", op: "eq", value: true },
+      { key: "wedding:invitations:done", op: "eq", value: true },
+      { key: "wedding:wedding-party:done", op: "eq", value: true },
+      { key: "wedding:alpine:done", op: "eq", value: true },
+      { key: "wedding:first-dance:done", op: "eq", value: true },
       { key: "coney:tony-invited", op: "neq", value: true },
     ],
     actions: [{ type: "ending", key: "", value: "去未来" }],
